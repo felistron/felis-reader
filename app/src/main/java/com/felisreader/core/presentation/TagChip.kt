@@ -3,7 +3,6 @@ package com.felisreader.core.presentation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,7 +14,6 @@ import com.felisreader.manga.domain.model.TagEntity
 import com.felisreader.manga.domain.model.TagGroup
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TagChip(
     tagName: String,
@@ -66,7 +64,7 @@ fun TagChipGroup(
 ) {
     FlowRow(
         modifier = modifier,
-        verticalAlignment = Alignment.Top,
+        verticalArrangement = Arrangement.Top,
         horizontalArrangement = Arrangement.Start
     ) {
         if (contentRating != null) {

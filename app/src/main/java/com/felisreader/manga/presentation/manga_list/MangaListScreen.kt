@@ -16,7 +16,8 @@ import com.felisreader.manga.presentation.manga_list.components.MangaCard
 @Composable
 fun MangaListScreen(
     viewModel: MangaListViewModel = hiltViewModel(),
-    onNavigateToInfo: (id: String) -> Unit
+    onNavigateToInfo: (id: String) -> Unit,
+    title: String? = null
 ) {
     MangaListContent(
         state = viewModel.state.value,

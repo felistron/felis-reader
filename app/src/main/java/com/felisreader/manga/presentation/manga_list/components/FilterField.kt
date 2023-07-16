@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.felisreader.core.domain.ContentRating
@@ -19,7 +18,6 @@ import com.felisreader.core.domain.PublicationDemographic
 import com.felisreader.core.domain.Status
 import com.felisreader.manga.presentation.manga_list.MangaListEvent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterField(
     expanded: Boolean,
@@ -85,7 +83,8 @@ fun FilterChip(
         colors = InputChipDefaults.inputChipColors(
             containerColor = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface,
             labelColor = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
-        )
+        ),
+        selected = selected
     )
 }
 
@@ -160,7 +159,7 @@ fun MagazineDemographicField(
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.Top,
+            verticalArrangement = Arrangement.Top,
         ) {
             FilterChip(
                 onClick = {
@@ -253,7 +252,7 @@ fun PublicationStatusField(
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.Top
+            verticalArrangement = Arrangement.Top
         ) {
             FilterChip(
                 onClick = {
@@ -346,7 +345,7 @@ fun ContentRatingField(
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.Top
+            verticalArrangement = Arrangement.Top
         ) {
             FilterChip(
                 onClick = {
