@@ -31,7 +31,10 @@ fun Toolbar(
                     .height(64.dp)
                     .padding(0.dp)
                     .clickable {
-                        navigation.navigate(Screen.SearchScreen.route)
+                        navigation.navigate(Screen.SearchScreen.route) {
+                            launchSingleTop = true
+                            popUpTo(Screen.SearchScreen.route) { inclusive = false }
+                        }
                     }
             )
         },

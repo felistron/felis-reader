@@ -47,7 +47,7 @@ fun FilterField(
                     )
                 },
                 border = null,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(horizontal = 10.dp)
             )
             AnimatedVisibility (expanded) {
                 FilterList(onEvent, queryState)
