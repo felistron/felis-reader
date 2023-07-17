@@ -1,4 +1,4 @@
-package com.felisreader.core.domain
+package com.felisreader.core.domain.model
 
 sealed class MangaOrder(val orderType: OrderType, val name: String) {
     class Title(orderType: OrderType): MangaOrder(orderType, "title")

@@ -1,7 +1,7 @@
 package com.felisreader.manga.domain.model
 
-import com.felisreader.core.domain.ContentRating
-import com.felisreader.core.domain.Status
+import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.core.domain.model.Status
 
 data class Manga(
     val id: String,

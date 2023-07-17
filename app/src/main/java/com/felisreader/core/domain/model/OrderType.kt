@@ -1,4 +1,4 @@
-package com.felisreader.core.domain
+package com.felisreader.core.domain.model
 
 sealed class OrderType(val name: String) {
     object Descending: OrderType("desc")

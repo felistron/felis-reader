@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.felisreader.manga.presentation.manga_info.MangaScreen
-import com.felisreader.manga.presentation.manga_list.MangaListScreen
+import com.felisreader.manga.presentation.manga_search.SearchScreen
 
 @Composable
 fun AppNavigation(
@@ -23,9 +23,11 @@ fun AppNavigation(
         composable(
             route = Screen.SearchScreen.route
         ) {
-            MangaListScreen(
+            SearchScreen(
                 onNavigateToInfo = { id ->
-                    navController.navigate(Screen.MangaScreen(id).route)
+                    navController.navigate(Screen.MangaScreen(id).route) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }

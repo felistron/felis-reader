@@ -1,35 +1,41 @@
-package com.felisreader.manga.presentation.manga_list
+package com.felisreader.manga.presentation.manga_search
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.manga.presentation.manga_info.components.Loading
-import com.felisreader.manga.presentation.manga_list.components.FilterField
-import com.felisreader.manga.presentation.manga_list.components.MangaCard
+import com.felisreader.manga.presentation.manga_search.components.FilterField
+import com.felisreader.manga.presentation.manga_search.components.MangaCard
+import com.felisreader.manga.presentation.manga_search.components.SearchField
 
 @Composable
-fun MangaListScreen(
-    viewModel: MangaListViewModel = hiltViewModel(),
-    onNavigateToInfo: (id: String) -> Unit,
-    title: String? = null
+fun SearchScreen(
+    viewModel: SearchViewModel = hiltViewModel(),
+    onNavigateToInfo: (id: String) -> Unit
 ) {
-    MangaListContent(
-        state = viewModel.state.value,
-        onEvent = viewModel::onEvent,
-        onNavigateToInfo = onNavigateToInfo
-    )
+    Column {
+        SearchField(
+            state = viewModel.state.value,
+            onEvent = viewModel::onEvent
+        )
+        SearchContent(
+            state = viewModel.state.value,
+            onEvent = viewModel::onEvent,
+            onNavigateToInfo = onNavigateToInfo
+        )
+    }
 }
 
 @Composable
-fun MangaListContent(
-    state: MangaListState,
-    onEvent: (MangaListEvent) -> Unit,
+fun SearchContent(
+    state: SearchState,
+    onEvent: (SearchEvent) -> Unit,
     onNavigateToInfo: (id: String) -> Unit
 ) {
     if (state.loading && state.mangaList == null) {
@@ -74,7 +80,7 @@ fun MangaListContent(
                             size = 32
                         )
                         LaunchedEffect(true) {
-                            onEvent(MangaListEvent.LoadMore)
+                            onEvent(SearchEvent.LoadMore)
                         }
                     }
                 }

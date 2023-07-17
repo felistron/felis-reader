@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.felisreader.core.domain.ContentRating
-import com.felisreader.core.domain.EntityType
+import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.core.domain.model.EntityType
 import com.felisreader.manga.domain.model.TagAttributes
 import com.felisreader.manga.domain.model.TagEntity
 import com.felisreader.manga.domain.model.TagGroup

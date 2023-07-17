@@ -1,7 +1,7 @@
 package com.felisreader.core.util
 
-import com.felisreader.core.domain.EntityType
-import com.felisreader.core.domain.Relationship
+import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.Relationship
 import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.model.Author
 import com.felisreader.manga.domain.model.Manga

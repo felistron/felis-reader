@@ -1,6 +1,6 @@
-package com.felisreader.core.domain
+package com.felisreader.core.domain.model
 
-data class MangaListRequest(
+data class MangaListQuery(
     val limit: Int? = null,
     val offset: Int? = null,
     val title: String? = null,
