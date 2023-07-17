@@ -1,4 +1,4 @@
-package com.felisreader.manga.presentation.manga_list
+package com.felisreader.manga.presentation.manga_search
 
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
@@ -7,7 +7,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.core.domain.MangaListRequest
+import com.felisreader.core.domain.model.MangaListQuery
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.MangaList
 import com.felisreader.manga.domain.use_case.MangaUseCases
@@ -16,25 +16,44 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MangaListViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val useCases: MangaUseCases
 ): ViewModel() {
-    private val _state: MutableState<MangaListState> = mutableStateOf(MangaListState())
-    val state: State<MangaListState> = _state
+    private val _state: MutableState<SearchState> = mutableStateOf(SearchState())
+    val state: State<SearchState> = _state
 
-    fun onEvent(event: MangaListEvent) {
+    init {
+        viewModelScope.launch {
+            val mangaList: MangaList? = getMangaList(_state.value.query)
+
+            if (mangaList != null) {
+
+                if (mangaList.limit == mangaList.total) {
+                    _state.value = _state.value.copy(
+                        canLoadMore = false
+                    )
+                }
+
+                _state.value = _state.value.copy(
+                    mangaList = mangaList
+                )
+            }
+        }
+    }
+
+    fun onEvent(event: SearchEvent) {
         when (event) {
-            is MangaListEvent.LoadMore -> {
+            is SearchEvent.LoadMore -> {
                 viewModelScope.launch {
                     loadMore()
                 }
             }
-            is MangaListEvent.ToggleFilter -> {
+            is SearchEvent.ToggleFilter -> {
                 _state.value = _state.value.copy(
                     expandedFilter = !_state.value.expandedFilter
                 )
             }
-            is MangaListEvent.ApplyFilter -> {
+            is SearchEvent.ApplyFilter -> {
                 _state.value = _state.value.copy(
                     query = _state.value.query.copy(
                         contentRating = event.query.contentRating,
@@ -63,25 +82,10 @@ class MangaListViewModel @Inject constructor(
                         )
                     }
                 }
-
             }
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            val mangaList: MangaList? = getMangaList(_state.value.query)
-
-            if (mangaList != null) {
-
-                if (mangaList.limit == mangaList.total) {
-                    _state.value = _state.value.copy(
-                        canLoadMore = false
-                    )
-                }
-
+            is SearchEvent.SearchBarActive -> {
                 _state.value = _state.value.copy(
-                    mangaList = mangaList
+                    searchBarActive = event.active
                 )
             }
         }
@@ -133,7 +137,7 @@ class MangaListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMangaList(query: MangaListRequest): MangaList? {
+    private suspend fun getMangaList(query: MangaListQuery): MangaList? {
 
         _state.value = _state.value.copy(
             loading = true

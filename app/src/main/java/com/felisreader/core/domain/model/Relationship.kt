@@ -1,4 +1,4 @@
-package com.felisreader.core.domain
+package com.felisreader.core.domain.model
 
 import java.util.*
 

@@ -1,7 +1,7 @@
 package com.felisreader.manga.data.repository
 
-import com.felisreader.core.domain.EntityType
-import com.felisreader.core.domain.MangaListRequest
+import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.MangaListQuery
 import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.model.api.MangaListResponse
 import com.felisreader.manga.domain.model.api.MangaResponse
@@ -19,7 +19,7 @@ class MangaRepositoryImp(
         return response.body()
     }
 
-    override suspend fun getMangaList(req: MangaListRequest): MangaListResponse? {
+    override suspend fun getMangaList(req: MangaListQuery): MangaListResponse? {
         val response: Response<MangaListResponse> = mangaService.getMangaList(
             limit = req.limit,
             offset = req.offset,

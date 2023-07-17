@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.felisreader.core.domain.ContentRating
+import com.felisreader.core.domain.model.ContentRating
 import com.felisreader.core.presentation.TagChipGroup
 import com.felisreader.manga.presentation.manga_info.components.*
 

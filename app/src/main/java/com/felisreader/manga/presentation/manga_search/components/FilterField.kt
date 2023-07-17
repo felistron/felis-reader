@@ -1,4 +1,4 @@
-package com.felisreader.manga.presentation.manga_list.components
+package com.felisreader.manga.presentation.manga_search.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -10,21 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.felisreader.core.domain.ContentRating
-import com.felisreader.core.domain.MangaListRequest
-import com.felisreader.core.domain.PublicationDemographic
-import com.felisreader.core.domain.Status
-import com.felisreader.manga.presentation.manga_list.MangaListEvent
+import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.core.domain.model.MangaListQuery
+import com.felisreader.core.domain.model.PublicationDemographic
+import com.felisreader.core.domain.model.Status
+import com.felisreader.manga.presentation.manga_search.SearchEvent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterField(
     expanded: Boolean,
-    onEvent: (MangaListEvent) -> Unit,
-    query: MangaListRequest
+    onEvent: (SearchEvent) -> Unit,
+    query: MangaListQuery
 ) {
     val queryState = remember { mutableStateOf(query.copy()) }
 
@@ -36,7 +34,7 @@ fun FilterField(
     ) {
         Column {
             AssistChip(
-                onClick = { onEvent(MangaListEvent.ToggleFilter) },
+                onClick = { onEvent(SearchEvent.ToggleFilter) },
                 label = {
                     Text(text = "Filter")
                 },
@@ -85,27 +83,27 @@ fun FilterChip(
         colors = InputChipDefaults.inputChipColors(
             containerColor = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface,
             labelColor = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
-        )
+        ),
+        selected = selected
     )
 }
 
 @Composable
 fun FilterList(
-    onEvent: (MangaListEvent) -> Unit,
-    queryState: MutableState<MangaListRequest>
+    onEvent: (SearchEvent) -> Unit,
+    queryState: MutableState<MangaListQuery>
 ) {
     Column(
         modifier = Modifier.padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        TitleInputField(queryState)
         ContentRatingField(queryState)
         PublicationStatusField(queryState)
         MagazineDemographicField(queryState)
         Button(
             onClick = {
-                onEvent(MangaListEvent.ToggleFilter)
-                onEvent(MangaListEvent.ApplyFilter(queryState.value))
+                onEvent(SearchEvent.ToggleFilter)
+                onEvent(SearchEvent.ApplyFilter(queryState.value))
             },
             shape = MaterialTheme.shapes.medium
         ) {
@@ -114,44 +112,20 @@ fun FilterList(
     }
 }
 
-@Composable
-fun TitleInputField(
-    queryState: MutableState<MangaListRequest>
-) {
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth(),
-        value = queryState.value.title ?: "",
-        onValueChange = {
-            queryState.value = queryState.value.copy(
-                title = it
-            )
-        },
-        placeholder = {
-            Text(text = "Title")
-        },
-        maxLines = 1,
-        singleLine = true,
-        trailingIcon = {
-            if (!queryState.value.title.isNullOrEmpty()) {
-                IconButton(onClick = { queryState.value = queryState.value.copy(title = null) }) {
-                    Icon(Icons.Outlined.Close, contentDescription = "Close icon")
-                }
-            }
-        }
-    )
-}
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MagazineDemographicField(
-    queryState: MutableState<MangaListRequest>
+    queryState: MutableState<MangaListQuery>
 ) {
     val anySelected: Boolean = queryState.value.publicationDemographic.isNullOrEmpty()
-    val shounenSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(PublicationDemographic.SHOUNEN)
-    val shoujoSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(PublicationDemographic.SHOUJO)
-    val seinenSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(PublicationDemographic.SEINEN)
-    val joseiSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(PublicationDemographic.JOSEI)
+    val shounenSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(
+        PublicationDemographic.SHOUNEN)
+    val shoujoSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(
+        PublicationDemographic.SHOUJO)
+    val seinenSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(
+        PublicationDemographic.SEINEN)
+    val joseiSelected: Boolean = queryState.value.publicationDemographic.isNotNullAndHas(
+        PublicationDemographic.JOSEI)
 
     Column {
         Text(
@@ -160,7 +134,7 @@ fun MagazineDemographicField(
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.Top,
+            verticalArrangement = Arrangement.Top,
         ) {
             FilterChip(
                 onClick = {
@@ -175,11 +149,13 @@ fun MagazineDemographicField(
                 onClick = {
                     if (!shounenSelected) {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(PublicationDemographic.SHOUNEN)
+                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(
+                                PublicationDemographic.SHOUNEN)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic?.minus(PublicationDemographic.SHOUNEN)
+                            publicationDemographic = queryState.value.publicationDemographic?.minus(
+                                PublicationDemographic.SHOUNEN)
                         )
                     }
                 },
@@ -190,11 +166,13 @@ fun MagazineDemographicField(
                 onClick = {
                     if (!shoujoSelected) {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(PublicationDemographic.SHOUJO)
+                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(
+                                PublicationDemographic.SHOUJO)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic?.minus(PublicationDemographic.SHOUJO)
+                            publicationDemographic = queryState.value.publicationDemographic?.minus(
+                                PublicationDemographic.SHOUJO)
                         )
                     }
                 },
@@ -205,11 +183,13 @@ fun MagazineDemographicField(
                 onClick = {
                     if (!seinenSelected) {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(PublicationDemographic.SEINEN)
+                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(
+                                PublicationDemographic.SEINEN)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic?.minus(PublicationDemographic.SEINEN)
+                            publicationDemographic = queryState.value.publicationDemographic?.minus(
+                                PublicationDemographic.SEINEN)
                         )
                     }
                 },
@@ -220,11 +200,13 @@ fun MagazineDemographicField(
                 onClick = {
                     if (!joseiSelected) {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(PublicationDemographic.JOSEI)
+                            publicationDemographic = queryState.value.publicationDemographic.plusOrCreate(
+                                PublicationDemographic.JOSEI)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
-                            publicationDemographic = queryState.value.publicationDemographic?.minus(PublicationDemographic.JOSEI)
+                            publicationDemographic = queryState.value.publicationDemographic?.minus(
+                                PublicationDemographic.JOSEI)
                         )
                     }
                 },
@@ -238,7 +220,7 @@ fun MagazineDemographicField(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PublicationStatusField(
-    queryState: MutableState<MangaListRequest>
+    queryState: MutableState<MangaListQuery>
 ) {
     val anySelected: Boolean = queryState.value.status.isNullOrEmpty()
     val ongoingSelected: Boolean = queryState.value.status.isNotNullAndHas(Status.ONGOING)
@@ -253,7 +235,7 @@ fun PublicationStatusField(
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.Top
+            verticalArrangement = Arrangement.Top
         ) {
             FilterChip(
                 onClick = {
@@ -331,7 +313,7 @@ fun PublicationStatusField(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ContentRatingField(
-    queryState: MutableState<MangaListRequest>
+    queryState: MutableState<MangaListQuery>
 ) {
     val anySelected: Boolean = queryState.value.contentRating.isNullOrEmpty()
     val safeSelected: Boolean = queryState.value.contentRating.isNotNullAndHas(ContentRating.SAFE)
@@ -346,7 +328,7 @@ fun ContentRatingField(
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.Top
+            verticalArrangement = Arrangement.Top
         ) {
             FilterChip(
                 onClick = {
@@ -361,7 +343,8 @@ fun ContentRatingField(
                 onClick = {
                     if (!safeSelected) {
                         queryState.value = queryState.value.copy(
-                            contentRating = queryState.value.contentRating.plusOrCreate(ContentRating.SAFE)
+                            contentRating = queryState.value.contentRating.plusOrCreate(
+                                ContentRating.SAFE)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
@@ -376,7 +359,8 @@ fun ContentRatingField(
                 onClick = {
                     if (!suggestiveSelected) {
                         queryState.value = queryState.value.copy(
-                            contentRating = queryState.value.contentRating.plusOrCreate(ContentRating.SUGGESTIVE)
+                            contentRating = queryState.value.contentRating.plusOrCreate(
+                                ContentRating.SUGGESTIVE)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
@@ -391,7 +375,8 @@ fun ContentRatingField(
                 onClick = {
                     if (!eroticaSelected) {
                         queryState.value = queryState.value.copy(
-                            contentRating = queryState.value.contentRating.plusOrCreate(ContentRating.EROTICA)
+                            contentRating = queryState.value.contentRating.plusOrCreate(
+                                ContentRating.EROTICA)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
@@ -406,7 +391,8 @@ fun ContentRatingField(
                 onClick = {
                     if (!pornographicSelected) {
                         queryState.value = queryState.value.copy(
-                            contentRating = queryState.value.contentRating.plusOrCreate(ContentRating.PORNOGRAPHIC)
+                            contentRating = queryState.value.contentRating.plusOrCreate(
+                                ContentRating.PORNOGRAPHIC)
                         )
                     } else {
                         queryState.value = queryState.value.copy(
