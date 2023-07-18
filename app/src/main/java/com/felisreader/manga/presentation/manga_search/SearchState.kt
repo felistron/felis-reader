@@ -3,6 +3,7 @@ package com.felisreader.manga.presentation.manga_search
 import androidx.compose.foundation.lazy.LazyListState
 import com.felisreader.core.domain.model.EntityType
 import com.felisreader.core.domain.model.MangaListQuery
+import com.felisreader.core.domain.model.SearchHistoryEntity
 import com.felisreader.manga.domain.model.MangaList
 
 data class SearchState(
@@ -20,7 +21,8 @@ data class SearchState(
     val lazyListState: LazyListState = LazyListState(),
     val canLoadMore: Boolean = true,
     val expandedFilter: Boolean = false,
-    val searchBarActive: Boolean = false
+    val searchBarActive: Boolean = false,
+    val searchHistory: List<SearchHistoryEntity> = emptyList()
 ) {
     companion object {
         const val LIMIT: Int = 20
