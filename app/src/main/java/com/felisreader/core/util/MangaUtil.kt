@@ -1,6 +1,7 @@
 package com.felisreader.core.util
 
 import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.LinkType
 import com.felisreader.core.domain.model.Relationship
 import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.model.Author
@@ -56,7 +57,24 @@ class MangaUtil {
                 tags = mangaEntity.attributes.tags,
                 contentRating = mangaEntity.attributes.contentRating,
                 year = mangaEntity.attributes.year,
-                status = mangaEntity.attributes.status
+                status = mangaEntity.attributes.status,
+                links = mangaEntity.attributes.links.entries.map {
+                    when (it.key) {
+                        "al" -> LinkType.AL(it.value)
+                        "ap" -> LinkType.AP(it.value)
+                        "bw" -> LinkType.BW(it.value)
+                        "mu" -> LinkType.MU(it.value)
+                        "nu" -> LinkType.NU(it.value)
+                        //"kt" -> LinkType.KT(it.value) TODO
+                        "amz" -> LinkType.AMZ(it.value)
+                        "ebj" -> LinkType.EBJ(it.value)
+                        "mal" -> LinkType.MAL(it.value)
+                        "cdj" -> LinkType.CDJ(it.value)
+                        "engtl" -> LinkType.ENGTL(it.value)
+                        "raw" -> LinkType.RAW(it.value)
+                        else -> null
+                    }
+                }
             )
         }
     }

@@ -2,20 +2,20 @@ package com.felisreader.manga.presentation.manga_info
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.OpenInNew
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.core.domain.model.ContentRating
 import com.felisreader.core.presentation.TagChipGroup
+import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.presentation.manga_info.components.*
 
 @Composable
@@ -60,18 +60,82 @@ fun MangaContent(
                     onContentRatingClick = { },
                 )
                 StatusField(state.manga)
-                Text(
-                    text = state.manga.description,
-                    overflow = TextOverflow.Ellipsis,
-                    softWrap = true,
-                    maxLines = if (state.descriptionIsCollapsed) 10 else Int.MAX_VALUE,
-                    modifier = Modifier
-                        .animateContentSize()
-                        .clickable(onClick = {onEvent(MangaEvent.ToggleDescription)})
+                InfoTabs(
+                    manga = state.manga,
+                    onEvent = onEvent,
+                    isDescriptionCollapsed = state.isDescriptionCollapsed
                 )
             }
         } else {
             Text(text = "error fetching data")
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun InfoTabs(
+    manga: Manga,
+    onEvent: (MangaEvent) -> Unit,
+    isDescriptionCollapsed: Boolean
+) {
+    var state by remember { mutableStateOf(0) }
+    val tabs = listOf("Description", "Links")
+    val uriHandler = LocalUriHandler.current
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier
+            .animateContentSize()
+    ) {
+        TabRow(
+            selectedTabIndex = state
+        ) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(text = title) },
+                    selected = state == index,
+                    onClick = { state = index }
+                )
+            }
+        }
+        when(state) {
+            0-> {
+                Text(
+                    text = manga.description,
+                    overflow = TextOverflow.Ellipsis,
+                    softWrap = true,
+                    maxLines = if (isDescriptionCollapsed) 10 else Int.MAX_VALUE,
+                    modifier = Modifier
+                        .animateContentSize()
+                        .clickable(onClick = { onEvent(MangaEvent.ToggleDescription) })
+                )
+            }
+            1 -> {
+                FlowRow(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    manga.links.forEach {
+                        if (it != null) {
+                            AssistChip(
+                                modifier = Modifier.padding(5.dp),
+                                label = { Text(text = it.relatedSite) },
+                                onClick = {
+                                    uriHandler.openUri(it.url)
+                                },
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.OpenInNew,
+                                        contentDescription = "Open in new icon"
+                                    )
+                                },
+                                border = null
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

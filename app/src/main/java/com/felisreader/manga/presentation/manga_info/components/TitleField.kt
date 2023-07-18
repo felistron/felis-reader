@@ -29,7 +29,8 @@ fun TitleField(manga: Manga) {
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            lineHeight = 30.sp
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
@@ -56,7 +57,7 @@ fun TitleField(manga: Manga) {
             leadingIcon = {
                 Icon(
                     Icons.Filled.Person,
-                    contentDescription = "Author icon"
+                    contentDescription = "Person icon"
                 )
             }
         )
