@@ -33,7 +33,7 @@ class MangaViewModel @Inject constructor(
 
     private fun toggleCollapseDescription() {
         _state.value = _state.value.copy(
-            descriptionIsCollapsed = !_state.value.descriptionIsCollapsed
+            isDescriptionCollapsed = !_state.value.isDescriptionCollapsed
         )
     }
 

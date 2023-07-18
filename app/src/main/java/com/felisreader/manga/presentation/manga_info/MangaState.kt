@@ -6,6 +6,6 @@ import com.felisreader.manga.domain.model.Manga
 data class MangaState(
     val manga: Manga? = null,
     val loading: Boolean = true,
-    val descriptionIsCollapsed: Boolean = true,
+    val isDescriptionCollapsed: Boolean = true,
     val scrollState: ScrollState = ScrollState(initial = 0)
 )
