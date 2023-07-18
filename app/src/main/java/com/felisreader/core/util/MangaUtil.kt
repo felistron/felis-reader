@@ -1,5 +1,6 @@
 package com.felisreader.core.util
 
+import android.util.Log
 import com.felisreader.core.domain.model.EntityType
 import com.felisreader.core.domain.model.LinkType
 import com.felisreader.core.domain.model.Relationship
@@ -44,6 +45,8 @@ class MangaUtil {
             val authorName: String = if (authorRelationship == null) "Unknown author"
             else authorRelationship.attributes["name"].toString()
 
+            Log.i("LINKS_TEST", "${mangaEntity.attributes.links}")
+
             return Manga(
                 id = mangaEntity.id.toString(),
                 title = title,
@@ -58,7 +61,7 @@ class MangaUtil {
                 contentRating = mangaEntity.attributes.contentRating,
                 year = mangaEntity.attributes.year,
                 status = mangaEntity.attributes.status,
-                links = mangaEntity.attributes.links.entries.map {
+                links = if (mangaEntity.attributes.links == null) emptyList() else mangaEntity.attributes.links.entries.map {
                     when (it.key) {
                         "al" -> LinkType.AL(it.value)
                         "ap" -> LinkType.AP(it.value)

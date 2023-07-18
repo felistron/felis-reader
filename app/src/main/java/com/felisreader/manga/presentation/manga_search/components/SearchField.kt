@@ -31,8 +31,7 @@ import com.felisreader.manga.presentation.manga_search.SearchState
 fun SearchField(
     modifier: Modifier = Modifier,
     state: SearchState,
-    onEvent: (SearchEvent) -> Unit,
-    historyItems: List<String> = emptyList() // TODO: Fetch from local database
+    onEvent: (SearchEvent) -> Unit
 ) {
     val title: MutableState<String> = remember { mutableStateOf(state.query.title ?: "") }
     val focusRequester: FocusRequester = remember { FocusRequester() }
@@ -46,6 +45,11 @@ fun SearchField(
         query = title.value,
         onQueryChange = { title.value = it },
         onSearch = {
+            if (it.isNotBlank()) {
+                onEvent(
+                    SearchEvent.AddHistoryItem(it, System.currentTimeMillis())
+                )
+            }
             onEvent(SearchEvent.SearchBarActive(false))
             onEvent(SearchEvent.ApplyFilter(
                 query = state.query.copy(
@@ -61,14 +65,10 @@ fun SearchField(
             Text(text = "Search by title")
         },
         leadingIcon = {
-            IconButton(onClick = {
-                // TODO: back button
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Search,
-                    contentDescription = "Search Icon"
-                )
-            }
+            Icon(
+                imageVector = Icons.Outlined.Search,
+                contentDescription = "Search Icon"
+            )
         },
         trailingIcon = {
             AnimatedVisibility(
@@ -90,13 +90,19 @@ fun SearchField(
         shape = MaterialTheme.shapes.medium
     ) {
         LazyColumn {
-            items(historyItems) {
+            items(state.searchHistory.filter {
+                if (title.value.isBlank()) return@filter true
+                else return@filter it.content.contains(title.value, ignoreCase = true)
+            }) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            title.value = it
+                            title.value = it.content
+                            onEvent(SearchEvent.AddHistoryItem(
+                                it.content, System.currentTimeMillis()
+                            ))
                             onEvent(SearchEvent.SearchBarActive(false))
                             onEvent(SearchEvent.ApplyFilter(
                                 query = state.query.copy(
@@ -115,10 +121,12 @@ fun SearchField(
                             imageVector = Icons.Outlined.History,
                             contentDescription = "History Icon"
                         )
-                        Text(text = it)
+                        Text(text = it.content)
                     }
                     IconButton(onClick = {
-                        // TODO: Delete history element
+                        onEvent(
+                            SearchEvent.DeleteHistoryItem(it)
+                        )
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Close,

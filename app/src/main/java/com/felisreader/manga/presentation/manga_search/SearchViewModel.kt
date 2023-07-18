@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.MangaListQuery
+import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.MangaList
 import com.felisreader.manga.domain.use_case.MangaUseCases
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val useCases: MangaUseCases
+    private val mangaUseCases: MangaUseCases,
+    private val historyUseCases: HistoryUseCases
 ): ViewModel() {
     private val _state: MutableState<SearchState> = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
@@ -36,6 +38,12 @@ class SearchViewModel @Inject constructor(
 
                 _state.value = _state.value.copy(
                     mangaList = mangaList
+                )
+            }
+
+            historyUseCases.getHistory().collect {
+                _state.value = _state.value.copy(
+                    searchHistory = it
                 )
             }
         }
@@ -87,6 +95,28 @@ class SearchViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     searchBarActive = event.active
                 )
+            }
+            is SearchEvent.AddHistoryItem -> {
+                viewModelScope.launch {
+                    historyUseCases.addItem(event.content, event.timestamp)
+
+                    historyUseCases.getHistory().collect {
+                        _state.value = _state.value.copy(
+                            searchHistory = it
+                        )
+                    }
+                }
+            }
+            is SearchEvent.DeleteHistoryItem -> {
+                viewModelScope.launch {
+                    historyUseCases.deleteItem(event.item)
+
+                    historyUseCases.getHistory().collect {
+                        _state.value = _state.value.copy(
+                            searchHistory = it
+                        )
+                    }
+                }
             }
         }
     }
@@ -143,7 +173,7 @@ class SearchViewModel @Inject constructor(
             loading = true
         )
 
-        val list = useCases.getMangaList(query)
+        val list = mangaUseCases.getMangaList(query)
 
         _state.value = _state.value.copy(
             loading = false

@@ -11,7 +11,7 @@ data class MangaAttributes(
     val altTitles: List<Map<String, String>>,
     val description: Map<String, String>,
     val isLocked: Boolean,
-    val links: Map<String, String>,
+    val links: Map<String, String>?,
     val originalLanguage: String,
     val lastVolume: String?,
     val lastChapter: String?,
