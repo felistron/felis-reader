@@ -25,7 +25,7 @@ object AppModule {
             app,
             HistoryDatabase::class.java,
             HistoryDatabase.DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides

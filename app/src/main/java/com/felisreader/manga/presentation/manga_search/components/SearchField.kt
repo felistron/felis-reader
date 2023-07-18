@@ -90,13 +90,19 @@ fun SearchField(
         shape = MaterialTheme.shapes.medium
     ) {
         LazyColumn {
-            items(state.searchHistory) {
+            items(state.searchHistory.filter {
+                if (title.value.isBlank()) return@filter true
+                else return@filter it.content.contains(title.value, ignoreCase = true)
+            }) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             title.value = it.content
+                            onEvent(SearchEvent.AddHistoryItem(
+                                it.content, System.currentTimeMillis()
+                            ))
                             onEvent(SearchEvent.SearchBarActive(false))
                             onEvent(SearchEvent.ApplyFilter(
                                 query = state.query.copy(
@@ -118,11 +124,9 @@ fun SearchField(
                         Text(text = it.content)
                     }
                     IconButton(onClick = {
-                        if (it.id != null) {
-                            onEvent(
-                                SearchEvent.DeleteHistoryItem(it)
-                            )
-                        }
+                        onEvent(
+                            SearchEvent.DeleteHistoryItem(it)
+                        )
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Close,

@@ -4,7 +4,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.felisreader.core.domain.model.SearchHistoryEntity
 
-@Database(entities = [SearchHistoryEntity::class], version = 1)
+@Database(
+    entities = [SearchHistoryEntity::class],
+    version = 2
+)
 abstract class HistoryDatabase: RoomDatabase() {
     abstract val historyDao: HistoryDao
 

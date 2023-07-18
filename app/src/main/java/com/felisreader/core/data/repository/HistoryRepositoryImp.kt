@@ -12,12 +12,8 @@ class HistoryRepositoryImp(
         return dao.getAll()
     }
 
-    override suspend fun getById(id: Int): SearchHistoryEntity? {
-        return dao.getById(id)
-    }
-
     override suspend fun insert(item: SearchHistoryEntity) {
-        return dao.insert(item)
+        return dao.insertOrUpdate(item)
     }
 
     override suspend fun delete(item: SearchHistoryEntity) {
