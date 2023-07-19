@@ -152,7 +152,13 @@ fun InfoTabs(
                                         "mu" -> Icon(
                                             modifier = Modifier.size(24.dp),
                                             painter = painterResource(id = R.drawable.mu_icon),
-                                            contentDescription = "Book Walker Icon",
+                                            contentDescription = "Manga Updates Icon",
+                                            tint = Color.Unspecified
+                                        )
+                                        "nu" -> Icon(
+                                            modifier = Modifier.size(24.dp),
+                                            painter = painterResource(id = R.drawable.nu_icon),
+                                            contentDescription = "Novel Updates Icon",
                                             tint = Color.Unspecified
                                         )
                                         "amz" -> Icon(
