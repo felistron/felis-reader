@@ -71,7 +71,8 @@ class SearchViewModel @Inject constructor(
                         offset = 0
                     ),
                     mangaList = null,
-                    lazyListState = LazyListState()
+                    lazyListState = LazyListState(),
+                    canLoadMore = true
                 )
 
                 viewModelScope.launch {
