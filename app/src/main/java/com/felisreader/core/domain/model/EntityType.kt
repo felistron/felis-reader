@@ -12,5 +12,11 @@ enum class EntityType(val value: String) {
     @SerializedName("cover_art")
     COVER_ART("cover_art"),
     @SerializedName("tag")
-    TAG("tag")
+    TAG("tag"),
+    @SerializedName("user")
+    USER("user"),
+    @SerializedName("scanlation_group")
+    SCANLATION_GROUP("scanlation_group"),
+    @SerializedName("chapter")
+    CHAPTER("chapter")
 }
