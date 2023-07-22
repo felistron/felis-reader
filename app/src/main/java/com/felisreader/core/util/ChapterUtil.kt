@@ -26,7 +26,7 @@ object ChapterUtil {
             "tl" -> R.drawable.ph
             "fi" -> R.drawable.fi
             "fr" -> R.drawable.fr
-            "ka" -> R.drawable.de
+            "de" -> R.drawable.de
             "el" -> R.drawable.gr
             "he" -> R.drawable.il
             "hu" -> R.drawable.hu
