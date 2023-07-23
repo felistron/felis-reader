@@ -45,20 +45,24 @@ fun ChapterCard(
         modifier = modifier
             .clickable {
                 selected = !selected
-            }
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation((if (selected) 10 else 1).dp),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        )
     ) {
         Column {
             Row(
                 Modifier
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .height(50.dp),
+                    .padding(horizontal = 15.dp, vertical = 5.dp)
+                    .height(48.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(30.dp)
-                        .weight(0.2f),
+                        .size(25.dp)
+                        .weight(0.1f),
                     painter = painterResource(
                         id = ChapterUtil.countryFlagFromLangCode(chapter.attributes.translatedLanguage)
                     ),
@@ -89,7 +93,9 @@ fun ChapterCard(
             AnimatedVisibility(selected) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    tonalElevation = 5.dp
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    tonalElevation = 2.dp
                 ) {
                     Column(
                         Modifier
@@ -97,22 +103,22 @@ fun ChapterCard(
                         horizontalAlignment = Alignment.Start,
                     ) {
                         AssistChip(
-                            onClick = { /*TODO*/ },
+                            onClick = { /*TODO: See Scanlation group info */ },
                             label = {
                                 Text(text = ChapterUtil.getScanlationGroups(chapter).firstOrNull() ?: "No group")
                             },
                             leadingIcon = {
-                                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Person Icon")
+                                Icon(imageVector = Icons.Outlined.Group, contentDescription = "Group Icon")
                             },
                             border = null
                         )
                         AssistChip(
-                            onClick = { /*TODO*/ },
+                            onClick = { /*TODO: See Uploader info*/ },
                             label = {
                                 Text(text = ChapterUtil.getUploaders(chapter).firstOrNull() ?: "No user")
                             },
                             leadingIcon = {
-                                Icon(imageVector = Icons.Outlined.Group, contentDescription = "Person Icon")
+                                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Person Icon")
                             },
                             border = null
                         )

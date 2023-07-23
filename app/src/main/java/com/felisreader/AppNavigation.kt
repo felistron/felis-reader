@@ -22,7 +22,7 @@ fun AppNavigation(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Screen.ChapterListScreen().route
+        startDestination = Screen.SearchScreen.route
     ) {
         composable(
             route = Screen.SearchScreen.route
@@ -44,7 +44,15 @@ fun AppNavigation(
             )
         ) {
             MangaScreen(
-                id = it.arguments?.getString("id").toString()
+                mangaId = it.arguments?.getString("id").toString(),
+                navigateToFeed = { id ->
+                    navController.navigate(Screen.ChapterListScreen(id).route) {
+                        launchSingleTop = true
+                        popUpTo(Screen.MangaScreen(id).route) {
+                            inclusive = false
+                        }
+                    }
+                }
             )
         }
         composable(
@@ -55,11 +63,12 @@ fun AppNavigation(
                 }
             )
         ) {
-            // TODO
-            ChapterListScreen(
-                mangaId = it.arguments?.getString("id") ?: "a96676e5-8ae2-425e-b549-7f15dd34a6d8",
-                navigateToLector = { /*TODO: Navigate to lector screen*/}
-            )
+            it.arguments?.getString("id")?.let { it1 ->
+                ChapterListScreen(
+                    mangaId = it1,
+                    navigateToLector = { /*TODO: Navigate to lector screen*/ }
+                )
+            }
         }
     }
 }

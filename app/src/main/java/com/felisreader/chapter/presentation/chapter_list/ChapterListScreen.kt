@@ -3,20 +3,17 @@ package com.felisreader.chapter.presentation.chapter_list
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.chapter.presentation.chapter_list.components.ChapterCard
+import com.felisreader.manga.presentation.manga_info.components.Loading
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -31,7 +28,6 @@ fun ChapterListScreen(
 
     ChapterListContent(
         state = viewModel.state.value,
-        onEvent = viewModel::onEvent,
         navigateToLector = navigateToLector
     )
 }
@@ -41,51 +37,63 @@ fun ChapterListScreen(
 @Composable
 fun ChapterListContent(
     state: ChapterListState,
-    onEvent: (ChapterListEvent) -> Unit,
     navigateToLector: (chapterId: String) -> Unit
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        state.chapterList.forEach {(volume, volumes) ->
-            stickyHeader(
-                key = volume
-            ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
+    if (state.loading) {
+        Loading(modifier = Modifier.fillMaxSize(), size = 64)
+    } else {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            state.chapterList.forEach { (volume, volumes) ->
+                stickyHeader(
+                    key = volume
                 ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth().padding(10.dp),
-                        text = "Volume $volume",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-            }
-
-            volumes.forEach { (chapter, chapters) ->
-                item {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp),
-                        text = "Chapter $chapter",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Surface(
+                        color = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            text = "Volume $volume",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
 
-                items(
-                    items = chapters,
-                    key = { it.id }
-                ) {
-                    ChapterCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
-                        chapter = it,
-                        onButtonClick = navigateToLector
-                    )
+                volumes.forEach { (chapter, chapters) ->
+
+                    item {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp),
+                        ) {
+                            Text(
+                                text = "Chapter $chapter",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Divider()
+                        }
+                    }
+
+                    items(
+                        items = chapters,
+                        key = { it.id }
+                    ) {
+                        ChapterCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp),
+                            chapter = it,
+                            onButtonClick = navigateToLector
+                        )
+                    }
                 }
             }
         }

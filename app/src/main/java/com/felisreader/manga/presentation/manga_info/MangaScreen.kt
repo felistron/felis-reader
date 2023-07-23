@@ -25,22 +25,27 @@ import com.felisreader.manga.presentation.manga_info.components.*
 @Composable
 fun MangaScreen(
     viewModel: MangaViewModel = hiltViewModel(),
-    id: String
+    mangaId: String,
+    navigateToFeed: (mangaId: String) -> Unit
 ) {
     LaunchedEffect(true) {
-        viewModel.onEvent(MangaEvent.LoadManga(id = id))
+        if (viewModel.state.value.loading) {
+            viewModel.onEvent(MangaEvent.LoadManga(id = mangaId))
+        }
     }
 
     MangaContent(
         state = viewModel.state.value,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        navigateToFeed = navigateToFeed
     )
 }
 
 @Composable
 fun MangaContent(
     state: MangaState,
-    onEvent: (MangaEvent) -> Unit
+    onEvent: (MangaEvent) -> Unit,
+    navigateToFeed: (mangaId: String) -> Unit
 ) {
     if (state.loading) {
         Loading(
@@ -64,6 +69,14 @@ fun MangaContent(
                     onContentRatingClick = { },
                 )
                 StatusField(state.manga)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(onClick = { navigateToFeed(state.manga.id) }) {
+                        Text(text = "See chapters")
+                    }
+                }
                 InfoTabs(
                     manga = state.manga,
                     onEvent = onEvent,

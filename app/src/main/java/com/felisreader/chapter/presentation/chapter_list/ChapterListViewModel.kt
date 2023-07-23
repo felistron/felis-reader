@@ -54,7 +54,8 @@ class ChapterListViewModel @Inject constructor(
                         }
 
                         _state.value = _state.value.copy(
-                            chapterList = groupedByVolumeAndChapter
+                            chapterList = groupedByVolumeAndChapter,
+                            loading = false
                         )
                     }
                 }
