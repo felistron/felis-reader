@@ -29,11 +29,13 @@ class ChapterListViewModel @Inject constructor(
         when (event) {
             is ChapterListEvent.FeedChapters -> {
                 viewModelScope.launch {
+                    _state.value = ChapterListState()
+
                     val query = FeedQuery(
                         id = UUID.fromString(event.id),
                         order = listOf(
-                            ChapterOrder.Volume(OrderType.Descending),
-                            ChapterOrder.Chapter(OrderType.Descending)
+                            ChapterOrder.Volume(event.order),
+                            ChapterOrder.Chapter(event.order)
                         ),
                         includes = listOf(
                             EntityType.SCANLATION_GROUP,
@@ -49,7 +51,8 @@ class ChapterListViewModel @Inject constructor(
                         _state.value = _state.value.copy(
                             chapterList = response.data,
                             loading = false,
-                            feedQuery = query
+                            feedQuery = query,
+                            order = event.order
                         )
                     }
                 }
@@ -83,6 +86,15 @@ class ChapterListViewModel @Inject constructor(
                             )
                         }
                     }
+                }
+            }
+            is ChapterListEvent.ToggleOrder -> {
+                if (_state.value.feedQuery != null) {
+                    val order = when(_state.value.order) {
+                        is OrderType.Descending -> OrderType.Ascending
+                        is OrderType.Ascending -> OrderType.Descending
+                    }
+                    onEvent(ChapterListEvent.FeedChapters(_state.value.feedQuery?.id.toString(), order))
                 }
             }
         }

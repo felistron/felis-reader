@@ -64,14 +64,14 @@ fun ChapterCard(
                         .size(25.dp)
                         .weight(0.1f),
                     painter = painterResource(
-                        id = ChapterUtil.countryFlagFromLangCode(chapter.attributes.translatedLanguage)
+                        id = ChapterUtil.countryFlagFromLangCode(chapter.attributes.translatedLanguage.toString())
                     ),
                     contentDescription = null,
                     tint = Color.Unspecified
                 )
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = chapter.attributes.title ?: "Chapter ${chapter.attributes.chapter}",
+                    text = if (chapter.attributes.title.isNullOrBlank()) "Chapter ${chapter.attributes.chapter}" else chapter.attributes.title,
                     style = MaterialTheme.typography.titleMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2

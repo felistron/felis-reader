@@ -7,7 +7,7 @@ data class ChapterAttributes(
     val volume: String?,
     val chapter: String?,
     val pages: Int,
-    val translatedLanguage: String,
+    val translatedLanguage: String?,
     val uploader: UUID,
     val externalUrl: String?,
     val version: Int,

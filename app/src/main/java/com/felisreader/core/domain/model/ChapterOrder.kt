@@ -1,6 +1,6 @@
 package com.felisreader.core.domain.model
 
-sealed class ChapterOrder(val orderType: OrderType, val name: String) {
+sealed class ChapterOrder(var orderType: OrderType, val name: String) {
     class Created(orderType: OrderType): ChapterOrder(orderType, "createdAt")
     class Updated(orderType: OrderType): ChapterOrder(orderType, "updatedAt")
     class Publish(orderType: OrderType): ChapterOrder(orderType, "publishAt")
