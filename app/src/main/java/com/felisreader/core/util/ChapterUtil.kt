@@ -74,4 +74,14 @@ object ChapterUtil {
         }
         return uploaders
     }
+
+    fun List<Chapter>.groupByVolumeAndChapter(): Map<String, Map<String, List<Chapter>>> {
+        val groupedVolume: Map<String, List<Chapter>> = this.groupBy { it.attributes.volume ?: "N/A" }
+
+        return groupedVolume.entries.associate { volume ->
+            volume.key to volume.value.groupBy { chapter ->
+                chapter.attributes.chapter ?: "N/A"
+            }
+        }
+    }
 }

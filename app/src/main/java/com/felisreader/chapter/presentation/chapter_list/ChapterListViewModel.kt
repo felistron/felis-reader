@@ -29,34 +29,59 @@ class ChapterListViewModel @Inject constructor(
         when (event) {
             is ChapterListEvent.FeedChapters -> {
                 viewModelScope.launch {
-                    val response: FeedResponse? = useCases.mangaFeed(
-                        FeedQuery(
-                            id = UUID.fromString(event.id),
-                            order = listOf(
-                                ChapterOrder.Volume(OrderType.Descending),
-                                ChapterOrder.Chapter(OrderType.Descending)
-                            ),
-                            includes = listOf(
-                                EntityType.SCANLATION_GROUP,
-                                EntityType.USER
-                            )
-                        )
+                    val query = FeedQuery(
+                        id = UUID.fromString(event.id),
+                        order = listOf(
+                            ChapterOrder.Volume(OrderType.Descending),
+                            ChapterOrder.Chapter(OrderType.Descending)
+                        ),
+                        includes = listOf(
+                            EntityType.SCANLATION_GROUP,
+                            EntityType.USER
+                        ),
+                        limit = ChapterListState.LIMIT,
+                        offset = 0
                     )
 
+                    val response: FeedResponse? = useCases.mangaFeed(query)
+
                     if (response != null) {
-
-                        val groupedVolume: Map<String, List<Chapter>> = response.data.groupBy { it.attributes.volume ?: "N/A" }
-
-                        val groupedByVolumeAndChapter: Map<String, Map<String, List<Chapter>>> = groupedVolume.entries.associate { volume ->
-                            volume.key to volume.value.groupBy { chapter ->
-                                chapter.attributes.chapter ?: "N/A"
-                            }
-                        }
-
                         _state.value = _state.value.copy(
-                            chapterList = groupedByVolumeAndChapter,
-                            loading = false
+                            chapterList = response.data,
+                            loading = false,
+                            feedQuery = query
                         )
+                    }
+                }
+            }
+            is ChapterListEvent.LoadMore -> {
+                viewModelScope.launch {
+                    val query = _state.value.feedQuery?.copy(
+                        offset = _state.value.feedQuery?.offset!!.plus(ChapterListState.LIMIT)
+                    )
+
+                    // Possible bugs incoming...
+                    val response: FeedResponse? = useCases.mangaFeed(query!!)
+
+                    if (response != null) {
+                        if (response.data.isNotEmpty()) {
+
+                            // Remove duplicates
+                            val ids: List<String> = _state.value.chapterList.map { it.id.toString() }
+
+                            val list: List<Chapter> = response.data.filter {
+                                !ids.contains(it.id.toString())
+                            }
+
+                            _state.value = _state.value.copy(
+                                chapterList = _state.value.chapterList.plus(list),
+                                feedQuery = query
+                            )
+                        } else {
+                            _state.value = _state.value.copy(
+                                canLoadMore = false
+                            )
+                        }
                     }
                 }
             }

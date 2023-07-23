@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.chapter.presentation.chapter_list.components.ChapterCard
+import com.felisreader.core.util.ChapterUtil.groupByVolumeAndChapter
 import com.felisreader.manga.presentation.manga_info.components.Loading
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -28,7 +29,8 @@ fun ChapterListScreen(
 
     ChapterListContent(
         state = viewModel.state.value,
-        navigateToLector = navigateToLector
+        navigateToLector = navigateToLector,
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -37,7 +39,8 @@ fun ChapterListScreen(
 @Composable
 fun ChapterListContent(
     state: ChapterListState,
-    navigateToLector: (chapterId: String) -> Unit
+    navigateToLector: (chapterId: String) -> Unit,
+    onEvent: (ChapterListEvent) -> Unit
 ) {
     if (state.loading) {
         Loading(modifier = Modifier.fillMaxSize(), size = 64)
@@ -46,7 +49,8 @@ fun ChapterListContent(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            state.chapterList.forEach { (volume, volumes) ->
+            // TODO: Move logic to view model
+            state.chapterList.groupByVolumeAndChapter().forEach { (volume, volumes) ->
                 stickyHeader(
                     key = volume
                 ) {
@@ -93,6 +97,18 @@ fun ChapterListContent(
                             chapter = it,
                             onButtonClick = navigateToLector
                         )
+                    }
+                }
+            }
+
+            if (state.canLoadMore) {
+                item {
+                    Loading(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+                        size = 32
+                    )
+                    LaunchedEffect(true) {
+                        onEvent(ChapterListEvent.LoadMore)
                     }
                 }
             }
