@@ -1,6 +1,5 @@
 package com.felisreader.manga.presentation.manga_search
 
-import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -143,7 +142,6 @@ class SearchViewModel @Inject constructor(
                 val filteredList: List<Manga> = list.filter {
                     val alreadyInList: Boolean = listOfIds.contains(it.id)
                     if (alreadyInList) {
-                        Log.i("MangaListViewModel", "Deleted duplicated: ${it.id}")
                         return@filter false
                     }
                     else {
