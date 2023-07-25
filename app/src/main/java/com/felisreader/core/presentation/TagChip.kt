@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.felisreader.core.domain.model.ContentRating
 import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.PublicationDemographic
 import com.felisreader.manga.domain.model.TagAttributes
 import com.felisreader.manga.domain.model.TagEntity
 import com.felisreader.manga.domain.model.TagGroup
@@ -58,9 +59,11 @@ private fun TagChipPreview() {
 fun TagChipGroup(
     modifier: Modifier = Modifier,
     tags: List<TagEntity>,
-    onTagClick: (String) -> Unit,
+    onTagClick: (tagId: String) -> Unit,
     contentRating: ContentRating? = null,
-    onContentRatingClick: (String) -> Unit = { }
+    onContentRatingClick: (contentRating: String) -> Unit = { },
+    demography: PublicationDemographic? = null,
+    onDemographyClick: (demography: String) -> Unit = { }
 ) {
     FlowRow(
         modifier = modifier,
@@ -75,11 +78,19 @@ fun TagChipGroup(
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
             )
         }
+        if (demography != null) {
+            TagChip(
+                tagName = demography.value,
+                onClick = { onDemographyClick(demography.name.lowercase()) },
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
+            )
+        }
         tags.forEach {
             TagChip(
                 tagName = it.attributes.name["en"].toString(),
                 onClick = { onTagClick(it.id.toString()) },
-                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp),
+                nsfw = it.attributes.group == TagGroup.CONTENT
             )
         }
     }

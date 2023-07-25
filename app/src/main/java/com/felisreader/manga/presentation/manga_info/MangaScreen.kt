@@ -67,6 +67,8 @@ fun MangaContent(
                     onTagClick = { },
                     contentRating = if (state.manga.contentRating == ContentRating.SAFE) null else state.manga.contentRating,
                     onContentRatingClick = { },
+                    demography = state.manga.demography,
+                    onDemographyClick = { }
                 )
                 StatusField(state.manga)
                 Row(
