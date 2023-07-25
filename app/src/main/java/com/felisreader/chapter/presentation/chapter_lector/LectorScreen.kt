@@ -6,7 +6,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -52,10 +51,8 @@ fun LectorContent(
     state: LectorState,
     navigateToChapter: (chapterId: String) -> Unit
 ) {
-    val lazyState = rememberLazyListState()
-
     val progress by animateFloatAsState(
-        targetValue = (lazyState.firstVisibleItemIndex + 1) / (state.images.size.toFloat() + 1),
+        targetValue = (state.lazyListState.firstVisibleItemIndex + 1) / (state.images.size.toFloat() + 1),
         animationSpec = tween(1000, 0)
     )
 
@@ -69,7 +66,7 @@ fun LectorContent(
             LazyColumn(
                 modifier = modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                state = lazyState
+                state = state.lazyListState
             ) {
                 stickyHeader {
                     LinearProgressIndicator(

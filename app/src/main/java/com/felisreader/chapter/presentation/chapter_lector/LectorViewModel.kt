@@ -82,6 +82,8 @@ class LectorViewModel @Inject constructor(
                             chapterIdList = chapterIdList,
                             loading = false
                         )
+
+                        _state.value.lazyListState.scrollToItem(0)
                     }
                 }
             }
