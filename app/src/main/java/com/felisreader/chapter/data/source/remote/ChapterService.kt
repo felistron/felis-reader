@@ -1,8 +1,15 @@
 package com.felisreader.chapter.data.source.remote
 
+import com.felisreader.chapter.domain.model.Aggregate
+import com.felisreader.chapter.domain.model.api.AtHomeResponse
+import com.felisreader.chapter.domain.model.api.ChapterResponse
 import com.felisreader.chapter.domain.model.api.FeedResponse
+import com.felisreader.chapter.domain.model.api.ReportBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
@@ -29,4 +36,29 @@ interface ChapterService {
         @Query("includeFuturePublishAt") includeFuturePublishAt: Int?,
         @Query("includeExternalUrl") includeExternalUrl: Int?
     ): Response<FeedResponse>
+
+    @GET("at-home/server/{id}")
+    suspend fun getChapterFeed(
+        @Path("id") id: String,
+        @Query("forcePort443") forcePort443: Boolean? = null
+    ): Response<AtHomeResponse>
+
+    @GET("manga/{id}/aggregate")
+    suspend fun getAggregate(
+        @Path("id") id: String,
+        @Query("translatedLanguage[]", encoded = true) translatedLanguage: List<String>?,
+        @Query("groups[]", encoded = true) groups: List<String>?
+    ): Response<Aggregate>
+
+    @GET("chapter/{id}")
+    suspend fun getChapter(
+        @Path("id") chapterId: String,
+        @Query("includes[]", encoded = true) includes: List<String>?
+    ): Response<ChapterResponse>
+
+    @Headers("Content-Type: application/json")
+    @POST("https://api.mangadex.network/report")
+    suspend fun postReport(
+        @Body body: ReportBody
+    )
 }

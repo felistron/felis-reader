@@ -3,8 +3,7 @@ package com.felisreader.chapter.di
 import com.felisreader.chapter.data.repository.ChapterRepositoryImp
 import com.felisreader.chapter.data.source.remote.ChapterService
 import com.felisreader.chapter.domain.repository.ChapterRepository
-import com.felisreader.chapter.domain.use_case.ChapterUseCases
-import com.felisreader.chapter.domain.use_case.MangaFeedUseCase
+import com.felisreader.chapter.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,7 +30,11 @@ object ChapterModule {
     @Singleton
     fun provideChapterUseCases(chapterRepository: ChapterRepository): ChapterUseCases {
         return ChapterUseCases(
-            MangaFeedUseCase(chapterRepository)
+            MangaFeedUseCase(chapterRepository),
+            FeedChapterUseCase(chapterRepository),
+            ReportUseCase(chapterRepository),
+            GetAggregateUseCase(chapterRepository),
+            GetChapterUseCase(chapterRepository)
         )
     }
 }

@@ -45,7 +45,7 @@ interface MangaService {
     ): Response<MangaListResponse>
 
     companion object {
-        const val BASE_URL: String = "https://api.mangadex.org"
+        const val BASE_URL: String = "https://api.mangadex.org/"
         const val UPLOADS_BASE_URL: String = "https://uploads.mangadex.org"
     }
 }

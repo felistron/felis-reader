@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.felisreader.chapter.presentation.chapter_lector.LectorScreen
 import com.felisreader.chapter.presentation.chapter_list.ChapterListScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
 import com.felisreader.manga.presentation.manga_search.SearchScreen
@@ -66,8 +67,25 @@ fun AppNavigation(
             it.arguments?.getString("id")?.let { it1 ->
                 ChapterListScreen(
                     mangaId = it1,
-                    navigateToLector = { /*TODO: Navigate to lector screen*/ }
+                    navigateToLector = { id ->
+                        navController.navigate(Screen.LectorScreen(id).route) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
+            }
+        }
+        composable(
+            route = Screen.LectorScreen().route,
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        ) {
+            it.arguments?.getString("id")?.let { chapterId ->
+                LectorScreen(chapterId = chapterId)
             }
         }
     }
