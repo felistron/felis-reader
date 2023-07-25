@@ -43,6 +43,8 @@ fun MangaCard(
                     onTagClick = {},
                     contentRating = if (manga.contentRating != ContentRating.SAFE) manga.contentRating else null,
                     onContentRatingClick = {},
+                    demography = manga.demography,
+                    onDemographyClick = {}
                 )
                 Text(
                     text = manga.description,

@@ -74,7 +74,8 @@ class MangaUtil {
                         "raw" -> LinkType.RAW(it.value)
                         else -> null
                     }
-                }
+                },
+                demography = mangaEntity.attributes.publicationDemographic
             )
         }
     }
