@@ -1,8 +1,9 @@
 package com.felisreader.chapter.data.repository
 
 import com.felisreader.chapter.data.source.remote.ChapterService
-import com.felisreader.chapter.domain.model.api.FeedQuery
-import com.felisreader.chapter.domain.model.api.FeedResponse
+import com.felisreader.chapter.domain.model.Aggregate
+import com.felisreader.chapter.domain.model.api.AtHomeResponse
+import com.felisreader.chapter.domain.model.api.*
 import com.felisreader.chapter.domain.repository.ChapterRepository
 import retrofit2.Response
 
@@ -32,5 +33,31 @@ class ChapterRepositoryImp(
         )
 
         return response.body()
+    }
+
+    override suspend fun getChapterFeed(chapterId: String): AtHomeResponse? {
+        val response: Response<AtHomeResponse> = chapterService.getChapterFeed(chapterId)
+        return response.body()
+    }
+
+    override suspend fun getAggregate(query: AggregateQuery): Aggregate? {
+        val response: Response<Aggregate> = chapterService.getAggregate(
+            id = query.mangaId,
+            translatedLanguage = query.translatedLanguage,
+            groups = query.groups
+        )
+        return response.body()
+    }
+
+    override suspend fun getChapter(query: ChapterQuery): ChapterResponse? {
+        val response: Response<ChapterResponse> = chapterService.getChapter(
+            chapterId = query.chapterId,
+            includes = query.includes?.map { it.name.lowercase() }
+        )
+        return response.body()
+    }
+
+    override suspend fun postReport(body: ReportBody) {
+        chapterService.postReport(body)
     }
 }

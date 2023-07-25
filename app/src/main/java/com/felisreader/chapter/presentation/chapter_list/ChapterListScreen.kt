@@ -27,7 +27,9 @@ fun ChapterListScreen(
     navigateToLector: (chapterId: String) -> Unit
 ) {
     LaunchedEffect(true) {
-        viewModel.onEvent(ChapterListEvent.FeedChapters(mangaId))
+        if (viewModel.state.value.loading) {
+            viewModel.onEvent(ChapterListEvent.FeedChapters(mangaId))
+        }
     }
 
     ChapterListContent(

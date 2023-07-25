@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.felisreader.core.presentation.Toolbar
 import com.felisreader.ui.theme.FelisReaderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,14 +34,6 @@ class MainActivity : ComponentActivity() {
                 scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
                 Scaffold(
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    topBar = {
-                        Toolbar(
-                            navigation = navController,
-                            title = "",
-                            scrollBehavior = scrollBehavior
-                        )
-                    },
                     content = {
                         Surface(
                             modifier = Modifier
