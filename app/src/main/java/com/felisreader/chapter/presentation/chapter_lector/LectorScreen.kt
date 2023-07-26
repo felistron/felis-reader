@@ -151,6 +151,8 @@ fun NavigationField(
                 Text(text = "Ch. ${prevChapter.chapter}")
             }
         }
+        
+        Spacer(modifier = Modifier.height(1.dp))
 
         if (nextChapter != null) {
             Button(
