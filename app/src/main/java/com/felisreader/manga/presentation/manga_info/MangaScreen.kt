@@ -60,6 +60,7 @@ fun MangaContent(
                     .verticalScroll(state = state.scrollState),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Spacer(modifier = Modifier.height(20.dp))
                 CoverField(state.manga.coverUrl)
                 TitleField(state.manga)
                 TagChipGroup(
@@ -84,6 +85,7 @@ fun MangaContent(
                     onEvent = onEvent,
                     isDescriptionCollapsed = state.isDescriptionCollapsed
                 )
+                Spacer(modifier = Modifier.height(20.dp))
             }
         } else {
             Text(text = "error fetching data")

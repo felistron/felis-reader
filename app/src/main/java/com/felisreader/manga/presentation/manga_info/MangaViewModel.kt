@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.EntityType
 import com.felisreader.manga.domain.model.Manga
+import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,9 +24,18 @@ class MangaViewModel @Inject constructor(
         when (event) {
             is MangaEvent.ToggleDescription -> toggleCollapseDescription()
             is MangaEvent.LoadManga -> {
+
+
                 viewModelScope.launch {
+                    val response: StatisticsResponse? = mangaUseCases.getMangaStatistics(event.id)
+
                     val manga: Manga? = getManga(event.id)
-                    _state.value = _state.value.copy(manga = manga)
+
+                    _state.value = _state.value.copy(
+                        manga = manga?.copy(
+                            statistics = response?.statistics?.get(event.id)
+                        )
+                    )
                 }
             }
         }
