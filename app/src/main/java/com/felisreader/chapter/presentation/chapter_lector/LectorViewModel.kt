@@ -83,7 +83,9 @@ class LectorViewModel @Inject constructor(
                             loading = false
                         )
 
-                        _state.value.lazyListState.scrollToItem(0)
+                        if (_state.value.images.size > 1) {
+                            _state.value.lazyListState.scrollToItem(0)
+                        }
                     }
                 }
             }
