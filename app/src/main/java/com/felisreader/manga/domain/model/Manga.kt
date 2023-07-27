@@ -18,5 +18,6 @@ data class Manga(
     val demography: PublicationDemographic?,
     val year: Int?,
     val status: Status,
-    val links: List<LinkType?>
+    val links: List<LinkType?>,
+    val statistics: Statistics?
 )

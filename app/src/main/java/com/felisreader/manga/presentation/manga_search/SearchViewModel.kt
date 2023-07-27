@@ -174,10 +174,22 @@ class SearchViewModel @Inject constructor(
 
         val list = mangaUseCases.getMangaList(query)
 
+        val ids = list?.data?.map {
+            it.id
+        } ?: emptyList()
+
+        val stats = mangaUseCases.getMangaStatistics(ids)
+
         _state.value = _state.value.copy(
             loading = false
         )
 
-        return list
+        return list?.copy(
+            data = list.data.map {
+                it.copy(
+                    statistics = stats?.statistics?.get(it.id)
+                )
+            }
+        )
     }
 }

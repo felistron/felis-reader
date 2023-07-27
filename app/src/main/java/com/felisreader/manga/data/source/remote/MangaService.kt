@@ -3,6 +3,7 @@ package com.felisreader.manga.data.source.remote
 import com.felisreader.core.domain.*
 import com.felisreader.manga.domain.model.api.MangaListResponse
 import com.felisreader.manga.domain.model.api.MangaResponse
+import com.felisreader.manga.domain.model.api.StatisticsResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -43,6 +44,16 @@ interface MangaService {
         @Query("hasAvailableChapters") hasAvailableChapters: Boolean?,
         @Query("group") group: String?,
     ): Response<MangaListResponse>
+
+    @GET("statistics/manga")
+    suspend fun getStatistics(
+        @Query("manga[]", encoded = true) manga: List<String>?
+    ): Response<StatisticsResponse>
+
+    @GET("statistics/manga/{id}")
+    suspend fun getMangaStatistics(
+        @Path("id") id: String
+    ): Response<StatisticsResponse>
 
     companion object {
         const val BASE_URL: String = "https://api.mangadex.org/"

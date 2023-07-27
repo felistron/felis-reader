@@ -4,6 +4,7 @@ import com.felisreader.manga.data.repository.MangaRepositoryImp
 import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.repository.MangaRepository
 import com.felisreader.manga.domain.use_case.GetMangaListUseCase
+import com.felisreader.manga.domain.use_case.GetMangaStatisticsUseCase
 import com.felisreader.manga.domain.use_case.GetMangaUseCase
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.Module
@@ -30,10 +31,11 @@ object MangaModule {
 
     @Provides
     @Singleton
-    fun provideMangaUseCases(mangaRepository: MangaRepository): MangaUseCases {
+    fun provideMangaUseCases(repository: MangaRepository): MangaUseCases {
         return MangaUseCases(
-            GetMangaUseCase(mangaRepository),
-            GetMangaListUseCase(mangaRepository)
+            GetMangaUseCase(repository),
+            GetMangaListUseCase(repository),
+            GetMangaStatisticsUseCase(repository)
         )
     }
 }

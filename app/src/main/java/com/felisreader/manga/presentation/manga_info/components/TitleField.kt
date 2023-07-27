@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.felisreader.manga.domain.model.Manga
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TitleField(manga: Manga) {
     Column(
@@ -43,8 +41,6 @@ fun TitleField(manga: Manga) {
         )
         Spacer(modifier = Modifier.height(5.dp))
         AssistChip(
-            modifier = Modifier
-                .widthIn(50.dp, 200.dp),
             onClick = { /*TODO*/ },
             label = {
                 Text(
