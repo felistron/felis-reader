@@ -50,7 +50,9 @@ class LectorViewModel @Inject constructor(
 
                                 val aggregate: Aggregate? = useCases.aggregate(AggregateQuery(
                                     mangaId = mangaRelationship?.id.toString(),
-                                    translatedLanguage = if (chapter.data.attributes.translatedLanguage == null) null else listOf(chapter.data.attributes.translatedLanguage),
+                                    translatedLanguage =
+                                        if (chapter.data.attributes.translatedLanguage == null) null
+                                        else listOf(chapter.data.attributes.translatedLanguage),
                                 ))
 
                                 aggregate?.volumes!!.flatMap {
@@ -65,14 +67,19 @@ class LectorViewModel @Inject constructor(
                         }
 
                         val prevIndex = chapterIdList.indexOf(
-                            chapterIdList.find { it.id == chapter.data.id.toString() }
+                            chapterIdList.find {
+                                it.id == chapter.data.id || it.others.contains(chapter.data.id)
+                            }
                         ) - 1
 
                         val nextIndex = chapterIdList.indexOf(
-                            chapterIdList.find { it.id == chapter.data.id.toString() }
+                            chapterIdList.find {
+                                it.id == chapter.data.id || it.others.contains(chapter.data.id)
+                            }
                         ) + 1
 
                         _state.value = _state.value.copy(
+                            // TODO: Select quality based on user preferences
                             images = atHome.chapter.data.map { fileName ->
                                 "${atHome.baseUrl}/data/${atHome.chapter.hash}/${fileName}"
                             },
