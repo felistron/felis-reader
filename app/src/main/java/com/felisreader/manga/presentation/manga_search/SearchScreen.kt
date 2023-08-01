@@ -1,11 +1,11 @@
 package com.felisreader.manga.presentation.manga_search
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,12 +13,19 @@ import com.felisreader.manga.presentation.manga_info.components.Loading
 import com.felisreader.manga.presentation.manga_search.components.FilterField
 import com.felisreader.manga.presentation.manga_search.components.MangaCard
 import com.felisreader.manga.presentation.manga_search.components.SearchField
+import com.felisreader.manga.presentation.manga_search.components.WelcomeDialog
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     onNavigateToInfo: (id: String) -> Unit
 ) {
+
+    AnimatedVisibility(viewModel.state.value.welcomeDialogVisible) {
+        WelcomeDialog(onClose = { viewModel.onEvent(SearchEvent.CloseWelcomeDialog(it)) })
+    }
+
+    
     Column {
         SearchField(
             state = viewModel.state.value,
