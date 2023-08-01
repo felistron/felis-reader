@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.MangaListQuery
 import com.felisreader.core.domain.use_case.HistoryUseCases
+import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.MangaList
 import com.felisreader.manga.domain.use_case.MangaUseCases
@@ -18,12 +19,19 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val mangaUseCases: MangaUseCases,
-    private val historyUseCases: HistoryUseCases
+    private val historyUseCases: HistoryUseCases,
+    private val dataStore: DataStoreManager
 ): ViewModel() {
     private val _state: MutableState<SearchState> = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
 
     init {
+        viewModelScope.launch {
+            dataStore.getPreferences().collect {
+                _state.value = _state.value.copy(welcomeDialogVisible = it.showWelcome)
+            }
+        }
+
         viewModelScope.launch {
             val mangaList: MangaList? = getMangaList(_state.value.query)
 
@@ -39,7 +47,9 @@ class SearchViewModel @Inject constructor(
                     mangaList = mangaList
                 )
             }
+        }
 
+        viewModelScope.launch {
             historyUseCases.getHistory().collect {
                 _state.value = _state.value.copy(
                     searchHistory = it
@@ -115,6 +125,17 @@ class SearchViewModel @Inject constructor(
                         _state.value = _state.value.copy(
                             searchHistory = it
                         )
+                    }
+                }
+            }
+            is SearchEvent.CloseWelcomeDialog -> {
+                _state.value = _state.value.copy(
+                    welcomeDialogVisible = false
+                )
+
+                viewModelScope.launch {
+                    dataStore.getPreferences().collect {
+                        dataStore.savePreferences(it.copy(showWelcome = event.showAgain))
                     }
                 }
             }

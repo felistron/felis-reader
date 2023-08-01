@@ -22,7 +22,8 @@ data class SearchState(
     val canLoadMore: Boolean = true,
     val expandedFilter: Boolean = false,
     val searchBarActive: Boolean = false,
-    val searchHistory: List<SearchHistoryEntity> = emptyList()
+    val searchHistory: List<SearchHistoryEntity> = emptyList(),
+    val welcomeDialogVisible: Boolean = false // keep false
 ) {
     companion object {
         const val LIMIT: Int = 20

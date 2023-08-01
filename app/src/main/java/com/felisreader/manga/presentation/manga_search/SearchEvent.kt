@@ -10,4 +10,5 @@ sealed class SearchEvent {
     data class ApplyFilter(val query: MangaListQuery): SearchEvent()
     data class DeleteHistoryItem(val item: SearchHistoryEntity): SearchEvent()
     data class AddHistoryItem(val content: String, val timestamp: Long): SearchEvent()
+    data class CloseWelcomeDialog(val showAgain: Boolean): SearchEvent()
 }
