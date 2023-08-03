@@ -6,7 +6,19 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+def keystorePropertiesFile= rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyPassword keystoreProperties['keyPassword']
+            keyAlias keystoreProperties['keyAlias']
+        }
+    }
     namespace 'com.felisreader'
     compileSdk 33
 
@@ -27,6 +39,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
         }
     }
     compileOptions {
