@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Felis Reader</string>
+    <string name="app_version">v0.1.0-beta</string>
+    <string name="welcome_body">Bienvenido y gracias por utilizar Felis Reader, una aplicación desarrollada por una única persona para poder disfrutar del pasatiempo de leer mangas, doujinshis y manhwas en cualquier lugar. Por ahora la aplicación se encuentra en una fase temprana de desarrollo por lo que es de esperar que ocurran errores y crasheos, si cualquiera de los dos sucede puedes reportarlo uniéndote al servidor de Discord. Gracias especiales a MangaDex por permitir el uso de su API.</string>
+    <string name="welcome_discord">Discord</string>
+    <string name="welcome_dismiss">Entendido</string>
+    <string name="welcome_dont_show">No volver a mostrar</string>
 </resources>

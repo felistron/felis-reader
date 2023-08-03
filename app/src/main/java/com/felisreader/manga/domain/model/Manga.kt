@@ -1,7 +1,9 @@
 package com.felisreader.manga.domain.model
 
-import com.felisreader.core.domain.ContentRating
-import com.felisreader.core.domain.Status
+import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.core.domain.model.LinkType
+import com.felisreader.core.domain.model.PublicationDemographic
+import com.felisreader.core.domain.model.Status
 
 data class Manga(
     val id: String,
@@ -13,6 +15,9 @@ data class Manga(
     val author: Author,
     val tags: List<TagEntity>,
     val contentRating: ContentRating,
+    val demography: PublicationDemographic?,
     val year: Int?,
-    val status: Status
+    val status: Status,
+    val links: List<LinkType?>,
+    val statistics: Statistics?
 )

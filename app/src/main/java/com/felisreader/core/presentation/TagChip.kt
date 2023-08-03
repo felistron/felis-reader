@@ -3,19 +3,18 @@ package com.felisreader.core.presentation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.felisreader.core.domain.ContentRating
-import com.felisreader.core.domain.EntityType
+import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.PublicationDemographic
 import com.felisreader.manga.domain.model.TagAttributes
 import com.felisreader.manga.domain.model.TagEntity
 import com.felisreader.manga.domain.model.TagGroup
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TagChip(
     tagName: String,
@@ -60,13 +59,15 @@ private fun TagChipPreview() {
 fun TagChipGroup(
     modifier: Modifier = Modifier,
     tags: List<TagEntity>,
-    onTagClick: (String) -> Unit,
+    onTagClick: (tagId: String) -> Unit,
     contentRating: ContentRating? = null,
-    onContentRatingClick: (String) -> Unit = { }
+    onContentRatingClick: (contentRating: String) -> Unit = { },
+    demography: PublicationDemographic? = null,
+    onDemographyClick: (demography: String) -> Unit = { }
 ) {
     FlowRow(
         modifier = modifier,
-        verticalAlignment = Alignment.Top,
+        verticalArrangement = Arrangement.Top,
         horizontalArrangement = Arrangement.Start
     ) {
         if (contentRating != null) {
@@ -77,11 +78,19 @@ fun TagChipGroup(
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
             )
         }
+        if (demography != null) {
+            TagChip(
+                tagName = demography.value,
+                onClick = { onDemographyClick(demography.name.lowercase()) },
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
+            )
+        }
         tags.forEach {
             TagChip(
                 tagName = it.attributes.name["en"].toString(),
                 onClick = { onTagClick(it.id.toString()) },
-                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp),
+                nsfw = it.attributes.group == TagGroup.CONTENT
             )
         }
     }
