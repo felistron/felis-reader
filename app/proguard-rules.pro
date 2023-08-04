@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep Data classes
+-keep public class com.felisreader.*.domain.model.** { *; }
+
+# Keep Enums
+-keep public enum com.felisreader.** { *; }
