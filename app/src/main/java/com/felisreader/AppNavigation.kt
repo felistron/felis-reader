@@ -5,10 +5,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.felisreader.chapter.presentation.chapter_lector.LectorScreen
 import com.felisreader.chapter.presentation.chapter_list.ChapterListScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
@@ -29,60 +27,53 @@ fun AppNavigation(
             route = Screen.SearchScreen.route
         ) {
             SearchScreen(
-                onNavigateToInfo = { id ->
-                    navController.navigate(Screen.MangaScreen(id).route) {
+                navigateToInfo = { mangaId ->
+                    navController.navigate(Screen.InfoScreen(mangaId).route) {
                         launchSingleTop = true
                     }
                 }
             )
         }
+
         composable(
-            route = Screen.MangaScreen().route,
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.StringType
-                }
-            )
+            route = Screen.InfoScreen().route,
+            arguments = Screen.InfoScreen().args
         ) {
-            MangaScreen(
-                mangaId = it.arguments?.getString("id").toString(),
-                navigateToFeed = { id ->
-                    navController.navigate(Screen.ChapterListScreen(id).route) {
-                        launchSingleTop = true
-                        popUpTo(Screen.MangaScreen(id).route) {
-                            inclusive = false
+            it.arguments?.getString("id")?.let { mangaId ->
+                MangaScreen(
+                    mangaId = mangaId,
+                    navigateToFeed = {
+                        navController.navigate(Screen.ChapterListScreen(mangaId).route) {
+                            launchSingleTop = true
+
+                            popUpTo(Screen.InfoScreen(mangaId).route) {
+                                inclusive = false
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
+
         composable(
             route = Screen.ChapterListScreen().route,
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.StringType
-                }
-            )
+            arguments = Screen.ChapterListScreen().args
         ) {
-            it.arguments?.getString("id")?.let { it1 ->
+            it.arguments?.getString("id")?.let { mangaId ->
                 ChapterListScreen(
-                    mangaId = it1,
-                    navigateToLector = { id ->
-                        navController.navigate(Screen.LectorScreen(id).route) {
+                    mangaId = mangaId,
+                    navigateToLector = { chapterId ->
+                        navController.navigate(Screen.LectorScreen(chapterId).route) {
                             launchSingleTop = true
                         }
                     }
                 )
             }
         }
+
         composable(
             route = Screen.LectorScreen().route,
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.StringType
-                    nullable = false
-                }
-            )
+            arguments = Screen.LectorScreen().args
         ) {
             it.arguments?.getString("id")?.let { chapterId ->
                 LectorScreen(chapterId = chapterId)

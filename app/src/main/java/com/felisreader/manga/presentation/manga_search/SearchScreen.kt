@@ -18,7 +18,7 @@ import com.felisreader.manga.presentation.manga_search.components.WelcomeDialog
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
-    onNavigateToInfo: (id: String) -> Unit
+    navigateToInfo: (id: String) -> Unit
 ) {
 
     AnimatedVisibility(viewModel.state.value.welcomeDialogVisible) {
@@ -34,7 +34,7 @@ fun SearchScreen(
         SearchContent(
             state = viewModel.state.value,
             onEvent = viewModel::onEvent,
-            onNavigateToInfo = onNavigateToInfo
+            navigateToInfo = navigateToInfo
         )
     }
 }
@@ -43,7 +43,7 @@ fun SearchScreen(
 fun SearchContent(
     state: SearchState,
     onEvent: (SearchEvent) -> Unit,
-    onNavigateToInfo: (id: String) -> Unit
+    navigateToInfo: (id: String) -> Unit
 ) {
     if (state.loading && state.mangaList == null) {
         Loading(
@@ -72,10 +72,10 @@ fun SearchContent(
                 items(
                     items = state.mangaList.data,
                     key = { it.id }
-                ) {
+                ) { manga ->
                     MangaCard(
-                        manga = it,
-                        onCardClick = { onNavigateToInfo(it.id) }
+                        manga = manga,
+                        onCardClick = { navigateToInfo(manga.id) }
                     )
                 }
                 if (state.canLoadMore) {

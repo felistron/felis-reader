@@ -26,7 +26,7 @@ import com.felisreader.manga.presentation.manga_info.components.*
 fun MangaScreen(
     viewModel: MangaViewModel = hiltViewModel(),
     mangaId: String,
-    navigateToFeed: (mangaId: String) -> Unit
+    navigateToFeed: () -> Unit
 ) {
     LaunchedEffect(true) {
         if (viewModel.state.value.loading) {
@@ -45,7 +45,7 @@ fun MangaScreen(
 fun MangaContent(
     state: MangaState,
     onEvent: (MangaEvent) -> Unit,
-    navigateToFeed: (mangaId: String) -> Unit
+    navigateToFeed: () -> Unit
 ) {
     if (state.loading) {
         Loading(
@@ -76,7 +76,7 @@ fun MangaContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(onClick = { navigateToFeed(state.manga.id) }) {
+                    Button(onClick = navigateToFeed) {
                         Text(text = "See chapters")
                     }
                 }
