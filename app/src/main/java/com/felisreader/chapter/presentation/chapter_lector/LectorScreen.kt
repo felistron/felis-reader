@@ -13,9 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.felisreader.R
 import com.felisreader.chapter.presentation.chapter_lector.components.NavigationField
 import com.felisreader.chapter.presentation.chapter_lector.components.PageImage
 import com.felisreader.manga.presentation.manga_info.components.Loading
@@ -113,7 +115,7 @@ fun LectorContent(
                     ) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = if (state.chapter.attributes.title.isNullOrBlank()) "Chapter ${state.chapter.attributes.chapter}"
+                            text = if (state.chapter.attributes.title.isNullOrBlank()) "${stringResource(id = R.string.chapter)} ${state.chapter.attributes.chapter}"
                                     else state.chapter.attributes.title,
                             style = MaterialTheme.typography.titleMedium,
                             textAlign = TextAlign.Center

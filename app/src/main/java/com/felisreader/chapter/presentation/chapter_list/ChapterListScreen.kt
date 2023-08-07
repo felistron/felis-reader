@@ -12,8 +12,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.felisreader.R
 import com.felisreader.chapter.presentation.chapter_list.components.ChapterCard
 import com.felisreader.core.domain.model.OrderType
 import com.felisreader.core.util.ChapterUtil.groupByVolumeAndChapter
@@ -60,7 +62,7 @@ fun ChapterListContent(
                     selected = state.order is OrderType.Ascending,
                     onClick = { onEvent(ChapterListEvent.ToggleOrder) },
                     label = {
-                        Text(text = if (state.order is OrderType.Descending) "Descending" else "Ascending")
+                        Text(text = if (state.order is OrderType.Descending) stringResource(id = R.string.order_descending) else stringResource(id = R.string.order_ascending))
                     },
                     leadingIcon = {
                         Icon(
@@ -84,7 +86,7 @@ fun ChapterListContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
-                            text = "Volume $volume",
+                            text = "${stringResource(id = R.string.volume)} $volume",
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
@@ -101,7 +103,7 @@ fun ChapterListContent(
                                 .padding(horizontal = 20.dp),
                         ) {
                             Text(
-                                text = "Chapter $chapter",
+                                text = "${stringResource(id = R.string.chapter)} $chapter",
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Divider()

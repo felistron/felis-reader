@@ -14,8 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.felisreader.R
 import com.felisreader.chapter.domain.model.Chapter
 import com.felisreader.core.util.ChapterUtil
 import java.time.LocalDateTime
@@ -71,7 +73,7 @@ fun ChapterCard(
                 )
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = if (chapter.attributes.title.isNullOrBlank()) "Chapter ${chapter.attributes.chapter}" else chapter.attributes.title,
+                    text = if (chapter.attributes.title.isNullOrBlank()) "${stringResource(id = R.string.chapter)} ${chapter.attributes.chapter}" else chapter.attributes.title,
                     style = MaterialTheme.typography.titleMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
@@ -105,7 +107,10 @@ fun ChapterCard(
                         AssistChip(
                             onClick = { /*TODO: See Scanlation group info */ },
                             label = {
-                                Text(text = ChapterUtil.getScanlationGroups(chapter).firstOrNull() ?: "No group")
+                                Text(
+                                    text = ChapterUtil.getScanlationGroups(chapter).firstOrNull()
+                                        ?: stringResource(id = R.string.no_group)
+                                )
                             },
                             leadingIcon = {
                                 Icon(imageVector = Icons.Outlined.Group, contentDescription = "Group Icon")
@@ -115,7 +120,10 @@ fun ChapterCard(
                         AssistChip(
                             onClick = { /*TODO: See Uploader info*/ },
                             label = {
-                                Text(text = ChapterUtil.getUploaders(chapter).firstOrNull() ?: "No user")
+                                Text(
+                                    text = ChapterUtil.getUploaders(chapter).firstOrNull()
+                                        ?: stringResource(id = R.string.no_user)
+                                )
                             },
                             leadingIcon = {
                                 Icon(imageVector = Icons.Outlined.Person, contentDescription = "Person Icon")
@@ -142,7 +150,7 @@ fun ChapterCard(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Button(
-                                onClick = { onButtonClick(chapter.id.toString()) },
+                                onClick = { onButtonClick(chapter.id) },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -152,7 +160,7 @@ fun ChapterCard(
                                     imageVector = Icons.Outlined.Book,
                                     contentDescription = "Book Icon"
                                 )
-                                Text(text = "Read now")
+                                Text(text = stringResource(id = R.string.read_now))
                             }
                         }
                     }

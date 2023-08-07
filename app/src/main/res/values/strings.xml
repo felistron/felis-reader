@@ -1,19 +1,41 @@
 <resources>
-    <string name="app_name">Felis Reader</string>
+    <string name="app_name" translatable="false">Felis Reader</string>
     <string name="welcome_body">Bienvenido y gracias por utilizar Felis Reader, una aplicación desarrollada por una única persona para poder disfrutar del pasatiempo de leer mangas, doujinshis y manhwas en cualquier lugar. Por ahora la aplicación se encuentra en una fase temprana de desarrollo por lo que es de esperar que ocurran errores y crasheos, si cualquiera de los dos sucede puedes reportarlo uniéndote al servidor de Discord. Gracias especiales a MangaDex por permitir el uso de su API.</string>
-    <string name="welcome_discord">Discord</string>
-    <string name="welcome_dismiss">Entendido</string>
-    <string name="welcome_dont_show">No volver a mostrar</string>
+    <string name="welcome_discord" translatable="false">Discord</string>
+    <string name="welcome_dismiss">Got it</string>
+    <string name="welcome_dont_show">Don\'t show again</string>
+    <string name="content_rating">Content rating</string>
     <string name="content_rating_safe">Safe</string>
     <string name="content_rating_suggestive">Suggestive</string>
     <string name="content_rating_erotica">Erotica</string>
     <string name="content_rating_pornographic">Pornographic</string>
-    <string name="demography_shonen">Shonen</string>
-    <string name="demography_shoujo">Shoujo</string>
-    <string name="demography_seinen">Seinen</string>
-    <string name="demography_josei">Josei</string>
+    <string name="demography">Magazine demographic</string>
+    <string name="demography_shounen" translatable="false">Shounen</string>
+    <string name="demography_shoujo" translatable="false">Shoujo</string>
+    <string name="demography_seinen" translatable="false">Seinen</string>
+    <string name="demography_josei" translatable="false">Josei</string>
+    <string name="status">Status</string>
     <string name="status_completed">Completed</string>
     <string name="status_ongoing">Ongoing</string>
     <string name="status_cancelled">Cancelled</string>
-    <string name="status_hiatus">Hiatus</string>
+    <string name="status_hiatus" translatable="false">Hiatus</string>
+    <string name="filter">Filter</string>
+    <string name="filter_any">Any</string>
+    <string name="filter_apply">Apply changes</string>
+    <string name="search_by_title">Search by title</string>
+    <string name="year">Year</string>
+    <string name="see_chapters">See chapters</string>
+    <string name="description">Description</string>
+    <string name="links">Links</string>
+    <string name="chapter">Chapter</string>
+    <string name="chapter_short">Ch.</string>
+    <string name="volume">Volume</string>
+    <string name="volume_short">Vol.</string>
+    <string name="no_user">No user</string>
+    <string name="no_group">No group</string>
+    <string name="read_now">Read now</string>
+    <string name="order_descending">Descending</string>
+    <string name="order_ascending">Ascending</string>
+    <string name="previous_chapter">Previous chapter</string>
+    <string name="next_chapter">Next chapter</string>
 </resources>

@@ -22,7 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.felisreader.R
 import com.felisreader.manga.presentation.manga_search.SearchEvent
 import com.felisreader.manga.presentation.manga_search.SearchState
 
@@ -62,7 +64,7 @@ fun SearchField(
             onEvent(SearchEvent.SearchBarActive(it))
         },
         placeholder = {
-            Text(text = "Search by title")
+            Text(text = stringResource(id = R.string.search_by_title))
         },
         leadingIcon = {
             Icon(
