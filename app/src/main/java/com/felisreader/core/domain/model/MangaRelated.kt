@@ -2,37 +2,52 @@ package com.felisreader.core.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-enum class MangaRelated {
+enum class MangaRelated(val apiName: String) {
     @SerializedName("monochrome")
-    MONOCHROME,
+    MONOCHROME("monochrome"),
+
     @SerializedName("main")
-    MAIN_STORY,
+    MAIN_STORY("main"),
+
     @SerializedName("adapted_from")
-    ADAPTED_FROM,
+    ADAPTED_FROM("adapted_from"),
+
     @SerializedName("based_on")
-    BASED_ON,
+    BASED_ON("based_on"),
+
     @SerializedName("prequel")
-    PREQUEL,
+    PREQUEL("prequel"),
+
     @SerializedName("side_story")
-    SIDE_STORY,
+    SIDE_STORY("side_Story"),
+
     @SerializedName("doujinshi")
-    DOUJINSHI,
+    DOUJINSHI("doujinshi"),
+
     @SerializedName("same_franchise")
-    SAME_FRANCHISE,
+    SAME_FRANCHISE("same_franchise"),
+
     @SerializedName("shared_universe")
-    SHARED_UNIVERSE,
+    SHARED_UNIVERSE("shared_universe"),
+
     @SerializedName("sequel")
-    SEQUEL,
+    SEQUEL("sequel"),
+
     @SerializedName("spin_off")
-    SPIN_OFF,
+    SPIN_OFF("spin_off"),
+
     @SerializedName("alternate_story")
-    ALTERNATE_STORY,
+    ALTERNATE_STORY("alternate_story"),
+
     @SerializedName("alternate_version")
-    ALTERNATE_VERSION,
+    ALTERNATE_VERSION("alternate_version"),
+
     @SerializedName("preserialization")
-    PRESERIALIZATION,
+    PRESERIALIZATION("preserialization"),
+
     @SerializedName("colored")
-    COLORED,
+    COLORED("colored"),
+
     @SerializedName("serialization")
-    SERIALIZATION
+    SERIALIZATION("serialization")
 }

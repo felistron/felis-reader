@@ -15,7 +15,7 @@ class MangaRepositoryImp(
     override suspend fun getMangaById(id: String, includes: List<EntityType>?): MangaResponse? {
         val response: Response<MangaResponse> = mangaService.getMangaById(
             id = id,
-            includes = includes?.map { it.value }
+            includes = includes?.map { it.apiName }
         )
         return response.body()
     }
@@ -33,17 +33,17 @@ class MangaRepositoryImp(
             includedTagsMode = req.includedTagsMode?.name,
             excludedTags = req.excludedTags,
             excludedTagsMode = req.excludedTagsMode?.name,
-            status = req.status?.map { it.name.lowercase() },
+            status = req.status?.map { it.apiName },
             originalLanguage = req.originalLanguage,
             excludedOriginalLanguage = req.excludedOriginalLanguage,
             availableTranslatedLanguage = req.availableTranslatedLanguage,
-            publicationDemographic = req.publicationDemographic?.map { it.name.lowercase() },
+            publicationDemographic = req.publicationDemographic?.map { it.apiName },
             ids = req.ids,
-            contentRating = req.contentRating?.map { it.name.lowercase() },
+            contentRating = req.contentRating?.map { it.apiName },
             createdAtSince = null,
             updatedAtSince = null,
             order = req.order?.associate { "order[${it.name}]" to it.orderType.name } ?: emptyMap(),
-            includes = req.includes?.map { it.value },
+            includes = req.includes?.map { it.apiName },
             hasAvailableChapters = req.hasAvailableChapters,
             group = req.group
         )

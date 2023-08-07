@@ -2,13 +2,16 @@ package com.felisreader.core.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-enum class ContentRating(val value: String) {
+enum class ContentRating(val apiName: String) {
     @SerializedName("safe")
-    SAFE("Safe"),
+    SAFE("safe"),
+
     @SerializedName("suggestive")
-    SUGGESTIVE("Suggestive"),
+    SUGGESTIVE("suggestive"),
+
     @SerializedName("erotica")
-    EROTICA("Erotica"),
+    EROTICA("erotica"),
+
     @SerializedName("pornographic")
-    PORNOGRAPHIC("Pornographic")
+    PORNOGRAPHIC("pornographic")
 }

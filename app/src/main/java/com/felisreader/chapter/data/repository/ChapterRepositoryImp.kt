@@ -18,7 +18,7 @@ class ChapterRepositoryImp(
             translatedLanguage = query.translatedLanguage,
             originalLanguage = query.originalLanguage,
             excludedOriginalLanguage = query.excludedOriginalLanguage,
-            contentRating = query.contentRating?.map { it.name.lowercase() },
+            contentRating = query.contentRating?.map { it.apiName },
             excludedGroups = query.excludedGroups?.map { it.toString() },
             excludedUploaders = query.excludedUploaders?.map { it.toString() },
             includeFutureUpdates = if (query.includeFutureUpdates == true) 1 else 0,
@@ -26,7 +26,7 @@ class ChapterRepositoryImp(
             updatedAtSince = query.updatedAtSince,
             publishAtSince = query.publishAtSince,
             order = query.order?.associate { "order[${it.name}]" to it.orderType.name } ?: emptyMap(),
-            includes = query.includes?.map { it.value },
+            includes = query.includes?.map { it.apiName },
             includeEmptyPages = if (query.includeEmptyPages == true) 1 else 0,
             includeFuturePublishAt = if (query.includeFuturePublishAt == true) 1 else 0,
             includeExternalUrl = if (query.includeExternalUrl == true) 1 else 0,
@@ -52,7 +52,7 @@ class ChapterRepositoryImp(
     override suspend fun getChapter(query: ChapterQuery): ChapterResponse? {
         val response: Response<ChapterResponse> = chapterService.getChapter(
             chapterId = query.chapterId,
-            includes = query.includes?.map { it.name.lowercase() }
+            includes = query.includes?.map { it.apiName }
         )
         return response.body()
     }

@@ -8,6 +8,8 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.felisreader.core.util.MangaUtil
 import com.felisreader.manga.domain.model.Manga
 
 @Composable
@@ -46,7 +48,7 @@ fun StatusField(manga: Manga) {
             onClick = { },
             enabled = false,
             label = {
-                Text(text = manga.status.value)
+                Text(text = stringResource(id = MangaUtil.getStatusResource(manga.status)))
             },
             leadingIcon = {
                 Text(text = "Status:")

@@ -2,13 +2,16 @@ package com.felisreader.core.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-enum class Status(val value: String) {
+enum class Status(val apiName: String) {
     @SerializedName("completed")
-    COMPLETED("Completed"),
+    COMPLETED("completed"),
+
     @SerializedName("ongoing")
-    ONGOING("Ongoing"),
+    ONGOING("ongoing"),
+
     @SerializedName("cancelled")
-    CANCELLED("Cancelled"),
+    CANCELLED("cancelled"),
+
     @SerializedName("hiatus")
-    HIATUS("Hiatus")
+    HIATUS("hiatus")
 }

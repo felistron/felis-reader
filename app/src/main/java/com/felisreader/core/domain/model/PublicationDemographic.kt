@@ -2,13 +2,16 @@ package com.felisreader.core.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-enum class PublicationDemographic(val value: String) {
+enum class PublicationDemographic(val apiName: String) {
     @SerializedName("shounen")
-    SHOUNEN("Shounen"),
+    SHOUNEN("shounen"),
+
     @SerializedName("shoujo")
-    SHOUJO("Shoujo"),
+    SHOUJO("shoujo"),
+
     @SerializedName("josei")
-    JOSEI("Josei"),
+    JOSEI("josei"),
+
     @SerializedName("seinen")
-    SEINEN("Seinen")
+    SEINEN("seinen")
 }

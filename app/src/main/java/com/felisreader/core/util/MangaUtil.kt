@@ -1,8 +1,7 @@
 package com.felisreader.core.util
 
-import com.felisreader.core.domain.model.EntityType
-import com.felisreader.core.domain.model.LinkType
-import com.felisreader.core.domain.model.Relationship
+import com.felisreader.R
+import com.felisreader.core.domain.model.*
 import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.model.Author
 import com.felisreader.manga.domain.model.Manga
@@ -77,5 +76,32 @@ object MangaUtil {
             demography = mangaEntity.attributes.publicationDemographic,
             statistics = null
         )
+    }
+
+    fun getContentRatingResource(contentRating: ContentRating): Int {
+        return when(contentRating) {
+            ContentRating.SAFE -> R.string.content_rating_safe
+            ContentRating.SUGGESTIVE -> R.string.content_rating_suggestive
+            ContentRating.EROTICA -> R.string.content_rating_erotica
+            ContentRating.PORNOGRAPHIC -> R.string.content_rating_pornographic
+        }
+    }
+
+    fun getDemographyResource(demography: PublicationDemographic): Int {
+        return when(demography) {
+            PublicationDemographic.SHOUNEN -> R.string.demography_shonen
+            PublicationDemographic.SHOUJO -> R.string.demography_shoujo
+            PublicationDemographic.SEINEN -> R.string.demography_seinen
+            PublicationDemographic.JOSEI -> R.string.demography_josei
+        }
+    }
+
+    fun getStatusResource(status: Status): Int {
+        return when(status) {
+            Status.COMPLETED -> R.string.status_completed
+            Status.ONGOING -> R.string.status_ongoing
+            Status.CANCELLED -> R.string.status_cancelled
+            Status.HIATUS -> R.string.status_hiatus
+        }
     }
 }

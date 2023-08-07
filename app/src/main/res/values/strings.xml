@@ -4,4 +4,16 @@
     <string name="welcome_discord">Discord</string>
     <string name="welcome_dismiss">Entendido</string>
     <string name="welcome_dont_show">No volver a mostrar</string>
+    <string name="content_rating_safe">Safe</string>
+    <string name="content_rating_suggestive">Suggestive</string>
+    <string name="content_rating_erotica">Erotica</string>
+    <string name="content_rating_pornographic">Pornographic</string>
+    <string name="demography_shonen">Shonen</string>
+    <string name="demography_shoujo">Shoujo</string>
+    <string name="demography_seinen">Seinen</string>
+    <string name="demography_josei">Josei</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_ongoing">Ongoing</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_hiatus">Hiatus</string>
 </resources>

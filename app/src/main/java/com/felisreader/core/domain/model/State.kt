@@ -2,13 +2,16 @@ package com.felisreader.core.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-enum class State {
+enum class State(val apiName: String) {
     @SerializedName("draft")
-    DRAFT,
+    DRAFT("draft"),
+
     @SerializedName("submitted")
-    SUBMITTED,
+    SUBMITTED("submitted"),
+
     @SerializedName("published")
-    PUBLISHED,
+    PUBLISHED("published"),
+
     @SerializedName("rejected")
-    REJECTED
+    REJECTED("rejected")
 }
