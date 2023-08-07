@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
 import com.felisreader.chapter.presentation.chapter_lector.components.NavigationField
 import com.felisreader.chapter.presentation.chapter_lector.components.PageImage
-import com.felisreader.manga.presentation.manga_info.components.Loading
+import com.felisreader.core.presentation.Loading
 import kotlinx.coroutines.launch
 
 @Composable

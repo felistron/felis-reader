@@ -12,7 +12,7 @@
     <string name="status_completed">Completado</string>
     <string name="status_ongoing">En publicación</string>
     <string name="status_cancelled">Cancelado</string>
-    <string name="filter">Filtro</string>
+    <string name="filter">Filtrar</string>
     <string name="filter_any">Cualquiera</string>
     <string name="filter_apply">Aplicar cambios</string>
     <string name="search_by_title">Buscar por titulo</string>

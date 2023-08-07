@@ -1,4 +1,4 @@
-package com.felisreader.manga.presentation.manga_info.components
+package com.felisreader.core.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator

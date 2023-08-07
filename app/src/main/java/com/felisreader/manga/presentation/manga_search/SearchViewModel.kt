@@ -6,11 +6,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.core.domain.model.MangaListQuery
+import com.felisreader.core.domain.model.SearchHistoryEntity
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.MangaList
+import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,54 +23,45 @@ class SearchViewModel @Inject constructor(
     private val historyUseCases: HistoryUseCases,
     private val dataStore: DataStoreManager
 ): ViewModel() {
+
     private val _state: MutableState<SearchState> = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
 
     init {
         viewModelScope.launch {
-            dataStore.getPreferences().collect {
-                _state.value = _state.value.copy(welcomeDialogVisible = it.showWelcome)
+            dataStore.getPreferences().collect { preferences ->
+                _state.value = _state.value.copy(welcomeDialogVisible = preferences.showWelcome)
             }
         }
 
         viewModelScope.launch {
-            val mangaList: MangaList? = getMangaList(_state.value.query)
-
-            if (mangaList != null) {
-
-                if (mangaList.limit == mangaList.total) {
-                    _state.value = _state.value.copy(
-                        canLoadMore = false
-                    )
-                }
+            getMangaList()?.let { mangaList ->
+                val canLoadMore = mangaList.data.size < mangaList.total
 
                 _state.value = _state.value.copy(
-                    mangaList = mangaList
+                    mangaList = mangaList,
+                    canLoadMore = canLoadMore
                 )
             }
         }
 
         viewModelScope.launch {
-            historyUseCases.getHistory().collect {
-                _state.value = _state.value.copy(
-                    searchHistory = it
-                )
+            historyUseCases.getHistory().collect { history ->
+                _state.value = _state.value.copy(searchHistory = history)
             }
         }
     }
 
     fun onEvent(event: SearchEvent) {
         when (event) {
-            is SearchEvent.LoadMore -> {
-                viewModelScope.launch {
-                    loadMore()
-                }
-            }
+            is SearchEvent.LoadMore -> loadMore()
+
             is SearchEvent.ToggleFilter -> {
                 _state.value = _state.value.copy(
                     expandedFilter = !_state.value.expandedFilter
                 )
             }
+
             is SearchEvent.ApplyFilter -> {
                 _state.value = _state.value.copy(
                     query = _state.value.query.copy(
@@ -85,131 +77,120 @@ class SearchViewModel @Inject constructor(
                 )
 
                 viewModelScope.launch {
-                    val mangaList: MangaList? = getMangaList(_state.value.query)
-
-                    if (mangaList != null) {
-
-                        if (mangaList.limit == mangaList.total) {
-                            _state.value = _state.value.copy(
-                                canLoadMore = false
-                            )
-                        }
+                    getMangaList()?.let { mangaList ->
+                        val canLoadMore = mangaList.data.size < mangaList.total
 
                         _state.value = _state.value.copy(
-                            mangaList = mangaList
+                            mangaList = mangaList,
+                            canLoadMore = canLoadMore
                         )
                     }
                 }
             }
+
             is SearchEvent.SearchBarActive -> {
                 _state.value = _state.value.copy(
                     searchBarActive = event.active
                 )
             }
-            is SearchEvent.AddHistoryItem -> {
-                viewModelScope.launch {
-                    historyUseCases.addItem(event.content, event.timestamp)
 
-                    historyUseCases.getHistory().collect {
-                        _state.value = _state.value.copy(
-                            searchHistory = it
-                        )
-                    }
-                }
-            }
-            is SearchEvent.DeleteHistoryItem -> {
-                viewModelScope.launch {
-                    historyUseCases.deleteItem(event.item)
-
-                    historyUseCases.getHistory().collect {
-                        _state.value = _state.value.copy(
-                            searchHistory = it
-                        )
-                    }
-                }
-            }
             is SearchEvent.CloseWelcomeDialog -> {
                 _state.value = _state.value.copy(
                     welcomeDialogVisible = false
                 )
 
                 viewModelScope.launch {
-                    dataStore.getPreferences().collect {
-                        dataStore.savePreferences(it.copy(showWelcome = event.showAgain))
+                    dataStore.getPreferences().collect { preferences ->
+                        dataStore.savePreferences(preferences.copy(showWelcome = event.showAgain))
                     }
                 }
+            }
+
+            is SearchEvent.AddHistoryItem -> addHistoryItem(event.content, event.timestamp)
+
+            is SearchEvent.DeleteHistoryItem -> deleteHistoryItem(event.item)
+        }
+    }
+
+    private fun addHistoryItem(content: String, timestamp: Long) {
+        viewModelScope.launch {
+            historyUseCases.addItem(content, timestamp)
+
+            historyUseCases.getHistory().collect {
+                _state.value = _state.value.copy(
+                    searchHistory = it
+                )
             }
         }
     }
 
-    private suspend fun loadMore() {
+    private fun deleteHistoryItem(item: SearchHistoryEntity) {
+        viewModelScope.launch {
+            historyUseCases.deleteItem(item)
+
+            _state.value = _state.value.copy(
+                searchHistory = _state.value.searchHistory.minus(item)
+            )
+        }
+    }
+
+    private fun loadMore() {
         _state.value = _state.value.copy(
             query = _state.value.query.copy(
                 offset = _state.value.query.offset?.plus(_state.value.query.limit!!),
             )
         )
 
-        val mangaList: MangaList? = getMangaList(_state.value.query)
+        viewModelScope.launch {
+            getMangaList()?.let { mangaList ->
+                if (mangaList.data.isEmpty()) {
+                    _state.value = _state.value.copy(canLoadMore = false)
+                } else {
+                    // Remove duplicates
+                    val list: List<Manga> =
+                        if (_state.value.mangaList == null) mangaList.data
+                        else _state.value.mangaList!!.data.plus(mangaList.data)
 
-        if (mangaList != null) {
-            if (mangaList.data.isNotEmpty()) {
-                // Remove duplicates
-                val list: List<Manga> =
-                    if (_state.value.mangaList == null) mangaList.data
-                    else _state.value.mangaList!!.data.plus(mangaList.data)
+                    val listOfIds: MutableList<String> = mutableListOf()
 
-                val listOfIds: MutableList<String> = mutableListOf()
-
-                val filteredList: List<Manga> = list.filter {
-                    val alreadyInList: Boolean = listOfIds.contains(it.id)
-                    if (alreadyInList) {
-                        return@filter false
+                    val filteredList: List<Manga> = list.filter {
+                        val alreadyInList: Boolean = listOfIds.contains(it.id)
+                        if (alreadyInList) {
+                            return@filter false
+                        }
+                        else {
+                            listOfIds.add(it.id)
+                            return@filter true
+                        }
                     }
-                    else {
-                        listOfIds.add(it.id)
-                        return@filter true
-                    }
-                }
 
-                _state.value = _state.value.copy(
-                    mangaList = MangaList(
-                        limit = mangaList.limit,
-                        offset = mangaList.offset,
-                        total = mangaList.total,
-                        data = filteredList
+                    _state.value = _state.value.copy(
+                        mangaList = MangaList(
+                            limit = mangaList.limit,
+                            offset = mangaList.offset,
+                            total = mangaList.total,
+                            data = filteredList
+                        )
                     )
-                )
-            } else {
-                _state.value = _state.value.copy(
-                    canLoadMore = false
-                )
+                }
             }
         }
     }
 
-    private suspend fun getMangaList(query: MangaListQuery): MangaList? {
+    private suspend fun getMangaList(): MangaList? {
+        _state.value = _state.value.copy(loading = true)
 
-        _state.value = _state.value.copy(
-            loading = true
-        )
+        val list: MangaList? = mangaUseCases.getMangaList(_state.value.query)
 
-        val list = mangaUseCases.getMangaList(query)
+        val ids: List<String> = list?.data?.map { manga -> manga.id } ?: emptyList()
 
-        val ids = list?.data?.map {
-            it.id
-        } ?: emptyList()
+        val stats: StatisticsResponse? = mangaUseCases.getMangaStatistics(ids)
 
-        val stats = mangaUseCases.getMangaStatistics(ids)
-
-        _state.value = _state.value.copy(
-            loading = false
-        )
+        _state.value = _state.value.copy(loading = false)
 
         return list?.copy(
-            data = list.data.map {
-                it.copy(
-                    statistics = stats?.statistics?.get(it.id)
-                )
+            data = list.data.map { manga ->
+                manga.copy(statistics = stats?.statistics?.get(manga.id))
             }
         )
     }

@@ -19,7 +19,7 @@ import com.felisreader.R
 import com.felisreader.chapter.presentation.chapter_list.components.ChapterCard
 import com.felisreader.core.domain.model.OrderType
 import com.felisreader.core.util.ChapterUtil.groupByVolumeAndChapter
-import com.felisreader.manga.presentation.manga_info.components.Loading
+import com.felisreader.core.presentation.Loading
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
