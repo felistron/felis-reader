@@ -11,7 +11,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.felisreader.R
 import com.felisreader.core.domain.model.ContentRating
 import com.felisreader.core.domain.model.MangaListQuery
 import com.felisreader.core.domain.model.PublicationDemographic
@@ -36,7 +38,7 @@ fun FilterField(
             AssistChip(
                 onClick = { onEvent(SearchEvent.ToggleFilter) },
                 label = {
-                    Text(text = "Filter")
+                    Text(text = stringResource(id = R.string.filter))
                 },
                 leadingIcon = {
                     Icon(
@@ -107,7 +109,7 @@ fun FilterList(
             },
             shape = MaterialTheme.shapes.medium
         ) {
-            Text(text = "Apply changes")
+            Text(text = stringResource(id = R.string.filter_apply))
         }
     }
 }
@@ -129,7 +131,7 @@ fun MagazineDemographicField(
 
     Column {
         Text(
-            text = "Magazine demographic",
+            text = stringResource(id = R.string.demography),
             style = MaterialTheme.typography.titleMedium
         )
         FlowRow(
@@ -142,7 +144,7 @@ fun MagazineDemographicField(
                         publicationDemographic = null
                     )
                 },
-                label = "Any",
+                label = stringResource(id = R.string.filter_any),
                 selected = anySelected
             )
             FilterChip(
@@ -159,7 +161,7 @@ fun MagazineDemographicField(
                         )
                     }
                 },
-                label = "Shounen",
+                label = stringResource(id = R.string.demography_shounen),
                 selected = shounenSelected
             )
             FilterChip(
@@ -176,7 +178,7 @@ fun MagazineDemographicField(
                         )
                     }
                 },
-                label = "Shoujo",
+                label = stringResource(id = R.string.demography_shoujo),
                 selected = shoujoSelected
             )
             FilterChip(
@@ -193,7 +195,7 @@ fun MagazineDemographicField(
                         )
                     }
                 },
-                label = "Seinen",
+                label = stringResource(id = R.string.demography_seinen),
                 selected = seinenSelected
             )
             FilterChip(
@@ -210,7 +212,7 @@ fun MagazineDemographicField(
                         )
                     }
                 },
-                label = "Josei",
+                label = stringResource(id = R.string.demography_josei),
                 selected = joseiSelected
             )
         }
@@ -230,7 +232,7 @@ fun PublicationStatusField(
 
     Column {
         Text(
-            text = "Publication status",
+            text = stringResource(id = R.string.status),
             style = MaterialTheme.typography.titleMedium
         )
         FlowRow(
@@ -243,7 +245,7 @@ fun PublicationStatusField(
                         status = null
                     )
                 },
-                label = "Any",
+                label = stringResource(id = R.string.filter_any),
                 selected = anySelected
             )
             FilterChip(
@@ -258,7 +260,7 @@ fun PublicationStatusField(
                         )
                     }
                 },
-                label = "Ongoing",
+                label = stringResource(id = R.string.status_ongoing),
                 selected = ongoingSelected
             )
             FilterChip(
@@ -273,7 +275,7 @@ fun PublicationStatusField(
                         )
                     }
                 },
-                label = "Completed",
+                label = stringResource(id = R.string.status_completed),
                 selected = completedSelected
             )
             FilterChip(
@@ -288,7 +290,7 @@ fun PublicationStatusField(
                         )
                     }
                 },
-                label = "Cancelled",
+                label = stringResource(id = R.string.status_cancelled),
                 selected = cancelledSelected
             )
             FilterChip(
@@ -303,7 +305,7 @@ fun PublicationStatusField(
                         )
                     }
                 },
-                label = "Hiatus",
+                label = stringResource(id = R.string.status_hiatus),
                 selected = hiatusSelected
             )
         }
@@ -323,7 +325,7 @@ fun ContentRatingField(
 
     Column {
         Text(
-            text = "Content rating",
+            text = stringResource(id = R.string.content_rating),
             style = MaterialTheme.typography.titleMedium
         )
         FlowRow(
@@ -336,7 +338,7 @@ fun ContentRatingField(
                         contentRating = null
                     )
                 },
-                label = "Any",
+                label = stringResource(id = R.string.filter_any),
                 selected = anySelected
             )
             FilterChip(
@@ -352,7 +354,7 @@ fun ContentRatingField(
                         )
                     }
                 },
-                label = "Safe",
+                label = stringResource(id = R.string.content_rating_safe),
                 selected = safeSelected
             )
             FilterChip(
@@ -368,7 +370,7 @@ fun ContentRatingField(
                         )
                     }
                 },
-                label = "Suggestive",
+                label = stringResource(id = R.string.content_rating_suggestive),
                 selected = suggestiveSelected
             )
             FilterChip(
@@ -384,7 +386,7 @@ fun ContentRatingField(
                         )
                     }
                 },
-                label = "Erotica",
+                label = stringResource(id = R.string.content_rating_erotica),
                 selected = eroticaSelected
             )
             FilterChip(
@@ -400,7 +402,7 @@ fun ContentRatingField(
                         )
                     }
                 },
-                label = "Pornographic",
+                label = stringResource(id = R.string.content_rating_pornographic),
                 selected = pornographicSelected
             )
         }

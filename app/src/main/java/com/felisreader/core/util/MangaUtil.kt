@@ -89,7 +89,7 @@ object MangaUtil {
 
     fun getDemographyResource(demography: PublicationDemographic): Int {
         return when(demography) {
-            PublicationDemographic.SHOUNEN -> R.string.demography_shonen
+            PublicationDemographic.SHOUNEN -> R.string.demography_shounen
             PublicationDemographic.SHOUJO -> R.string.demography_shoujo
             PublicationDemographic.SEINEN -> R.string.demography_seinen
             PublicationDemographic.JOSEI -> R.string.demography_josei

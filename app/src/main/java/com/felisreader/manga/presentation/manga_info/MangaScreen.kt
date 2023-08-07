@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,7 +78,7 @@ fun MangaContent(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(onClick = navigateToFeed) {
-                        Text(text = "See chapters")
+                        Text(text = stringResource(id = R.string.see_chapters))
                     }
                 }
                 InfoTabs(
@@ -101,7 +102,10 @@ fun InfoTabs(
     isDescriptionCollapsed: Boolean
 ) {
     var state by remember { mutableStateOf(0) }
-    val tabs = listOf("Description", "Links")
+    val tabs = listOf(
+        stringResource(id = R.string.description),
+        stringResource(id = R.string.links)
+    )
     val uriHandler = LocalUriHandler.current
 
     Column(
