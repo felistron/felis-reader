@@ -1,6 +1,6 @@
 package com.felisreader.chapter.domain.model.api
 
-data class ReportBody(
+data class AtHomeReportBody(
     val url: String,
     val success: Boolean,
     val cached: Boolean,

@@ -1,4 +1,4 @@
-package com.felisreader.core.domain.model
+package com.felisreader.core.domain.model.api
 
 sealed class LinkType(val key: String, val relatedSite: String, val url: String) {
     data class AL(val id: String): LinkType("al", "AniList", "https://anilist.co/manga/${id}")

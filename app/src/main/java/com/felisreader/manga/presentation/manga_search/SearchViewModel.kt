@@ -10,7 +10,7 @@ import com.felisreader.core.domain.model.SearchHistoryEntity
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
-import com.felisreader.manga.domain.model.MangaList
+import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel

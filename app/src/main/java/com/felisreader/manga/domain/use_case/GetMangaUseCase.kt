@@ -1,6 +1,6 @@
 package com.felisreader.manga.domain.use_case
 
-import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.core.util.MangaUtil
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.MangaResponse

@@ -1,4 +1,6 @@
-package com.felisreader.manga.domain.model
+package com.felisreader.manga.domain.model.api
+
+import com.felisreader.manga.domain.model.Manga
 
 data class MangaList(
     val limit: Int,

@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.felisreader.R
-import com.felisreader.chapter.domain.model.Chapter
+import com.felisreader.chapter.domain.model.api.Chapter
 import com.felisreader.core.util.ChapterUtil
 import java.time.LocalDateTime
 import java.time.ZoneOffset

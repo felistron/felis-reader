@@ -8,13 +8,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.felisreader.core.domain.model.ContentRating
-import com.felisreader.core.domain.model.EntityType
-import com.felisreader.core.domain.model.PublicationDemographic
+import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.manga.domain.model.api.PublicationDemographic
 import com.felisreader.core.util.MangaUtil
-import com.felisreader.manga.domain.model.TagAttributes
-import com.felisreader.manga.domain.model.TagEntity
-import com.felisreader.manga.domain.model.TagGroup
+import com.felisreader.manga.domain.model.api.TagAttributes
+import com.felisreader.manga.domain.model.api.TagEntity
+import com.felisreader.manga.domain.model.api.TagGroup
 import java.util.*
 
 @Composable

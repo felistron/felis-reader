@@ -1,11 +1,16 @@
 package com.felisreader.core.util
 
 import com.felisreader.R
-import com.felisreader.core.domain.model.*
+import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.core.domain.model.api.LinkType
+import com.felisreader.core.domain.model.api.Relationship
 import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.model.Author
 import com.felisreader.manga.domain.model.Manga
-import com.felisreader.manga.domain.model.MangaEntity
+import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.manga.domain.model.api.MangaEntity
+import com.felisreader.manga.domain.model.api.PublicationDemographic
+import com.felisreader.manga.domain.model.api.Status
 
 object MangaUtil {
     fun mangaEntityToManga(mangaEntity: MangaEntity): Manga {

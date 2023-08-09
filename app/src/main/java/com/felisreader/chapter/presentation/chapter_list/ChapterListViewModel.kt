@@ -5,12 +5,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.chapter.domain.model.Chapter
+import com.felisreader.chapter.domain.model.api.Chapter
 import com.felisreader.chapter.domain.model.api.FeedQuery
 import com.felisreader.chapter.domain.model.api.FeedResponse
 import com.felisreader.chapter.domain.use_case.ChapterUseCases
-import com.felisreader.core.domain.model.ChapterOrder
-import com.felisreader.core.domain.model.EntityType
+import com.felisreader.chapter.domain.model.api.ChapterOrder
+import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.core.domain.model.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -70,10 +70,10 @@ class ChapterListViewModel @Inject constructor(
                         if (response.data.isNotEmpty()) {
 
                             // Remove duplicates
-                            val ids: List<String> = _state.value.chapterList.map { it.id.toString() }
+                            val ids: List<String> = _state.value.chapterList.map { it.id }
 
-                            val list: List<Chapter> = response.data.filter {
-                                !ids.contains(it.id.toString())
+                            val list: List<Chapter> = response.data.filter {chapter ->
+                                !ids.contains(chapter.id)
                             }
 
                             _state.value = _state.value.copy(

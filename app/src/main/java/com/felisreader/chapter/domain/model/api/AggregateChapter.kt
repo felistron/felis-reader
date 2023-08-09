@@ -1,4 +1,4 @@
-package com.felisreader.chapter.domain.model
+package com.felisreader.chapter.domain.model.api
 
 data class AggregateChapter(
     val chapter: String,

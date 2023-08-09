@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.felisreader.R
-import com.felisreader.core.domain.model.ContentRating
-import com.felisreader.core.domain.model.MangaListQuery
-import com.felisreader.core.domain.model.PublicationDemographic
-import com.felisreader.core.domain.model.Status
+import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.manga.domain.model.api.MangaListQuery
+import com.felisreader.manga.domain.model.api.PublicationDemographic
+import com.felisreader.manga.domain.model.api.Status
 import com.felisreader.manga.presentation.manga_search.SearchEvent
 
 @Composable

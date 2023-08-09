@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.felisreader.R
-import com.felisreader.chapter.domain.model.AggregateChapter
+import com.felisreader.chapter.domain.model.api.AggregateChapter
 
 @Composable
 fun NavigationField(

@@ -1,4 +1,4 @@
-package com.felisreader.core.domain.model
+package com.felisreader.manga.domain.model.api
 
 import com.google.gson.annotations.SerializedName
 

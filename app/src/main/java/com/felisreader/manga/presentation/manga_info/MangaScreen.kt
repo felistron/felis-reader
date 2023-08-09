@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
-import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.core.presentation.Loading
 import com.felisreader.core.presentation.TagChipGroup
 import com.felisreader.manga.presentation.manga_info.components.*

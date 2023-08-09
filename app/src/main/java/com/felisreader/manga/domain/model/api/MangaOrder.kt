@@ -1,4 +1,6 @@
-package com.felisreader.core.domain.model
+package com.felisreader.manga.domain.model.api
+
+import com.felisreader.core.domain.model.OrderType
 
 sealed class MangaOrder(val orderType: OrderType, val name: String) {
     class Title(orderType: OrderType): MangaOrder(orderType, "title")

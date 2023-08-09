@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases

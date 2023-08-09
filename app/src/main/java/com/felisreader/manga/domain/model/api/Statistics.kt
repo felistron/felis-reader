@@ -1,4 +1,4 @@
-package com.felisreader.manga.domain.model
+package com.felisreader.manga.domain.model.api
 
 data class Statistics(
     val comments: StatisticsDetailsComments?,

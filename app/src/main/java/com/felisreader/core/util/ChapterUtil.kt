@@ -1,8 +1,8 @@
 package com.felisreader.core.util
 
 import com.felisreader.R
-import com.felisreader.chapter.domain.model.Chapter
-import com.felisreader.core.domain.model.EntityType
+import com.felisreader.chapter.domain.model.api.Chapter
+import com.felisreader.core.domain.model.api.EntityType
 
 object ChapterUtil {
     fun countryFlagFromLangCode(code: String): Int {

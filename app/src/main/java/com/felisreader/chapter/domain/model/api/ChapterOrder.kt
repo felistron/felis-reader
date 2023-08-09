@@ -1,4 +1,6 @@
-package com.felisreader.core.domain.model
+package com.felisreader.chapter.domain.model.api
+
+import com.felisreader.core.domain.model.OrderType
 
 sealed class ChapterOrder(var orderType: OrderType, val name: String) {
     class Created(orderType: OrderType): ChapterOrder(orderType, "createdAt")

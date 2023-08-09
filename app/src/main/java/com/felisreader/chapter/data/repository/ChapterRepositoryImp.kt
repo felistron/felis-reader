@@ -1,7 +1,7 @@
 package com.felisreader.chapter.data.repository
 
 import com.felisreader.chapter.data.source.remote.ChapterService
-import com.felisreader.chapter.domain.model.Aggregate
+import com.felisreader.chapter.domain.model.api.Aggregate
 import com.felisreader.chapter.domain.model.api.AtHomeResponse
 import com.felisreader.chapter.domain.model.api.*
 import com.felisreader.chapter.domain.repository.ChapterRepository
@@ -57,7 +57,7 @@ class ChapterRepositoryImp(
         return response.body()
     }
 
-    override suspend fun postReport(body: ReportBody) {
+    override suspend fun postReport(body: AtHomeReportBody) {
         chapterService.postReport(body)
     }
 }

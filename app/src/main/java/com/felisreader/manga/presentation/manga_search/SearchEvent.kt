@@ -1,6 +1,6 @@
 package com.felisreader.manga.presentation.manga_search
 
-import com.felisreader.core.domain.model.MangaListQuery
+import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.core.domain.model.SearchHistoryEntity
 
 sealed class SearchEvent {

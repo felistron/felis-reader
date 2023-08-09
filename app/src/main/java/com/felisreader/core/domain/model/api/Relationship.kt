@@ -1,5 +1,6 @@
-package com.felisreader.core.domain.model
+package com.felisreader.core.domain.model.api
 
+import com.felisreader.manga.domain.model.api.MangaRelated
 import java.util.*
 
 data class Relationship(
