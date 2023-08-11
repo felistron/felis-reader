@@ -35,14 +35,6 @@ fun ChapterCard(
         mutableStateOf(false)
     }
 
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssz")
-    val publishAt = LocalDateTime.parse(chapter.attributes.publishAt, formatter)
-
-    val publishTime: Long = publishAt.toInstant(ZoneOffset.UTC).toEpochMilli()
-    val currentTime: Long = System.currentTimeMillis()
-
-    val since: String = DateUtils.getRelativeTimeSpanString(publishTime, currentTime, DateUtils.MINUTE_IN_MILLIS).toString()
-    
     Card(
         modifier = modifier
             .clickable {
@@ -113,7 +105,10 @@ fun ChapterCard(
                                 )
                             },
                             leadingIcon = {
-                                Icon(imageVector = Icons.Outlined.Group, contentDescription = "Group Icon")
+                                Icon(
+                                    imageVector = Icons.Outlined.Group,
+                                    contentDescription = "Group Icon"
+                                )
                             },
                             border = null
                         )
@@ -132,9 +127,9 @@ fun ChapterCard(
                         )
                         AssistChip(
                             enabled = false,
-                            onClick = { /*TODO*/ },
+                            onClick = { },
                             label = {
-                                Text(text = since)
+                                Text(text = getSinceText(chapter.attributes.publishAt))
                             },
                             leadingIcon = {
                                 Icon(imageVector = Icons.Outlined.Timer, contentDescription = "Clock Icon")
@@ -168,4 +163,16 @@ fun ChapterCard(
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+private fun getSinceText(dateTime: String): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssz")
+    val publishAt = LocalDateTime.parse(dateTime, formatter)
+
+    val publishTime: Long = publishAt.toInstant(ZoneOffset.UTC).toEpochMilli()
+    val currentTime: Long = System.currentTimeMillis()
+
+    return DateUtils.getRelativeTimeSpanString(publishTime, currentTime, DateUtils.MINUTE_IN_MILLIS)
+        .toString()
 }

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.chapter.domain.model.api.Chapter
 import com.felisreader.chapter.domain.model.api.FeedQuery
-import com.felisreader.chapter.domain.model.api.FeedResponse
 import com.felisreader.chapter.domain.use_case.ChapterUseCases
 import com.felisreader.chapter.domain.model.api.ChapterOrder
 import com.felisreader.core.domain.model.api.EntityType
@@ -27,76 +26,75 @@ class ChapterListViewModel @Inject constructor(
 
     fun onEvent(event: ChapterListEvent) {
         when (event) {
-            is ChapterListEvent.FeedChapters -> {
-                viewModelScope.launch {
-                    _state.value = ChapterListState()
+            is ChapterListEvent.FeedChapters -> feedChapters(event.mangaId, event.order)
+            is ChapterListEvent.LoadMore -> loadMore()
+            is ChapterListEvent.ToggleOrder -> toggleOrder()
+        }
+    }
 
-                    val query = FeedQuery(
-                        id = UUID.fromString(event.id),
-                        order = listOf(
-                            ChapterOrder.Volume(event.order),
-                            ChapterOrder.Chapter(event.order)
-                        ),
-                        includes = listOf(
-                            EntityType.SCANLATION_GROUP,
-                            EntityType.USER
-                        ),
-                        limit = ChapterListState.LIMIT,
-                        offset = 0
-                    )
+    private fun feedChapters(mangaId: String, order: OrderType ) {
+        viewModelScope.launch {
+            _state.value = ChapterListState()
 
-                    val response: FeedResponse? = useCases.mangaFeed(query)
+            val query = FeedQuery(
+                id = UUID.fromString(mangaId),
+                order = listOf(
+                    ChapterOrder.Volume(order),
+                    ChapterOrder.Chapter(order)
+                ),
+                includes = listOf(
+                    EntityType.SCANLATION_GROUP,
+                    EntityType.USER
+                ),
+                limit = ChapterListState.LIMIT,
+                offset = 0
+            )
 
-                    if (response != null) {
-                        _state.value = _state.value.copy(
-                            chapterList = response.data,
-                            loading = false,
-                            feedQuery = query,
-                            order = event.order
-                        )
-                    }
-                }
+            useCases.mangaFeed(query)?.let { response ->
+                _state.value = _state.value.copy(
+                    chapterList = response.data,
+                    loading = false,
+                    feedQuery = query,
+                    order = order,
+                    canLoadMore = response.data.size < response.total
+                )
             }
-            is ChapterListEvent.LoadMore -> {
-                viewModelScope.launch {
-                    val query = _state.value.feedQuery?.copy(
-                        offset = _state.value.feedQuery?.offset!!.plus(ChapterListState.LIMIT)
-                    )
+        }
+    }
 
-                    // Possible bugs incoming...
-                    val response: FeedResponse? = useCases.mangaFeed(query!!)
+    private fun loadMore() {
+        viewModelScope.launch {
+            val query = _state.value.feedQuery?.copy(
+                offset = _state.value.feedQuery?.offset!!.plus(ChapterListState.LIMIT)
+            )
 
-                    if (response != null) {
-                        if (response.data.isNotEmpty()) {
+            // Possible bugs incoming...
+            useCases.mangaFeed(query!!)?.let { response ->
+                val canLoadMore = response.data.isNotEmpty()
 
-                            // Remove duplicates
-                            val ids: List<String> = _state.value.chapterList.map { it.id }
+                // Remove duplicates
+                val ids: List<String> = _state.value.chapterList.map { it.id }
 
-                            val list: List<Chapter> = response.data.filter {chapter ->
-                                !ids.contains(chapter.id)
-                            }
-
-                            _state.value = _state.value.copy(
-                                chapterList = _state.value.chapterList.plus(list),
-                                feedQuery = query
-                            )
-                        } else {
-                            _state.value = _state.value.copy(
-                                canLoadMore = false
-                            )
-                        }
-                    }
+                val list: List<Chapter> = response.data.filter { chapter ->
+                    !ids.contains(chapter.id)
                 }
+
+                _state.value = _state.value.copy(
+                    chapterList = _state.value.chapterList.plus(list),
+                    feedQuery = query,
+                    canLoadMore = canLoadMore
+                )
             }
-            is ChapterListEvent.ToggleOrder -> {
-                if (_state.value.feedQuery != null) {
-                    val order = when(_state.value.order) {
-                        is OrderType.Descending -> OrderType.Ascending
-                        is OrderType.Ascending -> OrderType.Descending
-                    }
-                    onEvent(ChapterListEvent.FeedChapters(_state.value.feedQuery?.id.toString(), order))
-                }
+        }
+    }
+
+    private fun toggleOrder() {
+        _state.value.feedQuery?.let {
+            val order: OrderType = when(_state.value.order) {
+                is OrderType.Descending -> OrderType.Ascending
+                is OrderType.Ascending -> OrderType.Descending
             }
+            onEvent(ChapterListEvent.FeedChapters(_state.value.feedQuery?.id.toString(), order))
         }
     }
 }
