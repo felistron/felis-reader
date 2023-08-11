@@ -40,7 +40,8 @@ class SearchViewModel @Inject constructor(
 
                 _state.value = _state.value.copy(
                     mangaList = mangaList,
-                    canLoadMore = canLoadMore
+                    canLoadMore = canLoadMore,
+                    loading = false
                 )
             }
         }
@@ -147,21 +148,10 @@ class SearchViewModel @Inject constructor(
                     _state.value = _state.value.copy(canLoadMore = false)
                 } else {
                     // Remove duplicates
-                    val list: List<Manga> =
-                        if (_state.value.mangaList == null) mangaList.data
-                        else _state.value.mangaList!!.data.plus(mangaList.data)
+                    val ids: List<String> = _state.value.mangaList?.data?.map { it.id } ?: emptyList()
 
-                    val listOfIds: MutableList<String> = mutableListOf()
-
-                    val filteredList: List<Manga> = list.filter {
-                        val alreadyInList: Boolean = listOfIds.contains(it.id)
-                        if (alreadyInList) {
-                            return@filter false
-                        }
-                        else {
-                            listOfIds.add(it.id)
-                            return@filter true
-                        }
+                    val list: List<Manga> = mangaList.data.filter { manga ->
+                        !ids.contains(manga.id)
                     }
 
                     _state.value = _state.value.copy(
@@ -169,7 +159,7 @@ class SearchViewModel @Inject constructor(
                             limit = mangaList.limit,
                             offset = mangaList.offset,
                             total = mangaList.total,
-                            data = filteredList
+                            data = _state.value.mangaList?.data?.plus(list) ?: list
                         )
                     )
                 }
@@ -178,15 +168,11 @@ class SearchViewModel @Inject constructor(
     }
 
     private suspend fun getMangaList(): MangaList? {
-        _state.value = _state.value.copy(loading = true)
-
         val list: MangaList? = mangaUseCases.getMangaList(_state.value.query)
 
         val ids: List<String> = list?.data?.map { manga -> manga.id } ?: emptyList()
 
         val stats: StatisticsResponse? = mangaUseCases.getMangaStatistics(ids)
-
-        _state.value = _state.value.copy(loading = false)
 
         return list?.copy(
             data = list.data.map { manga ->
