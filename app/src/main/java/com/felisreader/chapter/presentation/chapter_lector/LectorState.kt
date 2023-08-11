@@ -9,7 +9,7 @@ data class LectorState(
     val chapter: Chapter? = null,
     val nextChapter: AggregateChapter? = null,
     val prevChapter: AggregateChapter? = null,
-    val chapterIdList: List<AggregateChapter> = emptyList(),
+    val chapters: List<AggregateChapter> = emptyList(),
     val loading: Boolean = true,
     val lazyListState: LazyListState = LazyListState()
 )

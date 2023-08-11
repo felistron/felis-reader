@@ -36,8 +36,8 @@ fun LectorScreen(
 
     LectorContent(
         state = viewModel.state.value,
-        navigateToChapter = {
-            viewModel.onEvent(LectorEvent.LoadLector(it))
+        navigateToChapter = { id ->
+            viewModel.onEvent(LectorEvent.LoadLector(id))
         }
     )
 }
