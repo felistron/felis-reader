@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_body">Bienvenido y gracias por utilizar Felis Reader, una aplicación desarrollada por una única persona para poder disfrutar del pasatiempo de leer mangas, doujinshis y manhwas en cualquier lugar. Por ahora la aplicación se encuentra en una fase temprana de desarrollo por lo que es de esperar que ocurran errores y crasheos, si cualquiera de los dos sucede puedes reportarlo uniéndote al servidor de Discord. Gracias especiales a MangaDex por permitir el uso de su API.</string>
+    <string name="welcome_dont_show">No volver a mostrar</string>
+    <string name="content_rating">Clasificación</string>
+    <string name="content_rating_safe">Seguro</string>
+    <string name="content_rating_suggestive">Sugestivo</string>
+    <string name="content_rating_erotica">Erótico</string>
+    <string name="content_rating_pornographic">Pornográfico</string>
+    <string name="demography">Demografía</string>
+    <string name="status">Estado</string>
+    <string name="status_completed">Completado</string>
+    <string name="status_ongoing">En publicación</string>
+    <string name="status_cancelled">Cancelado</string>
+    <string name="filter">Filtrar</string>
+    <string name="filter_any">Cualquiera</string>
+    <string name="filter_apply">Aplicar cambios</string>
+    <string name="search_by_title">Buscar por titulo</string>
+    <string name="year">Año</string>
+    <string name="see_chapters">Ver capítulos</string>
+    <string name="description">Descripción</string>
+    <string name="links">Enlaces</string>
+    <string name="chapter">Capítulo</string>
+    <string name="chapter_short">Cap.</string>
+    <string name="volume">Volumen</string>
+    <string name="volume_short">Vol.</string>
+    <string name="no_user">Sin usuario</string>
+    <string name="no_group">Sin grupo</string>
+    <string name="read_now">Leer ahora</string>
+    <string name="order_descending">Descendiente</string>
+    <string name="order_ascending">Ascendente</string>
+    <string name="welcome_dismiss">Entendido</string>
+    <string name="previous_chapter">Capítulo anterior</string>
+    <string name="next_chapter">Capítulo siguiente</string>
+</resources>

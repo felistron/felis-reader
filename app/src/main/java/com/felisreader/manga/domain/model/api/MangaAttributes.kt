@@ -1,9 +1,5 @@
-package com.felisreader.manga.domain.model
+package com.felisreader.manga.domain.model.api
 
-import com.felisreader.core.domain.model.ContentRating
-import com.felisreader.core.domain.model.PublicationDemographic
-import com.felisreader.core.domain.model.State
-import com.felisreader.core.domain.model.Status
 import java.util.UUID
 
 data class MangaAttributes(

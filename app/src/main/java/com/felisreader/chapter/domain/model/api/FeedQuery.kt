@@ -1,8 +1,7 @@
 package com.felisreader.chapter.domain.model.api
 
-import com.felisreader.core.domain.model.ChapterOrder
-import com.felisreader.core.domain.model.ContentRating
-import com.felisreader.core.domain.model.EntityType
+import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.core.domain.model.api.EntityType
 import java.util.UUID
 
 data class FeedQuery(

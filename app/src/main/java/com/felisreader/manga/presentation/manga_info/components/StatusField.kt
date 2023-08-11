@@ -8,6 +8,9 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.felisreader.R
+import com.felisreader.core.util.MangaUtil
 import com.felisreader.manga.domain.model.Manga
 
 @Composable
@@ -33,7 +36,7 @@ fun StatusField(manga: Manga) {
                 Text(text = "${manga.year ?: "-"}")
             },
             leadingIcon = {
-                Text(text = "Year:")
+                Text(text = "${stringResource(id = R.string.year)}:")
             },
             border = null,
             colors = AssistChipDefaults.assistChipColors(
@@ -46,10 +49,10 @@ fun StatusField(manga: Manga) {
             onClick = { },
             enabled = false,
             label = {
-                Text(text = manga.status.value)
+                Text(text = stringResource(id = MangaUtil.getStatusResource(manga.status)))
             },
             leadingIcon = {
-                Text(text = "Status:")
+                Text(text = "${stringResource(id = R.string.status)}:")
             },
             border = null,
             colors = AssistChipDefaults.assistChipColors(

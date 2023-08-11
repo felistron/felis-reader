@@ -14,6 +14,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.felisreader.BuildConfig
 import com.felisreader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,7 +29,7 @@ fun WelcomeDialog(
         append(stringResource(id = R.string.app_name))
         append(" ")
         withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
-            append(stringResource(id = R.string.app_version))
+            append(BuildConfig.VERSION_NAME)
         }
     }
 

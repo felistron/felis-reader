@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.felisreader.core.domain.model.ContentRating
+import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.core.presentation.TagChipGroup
 import com.felisreader.manga.domain.model.Manga
 

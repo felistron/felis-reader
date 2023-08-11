@@ -1,10 +1,10 @@
 package com.felisreader.chapter.data.source.remote
 
-import com.felisreader.chapter.domain.model.Aggregate
+import com.felisreader.chapter.domain.model.api.Aggregate
 import com.felisreader.chapter.domain.model.api.AtHomeResponse
 import com.felisreader.chapter.domain.model.api.ChapterResponse
 import com.felisreader.chapter.domain.model.api.FeedResponse
-import com.felisreader.chapter.domain.model.api.ReportBody
+import com.felisreader.chapter.domain.model.api.AtHomeReportBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -59,6 +59,6 @@ interface ChapterService {
     @Headers("Content-Type: application/json")
     @POST("https://api.mangadex.network/report")
     suspend fun postReport(
-        @Body body: ReportBody
+        @Body body: AtHomeReportBody
     )
 }

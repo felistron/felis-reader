@@ -1,6 +1,6 @@
 package com.felisreader.chapter.domain.use_case
 
-import com.felisreader.chapter.domain.model.Aggregate
+import com.felisreader.chapter.domain.model.api.Aggregate
 import com.felisreader.chapter.domain.model.api.AggregateQuery
 import com.felisreader.chapter.domain.repository.ChapterRepository
 

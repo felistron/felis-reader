@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.felisreader.chapter.domain.model.AggregateChapter
+import com.felisreader.R
+import com.felisreader.chapter.domain.model.api.AggregateChapter
 
 @Composable
 fun NavigationField(
@@ -32,9 +34,9 @@ fun NavigationField(
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Previous chapter"
+                    contentDescription = stringResource(id = R.string.previous_chapter)
                 )
-                Text(text = "Ch. ${prevChapter.chapter}")
+                Text(text = "${stringResource(id = R.string.chapter_short)} ${prevChapter.chapter}")
             }
         }
 
@@ -45,10 +47,10 @@ fun NavigationField(
                 onClick = { navigateToChapter(nextChapter.id) },
                 colors = ButtonDefaults.textButtonColors()
             ) {
-                Text(text = "Ch. ${nextChapter.chapter}")
+                Text(text = "${stringResource(id = R.string.chapter_short)} ${nextChapter.chapter}")
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Next chapter"
+                    contentDescription = stringResource(id = R.string.next_chapter)
                 )
             }
         }

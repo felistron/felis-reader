@@ -1,9 +1,11 @@
 package com.felisreader.manga.domain.model
 
-import com.felisreader.core.domain.model.ContentRating
-import com.felisreader.core.domain.model.LinkType
-import com.felisreader.core.domain.model.PublicationDemographic
-import com.felisreader.core.domain.model.Status
+import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.core.domain.model.api.LinkType
+import com.felisreader.manga.domain.model.api.PublicationDemographic
+import com.felisreader.manga.domain.model.api.Status
+import com.felisreader.manga.domain.model.api.Statistics
+import com.felisreader.manga.domain.model.api.TagEntity
 
 data class Manga(
     val id: String,

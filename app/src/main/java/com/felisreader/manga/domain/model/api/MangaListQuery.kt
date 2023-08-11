@@ -1,4 +1,7 @@
-package com.felisreader.core.domain.model
+package com.felisreader.manga.domain.model.api
+
+import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.core.domain.model.api.IncludedMode
 
 data class MangaListQuery(
     val limit: Int? = null,

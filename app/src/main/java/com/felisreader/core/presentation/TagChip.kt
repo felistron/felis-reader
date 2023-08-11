@@ -4,15 +4,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.felisreader.core.domain.model.ContentRating
-import com.felisreader.core.domain.model.EntityType
-import com.felisreader.core.domain.model.PublicationDemographic
-import com.felisreader.manga.domain.model.TagAttributes
-import com.felisreader.manga.domain.model.TagEntity
-import com.felisreader.manga.domain.model.TagGroup
+import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.manga.domain.model.api.PublicationDemographic
+import com.felisreader.core.util.MangaUtil
+import com.felisreader.manga.domain.model.api.TagAttributes
+import com.felisreader.manga.domain.model.api.TagEntity
+import com.felisreader.manga.domain.model.api.TagGroup
 import java.util.*
 
 @Composable
@@ -72,24 +74,30 @@ fun TagChipGroup(
     ) {
         if (contentRating != null) {
             TagChip(
-                tagName = contentRating.value,
-                onClick = { onContentRatingClick(contentRating.name.lowercase()) },
+                tagName = stringResource(id = MangaUtil.getContentRatingResource(contentRating)),
+                onClick = { onContentRatingClick(contentRating.apiName) },
                 nsfw = true,
-                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 5.dp)
+                    .height(25.dp)
             )
         }
         if (demography != null) {
             TagChip(
-                tagName = demography.value,
-                onClick = { onDemographyClick(demography.name.lowercase()) },
-                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp)
+                tagName = stringResource(id = MangaUtil.getDemographyResource(demography)),
+                onClick = { onDemographyClick(demography.apiName) },
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 5.dp)
+                    .height(25.dp)
             )
         }
         tags.forEach {
             TagChip(
                 tagName = it.attributes.name["en"].toString(),
                 onClick = { onTagClick(it.id.toString()) },
-                modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).height(25.dp),
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 5.dp)
+                    .height(25.dp),
                 nsfw = it.attributes.group == TagGroup.CONTENT
             )
         }

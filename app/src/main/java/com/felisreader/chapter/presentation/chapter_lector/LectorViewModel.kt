@@ -5,15 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.chapter.domain.model.Aggregate
-import com.felisreader.chapter.domain.model.AggregateChapter
-import com.felisreader.chapter.domain.model.api.AtHomeResponse
-import com.felisreader.chapter.domain.model.api.AggregateQuery
-import com.felisreader.chapter.domain.model.api.ChapterQuery
-import com.felisreader.chapter.domain.model.api.ChapterResponse
+import com.felisreader.chapter.domain.model.api.*
 import com.felisreader.chapter.domain.use_case.ChapterUseCases
-import com.felisreader.core.domain.model.EntityType
-import com.felisreader.core.domain.model.Relationship
+import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.core.domain.model.api.Relationship
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,80 +22,90 @@ class LectorViewModel @Inject constructor(
 
     fun onEvent(event: LectorEvent) {
         when(event) {
-            is LectorEvent.LoadLector -> {
-                if (!_state.value.loading) _state.value = _state.value.copy(loading = true)
+            is LectorEvent.LoadLector -> loadLector(event.chapterId)
+            is LectorEvent.ReportImage -> reportImage(event.body)
+        }
+    }
 
-                viewModelScope.launch {
-                    val atHome: AtHomeResponse? = useCases.chapterFeed(event.chapterId)
+    private fun loadLector(chapterId: String) {
+        _state.value = _state.value.copy(loading = true)
 
-                    val chapter: ChapterResponse? = useCases.getChapter(ChapterQuery(
-                        chapterId = event.chapterId,
-                        includes = listOf(
-                            EntityType.MANGA,
-                            EntityType.SCANLATION_GROUP,
-                            EntityType.USER
-                        )
-                    ))
+        viewModelScope.launch {
+            val atHome: AtHomeResponse? = useCases.chapterFeed(chapterId)
 
-                    if (atHome != null && chapter != null) {
+            val chapter: ChapterResponse? = useCases.getChapter(ChapterQuery(
+                chapterId = chapterId,
+                includes = listOf(
+                    EntityType.MANGA,
+                    EntityType.SCANLATION_GROUP,
+                    EntityType.USER
+                )
+            ))
 
-                        val chapterIdList: List<AggregateChapter> = when {
-                            _state.value.chapterIdList.isEmpty() -> {
-                                val mangaRelationship = Relationship.queryRelationship(chapter.data.relationships, EntityType.MANGA)
+            if (atHome == null || chapter == null) return@launch
 
-                                val aggregate: Aggregate? = useCases.aggregate(AggregateQuery(
-                                    mangaId = mangaRelationship?.id.toString(),
-                                    translatedLanguage =
-                                        if (chapter.data.attributes.translatedLanguage == null) null
-                                        else listOf(chapter.data.attributes.translatedLanguage),
-                                ))
-
-                                aggregate?.volumes!!.flatMap {
-                                    it.value.chapters.values.toList()
-                                } .sortedBy {
-                                    it.chapter.toFloat()
-                                }
-                            }
-                            else -> {
-                                _state.value.chapterIdList
-                            }
-                        }
-
-                        val prevIndex = chapterIdList.indexOf(
-                            chapterIdList.find {
-                                it.id == chapter.data.id || it.others.contains(chapter.data.id)
-                            }
-                        ) - 1
-
-                        val nextIndex = chapterIdList.indexOf(
-                            chapterIdList.find {
-                                it.id == chapter.data.id || it.others.contains(chapter.data.id)
-                            }
-                        ) + 1
-
-                        _state.value = _state.value.copy(
-                            // TODO: Select quality based on user preferences
-                            images = atHome.chapter.data.map { fileName ->
-                                "${atHome.baseUrl}/data/${atHome.chapter.hash}/${fileName}"
-                            },
-                            chapter = chapter.data,
-                            nextChapter = chapterIdList.getOrNull(nextIndex),
-                            prevChapter = chapterIdList.getOrNull(prevIndex),
-                            chapterIdList = chapterIdList,
-                            loading = false
+            val chapterIdList: List<AggregateChapter> = when {
+                _state.value.chapters.isEmpty() -> {
+                    val mangaRelationship = Relationship
+                        .queryRelationship(
+                            chapter.data.relationships, EntityType.MANGA
                         )
 
-                        if (_state.value.images.size > 1) {
-                            _state.value.lazyListState.scrollToItem(0)
+                    mangaRelationship?.let {
+                        val aggregate: Aggregate? = useCases.aggregate(
+                            AggregateQuery(
+                                mangaId = mangaRelationship.id.toString(),
+                                translatedLanguage =
+                                if (chapter.data.attributes.translatedLanguage == null) null
+                                else listOf(chapter.data.attributes.translatedLanguage),
+                            )
+                        )
+
+                        aggregate?.volumes?.flatMap {
+                            it.value.chapters.values.toList()
+                        } ?.sortedBy {
+                            it.chapter.toFloat()
                         }
-                    }
+                    } ?: emptyList()
+                }
+                else -> {
+                    _state.value.chapters
                 }
             }
-            is LectorEvent.Report -> {
-                viewModelScope.launch {
-                    useCases.report(event.body)
+
+            val prevIndex = chapterIdList.indexOf(
+                chapterIdList.find {
+                    it.id == chapter.data.id || it.others.contains(chapter.data.id)
                 }
+            ) - 1
+
+            val nextIndex = chapterIdList.indexOf(
+                chapterIdList.find {
+                    it.id == chapter.data.id || it.others.contains(chapter.data.id)
+                }
+            ) + 1
+
+            _state.value = _state.value.copy(
+                // TODO: Select quality based on user preferences
+                images = atHome.chapter.data.map { fileName ->
+                    "${atHome.baseUrl}/data/${atHome.chapter.hash}/${fileName}"
+                },
+                chapter = chapter.data,
+                nextChapter = chapterIdList.getOrNull(nextIndex),
+                prevChapter = chapterIdList.getOrNull(prevIndex),
+                chapters = chapterIdList,
+                loading = false
+            )
+
+            if (_state.value.images.size > 1) {
+                _state.value.lazyListState.scrollToItem(0)
             }
+        }
+    }
+
+    private fun reportImage(body: AtHomeReportBody) {
+        viewModelScope.launch {
+            useCases.report(body)
         }
     }
 }

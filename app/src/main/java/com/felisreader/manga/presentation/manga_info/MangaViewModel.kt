@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.core.domain.model.EntityType
+import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases
@@ -23,34 +23,33 @@ class MangaViewModel @Inject constructor(
     fun onEvent(event: MangaEvent) {
         when (event) {
             is MangaEvent.ToggleDescription -> toggleCollapseDescription()
-            is MangaEvent.LoadManga -> {
-
-
-                viewModelScope.launch {
-                    val response: StatisticsResponse? = mangaUseCases.getMangaStatistics(event.id)
-
-                    val manga: Manga? = getManga(event.id)
-
-                    _state.value = _state.value.copy(
-                        manga = manga?.copy(
-                            statistics = response?.statistics?.get(event.id)
-                        )
-                    )
-                }
-            }
+            is MangaEvent.LoadManga -> loadManga(event.mangaId)
         }
     }
 
+    private fun loadManga(mangaId: String) {
+        viewModelScope.launch {
+            val statisticsResponse: StatisticsResponse? = mangaUseCases.getMangaStatistics(mangaId)
+
+            val manga: Manga? = getManga(mangaId)
+
+            _state.value = _state.value.copy(
+                manga = manga?.copy(
+                    statistics = statisticsResponse?.statistics?.get(mangaId)
+                )
+            )
+        }
+    }
     private fun toggleCollapseDescription() {
         _state.value = _state.value.copy(
             isDescriptionCollapsed = !_state.value.isDescriptionCollapsed
         )
     }
 
-    private suspend fun getManga(id: String): Manga? {
+    private suspend fun getManga(mangaId: String): Manga? {
         _state.value = _state.value.copy(loading = true)
         val manga: Manga? = mangaUseCases.getManga(
-            id = id,
+            id = mangaId,
             includes = listOf(
                 EntityType.AUTHOR,
                 EntityType.COVER_ART

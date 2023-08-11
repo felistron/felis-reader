@@ -1,7 +1,7 @@
 package com.felisreader.manga.domain.repository
 
-import com.felisreader.core.domain.model.EntityType
-import com.felisreader.core.domain.model.MangaListQuery
+import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.manga.domain.model.api.MangaListResponse
 import com.felisreader.manga.domain.model.api.MangaResponse
 import com.felisreader.manga.domain.model.api.StatisticsResponse
