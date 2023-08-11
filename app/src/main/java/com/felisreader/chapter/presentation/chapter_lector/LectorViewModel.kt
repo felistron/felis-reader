@@ -42,64 +42,63 @@ class LectorViewModel @Inject constructor(
                 )
             ))
 
-            if (atHome != null && chapter != null) {
+            if (atHome == null || chapter == null) return@launch
 
-                val chapterIdList: List<AggregateChapter> = when {
-                    _state.value.chapters.isEmpty() -> {
-                        val mangaRelationship = Relationship
-                            .queryRelationship(
-                                chapter.data.relationships, EntityType.MANGA
+            val chapterIdList: List<AggregateChapter> = when {
+                _state.value.chapters.isEmpty() -> {
+                    val mangaRelationship = Relationship
+                        .queryRelationship(
+                            chapter.data.relationships, EntityType.MANGA
+                        )
+
+                    mangaRelationship?.let {
+                        val aggregate: Aggregate? = useCases.aggregate(
+                            AggregateQuery(
+                                mangaId = mangaRelationship.id.toString(),
+                                translatedLanguage =
+                                if (chapter.data.attributes.translatedLanguage == null) null
+                                else listOf(chapter.data.attributes.translatedLanguage),
                             )
+                        )
 
-                        mangaRelationship?.let {
-                            val aggregate: Aggregate? = useCases.aggregate(
-                                AggregateQuery(
-                                    mangaId = mangaRelationship.id.toString(),
-                                    translatedLanguage =
-                                    if (chapter.data.attributes.translatedLanguage == null) null
-                                    else listOf(chapter.data.attributes.translatedLanguage),
-                                )
-                            )
-
-                            aggregate?.volumes?.flatMap {
-                                it.value.chapters.values.toList()
-                            } ?.sortedBy {
-                                it.chapter.toFloat()
-                            }
-                        } ?: emptyList()
-                    }
-                    else -> {
-                        _state.value.chapters
-                    }
+                        aggregate?.volumes?.flatMap {
+                            it.value.chapters.values.toList()
+                        } ?.sortedBy {
+                            it.chapter.toFloat()
+                        }
+                    } ?: emptyList()
                 }
-
-                val prevIndex = chapterIdList.indexOf(
-                    chapterIdList.find {
-                        it.id == chapter.data.id || it.others.contains(chapter.data.id)
-                    }
-                ) - 1
-
-                val nextIndex = chapterIdList.indexOf(
-                    chapterIdList.find {
-                        it.id == chapter.data.id || it.others.contains(chapter.data.id)
-                    }
-                ) + 1
-
-                _state.value = _state.value.copy(
-                    // TODO: Select quality based on user preferences
-                    images = atHome.chapter.data.map { fileName ->
-                        "${atHome.baseUrl}/data/${atHome.chapter.hash}/${fileName}"
-                    },
-                    chapter = chapter.data,
-                    nextChapter = chapterIdList.getOrNull(nextIndex),
-                    prevChapter = chapterIdList.getOrNull(prevIndex),
-                    chapters = chapterIdList,
-                    loading = false
-                )
-
-                if (_state.value.images.size > 1) {
-                    _state.value.lazyListState.scrollToItem(0)
+                else -> {
+                    _state.value.chapters
                 }
+            }
+
+            val prevIndex = chapterIdList.indexOf(
+                chapterIdList.find {
+                    it.id == chapter.data.id || it.others.contains(chapter.data.id)
+                }
+            ) - 1
+
+            val nextIndex = chapterIdList.indexOf(
+                chapterIdList.find {
+                    it.id == chapter.data.id || it.others.contains(chapter.data.id)
+                }
+            ) + 1
+
+            _state.value = _state.value.copy(
+                // TODO: Select quality based on user preferences
+                images = atHome.chapter.data.map { fileName ->
+                    "${atHome.baseUrl}/data/${atHome.chapter.hash}/${fileName}"
+                },
+                chapter = chapter.data,
+                nextChapter = chapterIdList.getOrNull(nextIndex),
+                prevChapter = chapterIdList.getOrNull(prevIndex),
+                chapters = chapterIdList,
+                loading = false
+            )
+
+            if (_state.value.images.size > 1) {
+                _state.value.lazyListState.scrollToItem(0)
             }
         }
     }
