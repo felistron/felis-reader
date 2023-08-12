@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface HistoryRepository {
     fun getAll(): Flow<List<SearchHistoryEntity>>
     suspend fun insert(item: SearchHistoryEntity)
-    suspend fun delete(item: SearchHistoryEntity)
+    suspend fun deleteByContent(content: String)
 }

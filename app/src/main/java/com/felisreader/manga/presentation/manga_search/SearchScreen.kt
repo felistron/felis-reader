@@ -28,6 +28,8 @@ fun SearchScreen(
     Column {
         SearchField(
             state = viewModel.state.value,
+            searchText = viewModel.titleSearchState.collectAsState().value,
+            history = viewModel.historyState.collectAsState().value,
             onEvent = viewModel::onEvent
         )
         SearchContent(
