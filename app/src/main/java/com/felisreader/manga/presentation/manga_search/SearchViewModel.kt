@@ -42,8 +42,8 @@ class SearchViewModel @Inject constructor(
                 .findClosestSentences(title, list.toMutableList(), 10)
 
             closestSentences.filterIndexed { index, sentence ->
-                if (index > 0) (sentence.score - closestSentences[0].score) < 2 && sentence.score < 4
-                else sentence.score < 4
+                if (index > 0) (sentence.score - closestSentences[0].score) < 2 && sentence.score < 3
+                else sentence.score < 3
             }.map { it.sentence }
         }
         .stateIn(
