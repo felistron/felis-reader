@@ -6,14 +6,17 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.felisreader.core.domain.model.SearchHistoryEntity
+import com.felisreader.core.domain.model.Sentence
 import com.felisreader.core.domain.use_case.HistoryUseCases
+import com.felisreader.core.util.AppUtil
 import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +29,29 @@ class SearchViewModel @Inject constructor(
 
     private val _state: MutableState<SearchState> = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
+
+    private val _titleSearchState = MutableStateFlow("")
+    val titleSearchState = _titleSearchState.asStateFlow()
+
+    private val _historyState = MutableStateFlow<List<String>>(emptyList())
+    @OptIn(FlowPreview::class)
+    val historyState = titleSearchState
+        .debounce(50L)
+        .combine(_historyState) { title, list ->
+            val closestSentences: List<Sentence> = AppUtil
+                .findClosestSentences(title, list.toMutableList(), 10)
+
+            closestSentences.filterIndexed { index, sentence ->
+                if (index > 0) (sentence.score - closestSentences[0].score) < 2 && sentence.score < 4
+                else sentence.score < 4
+            }.map { it.sentence }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            _historyState.value
+        )
+
 
     init {
         viewModelScope.launch {
@@ -48,7 +74,10 @@ class SearchViewModel @Inject constructor(
 
         viewModelScope.launch {
             historyUseCases.getHistory().collect { history ->
-                _state.value = _state.value.copy(searchHistory = history)
+                val list: List<String> = history.map {
+                    it.content
+                }
+                _historyState.value = list
             }
         }
     }
@@ -74,7 +103,8 @@ class SearchViewModel @Inject constructor(
                     ),
                     mangaList = null,
                     lazyListState = LazyListState(),
-                    canLoadMore = true
+                    canLoadMore = true,
+                    loading = true
                 )
 
                 viewModelScope.launch {
@@ -83,7 +113,8 @@ class SearchViewModel @Inject constructor(
 
                         _state.value = _state.value.copy(
                             mangaList = mangaList,
-                            canLoadMore = canLoadMore
+                            canLoadMore = canLoadMore,
+                            loading = false
                         )
                     }
                 }
@@ -110,28 +141,44 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.AddHistoryItem -> addHistoryItem(event.content, event.timestamp)
 
             is SearchEvent.DeleteHistoryItem -> deleteHistoryItem(event.item)
+
+            is SearchEvent.OnSearchTextChange -> {
+                _titleSearchState.value = event.text
+            }
+
+            is SearchEvent.OnSearch -> onSearch(event.title)
         }
+    }
+
+    private fun onSearch(title: String) {
+        if (title.isNotBlank()) {
+            onEvent(
+                SearchEvent.AddHistoryItem(title, System.currentTimeMillis())
+            )
+        }
+        onEvent(SearchEvent.SearchBarActive(false))
+        onEvent(SearchEvent.ApplyFilter(
+            query = _state.value.query.copy(
+                title = title
+            )
+        ))
     }
 
     private fun addHistoryItem(content: String, timestamp: Long) {
         viewModelScope.launch {
             historyUseCases.addItem(content, timestamp)
 
-            historyUseCases.getHistory().collect {
-                _state.value = _state.value.copy(
-                    searchHistory = it
-                )
+            historyUseCases.getHistory().collect { list ->
+                _historyState.value = list.map { it.content }
             }
         }
     }
 
-    private fun deleteHistoryItem(item: SearchHistoryEntity) {
+    private fun deleteHistoryItem(item: String) {
         viewModelScope.launch {
             historyUseCases.deleteItem(item)
-
-            _state.value = _state.value.copy(
-                searchHistory = _state.value.searchHistory.minus(item)
-            )
+            // it is no necessary to update the historyState
+            // trust me (it is updated right after when the search text is cleared)
         }
     }
 

@@ -16,7 +16,7 @@ class HistoryRepositoryImp(
         return dao.insertOrUpdate(item)
     }
 
-    override suspend fun delete(item: SearchHistoryEntity) {
-        return dao.delete(item)
+    override suspend fun deleteByContent(content: String) {
+        return dao.deleteByContent(content)
     }
 }

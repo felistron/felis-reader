@@ -15,8 +15,6 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,10 +30,11 @@ import com.felisreader.manga.presentation.manga_search.SearchState
 @Composable
 fun SearchField(
     modifier: Modifier = Modifier,
+    searchText: String,
+    history: List<String>,
     state: SearchState,
     onEvent: (SearchEvent) -> Unit
 ) {
-    val title: MutableState<String> = remember { mutableStateOf(state.query.title ?: "") }
     val focusRequester: FocusRequester = remember { FocusRequester() }
 
     SearchBar(
@@ -44,21 +43,9 @@ fun SearchField(
             .animateContentSize()
             .fillMaxWidth()
             .focusRequester(focusRequester),
-        query = title.value,
-        onQueryChange = { title.value = it },
-        onSearch = {
-            if (it.isNotBlank()) {
-                onEvent(
-                    SearchEvent.AddHistoryItem(it, System.currentTimeMillis())
-                )
-            }
-            onEvent(SearchEvent.SearchBarActive(false))
-            onEvent(SearchEvent.ApplyFilter(
-                query = state.query.copy(
-                    title = title.value
-                )
-            ))
-        },
+        query = searchText,
+        onQueryChange = { onEvent(SearchEvent.OnSearchTextChange(it)) },
+        onSearch = { onEvent(SearchEvent.OnSearch(it)) },
         active = state.searchBarActive,
         onActiveChange = {
             onEvent(SearchEvent.SearchBarActive(it))
@@ -74,10 +61,10 @@ fun SearchField(
         },
         trailingIcon = {
             AnimatedVisibility(
-                visible = title.value.isNotEmpty()
+                visible = searchText.isNotEmpty()
             ) {
                 IconButton(onClick = {
-                    title.value = ""
+                    onEvent(SearchEvent.OnSearchTextChange(""))
                     onEvent(SearchEvent.SearchBarActive(true))
                     focusRequester.requestFocus()
                 }) {
@@ -92,25 +79,14 @@ fun SearchField(
         shape = MaterialTheme.shapes.medium
     ) {
         LazyColumn {
-            items(state.searchHistory.filter {
-                if (title.value.isBlank()) return@filter true
-                else return@filter it.content.contains(title.value, ignoreCase = true)
-            }) {
+            items(if (state.searchBarActive) history else emptyList() ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            title.value = it.content
-                            onEvent(SearchEvent.AddHistoryItem(
-                                it.content, System.currentTimeMillis()
-                            ))
-                            onEvent(SearchEvent.SearchBarActive(false))
-                            onEvent(SearchEvent.ApplyFilter(
-                                query = state.query.copy(
-                                    title = title.value
-                                )
-                            ))
+                            onEvent(SearchEvent.OnSearchTextChange(it))
+                            onEvent(SearchEvent.OnSearch(it))
                         }
                 ) {
                     Row(
@@ -123,7 +99,7 @@ fun SearchField(
                             imageVector = Icons.Outlined.History,
                             contentDescription = "History Icon"
                         )
-                        Text(text = it.content)
+                        Text(text = it)
                     }
                     IconButton(onClick = {
                         onEvent(
