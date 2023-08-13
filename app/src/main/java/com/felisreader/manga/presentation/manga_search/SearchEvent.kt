@@ -12,4 +12,5 @@ sealed class SearchEvent {
     data class CloseWelcomeDialog(val showAgain: Boolean): SearchEvent()
     data class OnSearchTextChange(val text: String): SearchEvent()
     data class OnSearch(val title: String): SearchEvent()
+    data class LoadMangaList(val title: String?, val tag: String?): SearchEvent()
 }

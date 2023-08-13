@@ -17,14 +17,21 @@ import com.felisreader.manga.presentation.manga_search.components.WelcomeDialog
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
-    navigateToInfo: (mangaId: String) -> Unit
+    navigateToInfo: (mangaId: String) -> Unit,
+    title: String?,
+    tag: String?,
 ) {
 
     AnimatedVisibility(viewModel.state.value.welcomeDialogVisible) {
         WelcomeDialog(onClose = { viewModel.onEvent(SearchEvent.CloseWelcomeDialog(it)) })
     }
 
-    
+    LaunchedEffect(true) {
+        if (viewModel.state.value.loading) {
+            viewModel.onEvent(SearchEvent.LoadMangaList(title = title, tag = tag))
+        }
+    }
+
     Column {
         SearchField(
             state = viewModel.state.value,

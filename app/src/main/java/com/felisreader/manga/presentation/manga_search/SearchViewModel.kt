@@ -61,18 +61,6 @@ class SearchViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            getMangaList()?.let { mangaList ->
-                val canLoadMore = mangaList.data.size < mangaList.total
-
-                _state.value = _state.value.copy(
-                    mangaList = mangaList,
-                    canLoadMore = canLoadMore,
-                    loading = false
-                )
-            }
-        }
-
-        viewModelScope.launch {
             historyUseCases.getHistory().collect { history ->
                 val list: List<String> = history.map {
                     it.content
@@ -147,6 +135,33 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.OnSearch -> onSearch(event.title)
+
+            is SearchEvent.LoadMangaList -> loadMangaList(event.title, event.tag)
+        }
+    }
+
+    private fun loadMangaList(title: String?, tag: String?) {
+        _state.value = _state.value.copy(
+            query = _state.value.query.copy(
+                title = title,
+                includedTags = tag?.let { listOf(it) },
+            ),
+            mangaList = null,
+            lazyListState = LazyListState(),
+            canLoadMore = true,
+            loading = true
+        )
+
+        viewModelScope.launch {
+            getMangaList()?.let { mangaList ->
+                val canLoadMore = mangaList.data.size < mangaList.total
+
+                _state.value = _state.value.copy(
+                    mangaList = mangaList,
+                    canLoadMore = canLoadMore,
+                    loading = false
+                )
+            }
         }
     }
 

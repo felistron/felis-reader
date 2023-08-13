@@ -1,4 +1,4 @@
-package com.felisreader.core.presentation
+package com.felisreader.manga.presentation.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

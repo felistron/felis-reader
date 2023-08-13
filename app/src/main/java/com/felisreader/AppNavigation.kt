@@ -21,17 +21,19 @@ fun AppNavigation(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Screen.SearchScreen.route
+        startDestination = Screen.SearchScreen().route
     ) {
         composable(
-            route = Screen.SearchScreen.route
+            route = Screen.SearchScreen().route
         ) {
             SearchScreen(
                 navigateToInfo = { mangaId ->
                     navController.navigate(Screen.InfoScreen(mangaId).route) {
                         launchSingleTop = true
                     }
-                }
+                },
+                title = it.arguments?.getString("title"),
+                tag = it.arguments?.getString("tag")
             )
         }
 
@@ -44,6 +46,15 @@ fun AppNavigation(
                     mangaId = mangaId,
                     navigateToFeed = {
                         navController.navigate(Screen.ChapterListScreen(mangaId).route) {
+                            launchSingleTop = true
+
+                            popUpTo(Screen.InfoScreen(mangaId).route) {
+                                inclusive = false
+                            }
+                        }
+                    },
+                    searchByTag = { tagId ->
+                        navController.navigate(Screen.SearchScreen(tag = tagId).route) {
                             launchSingleTop = true
 
                             popUpTo(Screen.InfoScreen(mangaId).route) {

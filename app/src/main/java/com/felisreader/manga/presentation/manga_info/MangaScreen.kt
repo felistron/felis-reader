@@ -11,14 +11,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
 import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.core.presentation.Loading
-import com.felisreader.core.presentation.TagChipGroup
+import com.felisreader.manga.presentation.components.TagChipGroup
 import com.felisreader.manga.presentation.manga_info.components.*
 
 @Composable
 fun MangaScreen(
     viewModel: MangaViewModel = hiltViewModel(),
     mangaId: String,
-    navigateToFeed: () -> Unit
+    navigateToFeed: () -> Unit,
+    searchByTag: (tagId: String) -> Unit,
 ) {
     LaunchedEffect(true) {
         if (viewModel.state.value.loading) {
@@ -29,7 +30,8 @@ fun MangaScreen(
     MangaContent(
         state = viewModel.state.value,
         onEvent = viewModel::onEvent,
-        navigateToFeed = navigateToFeed
+        navigateToFeed = navigateToFeed,
+        searchByTag = searchByTag,
     )
 }
 
@@ -37,7 +39,8 @@ fun MangaScreen(
 fun MangaContent(
     state: MangaState,
     onEvent: (MangaEvent) -> Unit,
-    navigateToFeed: () -> Unit
+    navigateToFeed: () -> Unit,
+    searchByTag: (tagId: String) -> Unit,
 ) {
     when {
         state.loading && state.manga == null -> {
@@ -56,7 +59,9 @@ fun MangaContent(
                 TitleField(state.manga)
                 TagChipGroup(
                     tags = state.manga.tags,
-                    onTagClick = { },
+                    onTagClick = { tagId ->
+                        searchByTag(tagId)
+                    },
                     contentRating = if (state.manga.contentRating == ContentRating.SAFE) null else state.manga.contentRating,
                     onContentRatingClick = { },
                     demography = state.manga.demography,
