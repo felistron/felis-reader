@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.felisreader.R
 import com.felisreader.core.util.AppUtil
 import com.felisreader.manga.domain.model.api.ContentRating
@@ -152,7 +153,7 @@ fun TagField(
         )
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = it }
+            onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
                 modifier = Modifier
@@ -162,15 +163,17 @@ fun TagField(
                 value = tagText,
                 onValueChange = {
                     tagText = it
-                    expanded = true
                 },
                 placeholder = {
                     Text(text = stringResource(id = R.string.filter_tag_placeholder))
                 },
                 singleLine = true,
             )
-            ExposedDropdownMenu(
-                expanded = expanded,
+            DropdownMenu(
+                modifier = Modifier
+                    .exposedDropdownSize(true),
+                properties = PopupProperties(focusable = false),
+                expanded = tagText.isNotBlank(),
                 onDismissRequest = { expanded = false }
             ) {
                 displayTags.forEach { tag ->
