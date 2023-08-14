@@ -105,18 +105,16 @@ fun FilterChip(
                 Icon(
                     Icons.Outlined.Close,
                     contentDescription = "Cancel icon",
-                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
         },
-        border = InputChipDefaults.inputChipBorder(
-            borderWidth = 1.dp,
-            borderColor = if (selected) MaterialTheme.colorScheme.secondary
-            else MaterialTheme.colorScheme.outline
-        ),
+        border = null,
         colors = InputChipDefaults.inputChipColors(
-            containerColor = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface,
-            labelColor = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+            selectedContainerColor = MaterialTheme.colorScheme.secondary,
+            labelColor = MaterialTheme.colorScheme.onSurface,
+            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
+            selectedTrailingIconColor = MaterialTheme.colorScheme.onSecondary,
         ),
         selected = selected
     )
