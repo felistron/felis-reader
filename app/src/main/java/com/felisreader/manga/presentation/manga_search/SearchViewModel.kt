@@ -13,6 +13,7 @@ import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.StatisticsResponse
+import com.felisreader.manga.domain.model.api.TagEntity
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -52,6 +53,8 @@ class SearchViewModel @Inject constructor(
             _historyState.value
         )
 
+    private val _tagsState = MutableStateFlow<List<TagEntity>>(emptyList())
+    val tagsState = _tagsState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -67,6 +70,10 @@ class SearchViewModel @Inject constructor(
                 }
                 _historyState.value = list
             }
+        }
+
+        viewModelScope.launch {
+            _tagsState.value = mangaUseCases.getMangaTags()
         }
     }
 
@@ -87,6 +94,7 @@ class SearchViewModel @Inject constructor(
                         publicationDemographic = event.query.publicationDemographic,
                         status = event.query.status,
                         title = if (event.query.title.isNullOrBlank()) null else event.query.title,
+                        includedTags = event.query.includedTags,
                         offset = 0
                     ),
                     mangaList = null,

@@ -116,8 +116,7 @@ private fun TagChipGroupPreview() {
                 description = mapOf("en" to "Comedy"),
                 group = TagGroup.GENRE,
                 version = 1
-            ),
-            relationships = emptyList()
+            )
         ),
         TagEntity(
             id = UUID.randomUUID(),
@@ -127,8 +126,7 @@ private fun TagChipGroupPreview() {
                 description = mapOf("en" to "Romance"),
                 group = TagGroup.GENRE,
                 version = 1
-            ),
-            relationships = emptyList()
+            )
         ),
         TagEntity(
             id = UUID.randomUUID(),
@@ -138,8 +136,7 @@ private fun TagChipGroupPreview() {
                 description = mapOf("en" to "Action"),
                 group = TagGroup.GENRE,
                 version = 1
-            ),
-            relationships = emptyList()
+            )
         )
     )
 

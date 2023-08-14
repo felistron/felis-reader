@@ -32,4 +32,6 @@
     <string name="welcome_dismiss">Entendido</string>
     <string name="previous_chapter">Capítulo anterior</string>
     <string name="next_chapter">Capítulo siguiente</string>
+    <string name="filter_tag_placeholder">Agregar etiqueta</string>
+    <string name="filter_tags">Etiquetas</string>
 </resources>

@@ -8,23 +8,28 @@ import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.felisreader.R
+import com.felisreader.core.util.AppUtil
 import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.manga.domain.model.api.PublicationDemographic
 import com.felisreader.manga.domain.model.api.Status
+import com.felisreader.manga.domain.model.api.TagEntity
 import com.felisreader.manga.presentation.manga_search.SearchEvent
 
 @Composable
 fun FilterField(
     expanded: Boolean,
     onEvent: (SearchEvent) -> Unit,
-    query: MangaListQuery
+    query: MangaListQuery,
+    supportedTags: List<TagEntity>,
 ) {
     val queryState = remember { mutableStateOf(query.copy()) }
 
@@ -50,8 +55,35 @@ fun FilterField(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             AnimatedVisibility (expanded) {
-                FilterList(onEvent, queryState)
+                FilterList(onEvent, queryState, supportedTags)
             }
+        }
+    }
+}
+
+@Composable
+fun FilterList(
+    onEvent: (SearchEvent) -> Unit,
+    queryState: MutableState<MangaListQuery>,
+    supportedTags: List<TagEntity>
+) {
+    Column(
+        modifier = Modifier.padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        TagField(queryState, supportedTags)
+        Divider()
+        ContentRatingField(queryState)
+        PublicationStatusField(queryState)
+        MagazineDemographicField(queryState)
+        Button(
+            onClick = {
+                onEvent(SearchEvent.ToggleFilter)
+                onEvent(SearchEvent.ApplyFilter(queryState.value))
+            },
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(text = stringResource(id = R.string.filter_apply))
         }
     }
 }
@@ -90,26 +122,107 @@ fun FilterChip(
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun FilterList(
-    onEvent: (SearchEvent) -> Unit,
-    queryState: MutableState<MangaListQuery>
+fun TagField(
+    queryState: MutableState<MangaListQuery>,
+    supportedTags: List<TagEntity>
 ) {
-    Column(
-        modifier = Modifier.padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        ContentRatingField(queryState)
-        PublicationStatusField(queryState)
-        MagazineDemographicField(queryState)
-        Button(
-            onClick = {
-                onEvent(SearchEvent.ToggleFilter)
-                onEvent(SearchEvent.ApplyFilter(queryState.value))
-            },
-            shape = MaterialTheme.shapes.medium
+    var tagText by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+
+    val selectedTags: List<TagEntity> = queryState.value.includedTags?.mapNotNull {
+        supportedTags.firstOrNull { tag -> tag.id.toString() == it }
+    } ?: emptyList()
+
+    // Tags to be displayed in the dropdown menu
+    val displayTags = supportedTags
+        .filter {
+            // Exclude tags that are already selected
+            !(queryState.value.includedTags?.contains(it.id.toString()) ?: false)
+        }
+        .sortedBy {
+            // Sort tags by its levenshtein distance to the input
+            AppUtil.levenshteinDistance(tagText, it.attributes.name["en"] ?: "")
+        }
+        .take(5)
+
+    Column {
+        Text(
+            text = stringResource(id = R.string.filter_tags),
+            style = MaterialTheme.typography.titleMedium
+        )
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it }
         ) {
-            Text(text = stringResource(id = R.string.filter_apply))
+            OutlinedTextField(
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
+                value = tagText,
+                onValueChange = {
+                    tagText = it
+                    expanded = true
+                },
+                placeholder = {
+                    Text(text = stringResource(id = R.string.filter_tag_placeholder))
+                },
+                singleLine = true,
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                displayTags.forEach { tag ->
+                    DropdownMenuItem(
+                        onClick = {
+                            queryState.value = queryState.value.copy(
+                                includedTags = queryState.value.includedTags.plusOrCreate(tag.id.toString())
+                            )
+                            tagText = ""
+                            expanded = false
+                        },
+                        text = {
+                            Text(text = tag.attributes.name["en"] ?: "")
+                        }
+                    )
+                }
+            }
+        }
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.Top,
+        ) {
+            selectedTags.take(5).forEach { tag ->
+                FilterChip(
+                    onClick = {
+                        queryState.value = queryState.value.copy(
+                            includedTags = queryState.value.includedTags?.minus(tag.id.toString())
+                        )
+                    },
+                    label = tag.attributes.name["en"] ?: "",
+                    selected = true
+                )
+            }
+            if (selectedTags.size > 5) {
+                AssistChip(
+                    enabled = false,
+                    onClick = {  },
+                    label = {
+                        Text(
+                            text = "+${selectedTags.size - 5}",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    },
+                    border = null,
+                    colors = AssistChipDefaults.assistChipColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.surface,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+                )
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.core.presentation.Loading
+import com.felisreader.manga.domain.model.api.TagEntity
 import com.felisreader.manga.presentation.manga_search.components.FilterField
 import com.felisreader.manga.presentation.manga_search.components.MangaCard
 import com.felisreader.manga.presentation.manga_search.components.SearchField
@@ -37,12 +38,13 @@ fun SearchScreen(
             state = viewModel.state.value,
             searchText = viewModel.titleSearchState.collectAsState().value,
             history = viewModel.historyState.collectAsState().value,
-            onEvent = viewModel::onEvent
+            onEvent = viewModel::onEvent,
         )
         SearchContent(
             state = viewModel.state.value,
             onEvent = viewModel::onEvent,
-            navigateToInfo = navigateToInfo
+            navigateToInfo = navigateToInfo,
+            supportedTags = viewModel.tagsState.collectAsState().value,
         )
     }
 }
@@ -50,6 +52,7 @@ fun SearchScreen(
 @Composable
 fun SearchContent(
     state: SearchState,
+    supportedTags: List<TagEntity>,
     onEvent: (SearchEvent) -> Unit,
     navigateToInfo: (mangaId: String) -> Unit
 ) {
@@ -76,7 +79,8 @@ fun SearchContent(
                             FilterField(
                                 expanded = state.expandedFilter,
                                 onEvent = onEvent,
-                                query = state.query
+                                query = state.query,
+                                supportedTags = supportedTags,
                             )
                         }
                         items(
