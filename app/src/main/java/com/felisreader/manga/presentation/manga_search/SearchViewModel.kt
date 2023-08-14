@@ -13,6 +13,7 @@ import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.StatisticsResponse
+import com.felisreader.manga.domain.model.api.TagEntity
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -52,23 +53,13 @@ class SearchViewModel @Inject constructor(
             _historyState.value
         )
 
+    private val _tagsState = MutableStateFlow<List<TagEntity>>(emptyList())
+    val tagsState = _tagsState.asStateFlow()
 
     init {
         viewModelScope.launch {
             dataStore.getPreferences().collect { preferences ->
                 _state.value = _state.value.copy(welcomeDialogVisible = preferences.showWelcome)
-            }
-        }
-
-        viewModelScope.launch {
-            getMangaList()?.let { mangaList ->
-                val canLoadMore = mangaList.data.size < mangaList.total
-
-                _state.value = _state.value.copy(
-                    mangaList = mangaList,
-                    canLoadMore = canLoadMore,
-                    loading = false
-                )
             }
         }
 
@@ -79,6 +70,10 @@ class SearchViewModel @Inject constructor(
                 }
                 _historyState.value = list
             }
+        }
+
+        viewModelScope.launch {
+            _tagsState.value = mangaUseCases.getMangaTags()
         }
     }
 
@@ -99,6 +94,7 @@ class SearchViewModel @Inject constructor(
                         publicationDemographic = event.query.publicationDemographic,
                         status = event.query.status,
                         title = if (event.query.title.isNullOrBlank()) null else event.query.title,
+                        includedTags = event.query.includedTags,
                         offset = 0
                     ),
                     mangaList = null,
@@ -147,6 +143,33 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.OnSearch -> onSearch(event.title)
+
+            is SearchEvent.LoadMangaList -> loadMangaList(event.title, event.tag)
+        }
+    }
+
+    private fun loadMangaList(title: String?, tag: String?) {
+        _state.value = _state.value.copy(
+            query = _state.value.query.copy(
+                title = title,
+                includedTags = tag?.let { listOf(it) },
+            ),
+            mangaList = null,
+            lazyListState = LazyListState(),
+            canLoadMore = true,
+            loading = true
+        )
+
+        viewModelScope.launch {
+            getMangaList()?.let { mangaList ->
+                val canLoadMore = mangaList.data.size < mangaList.total
+
+                _state.value = _state.value.copy(
+                    mangaList = mangaList,
+                    canLoadMore = canLoadMore,
+                    loading = false
+                )
+            }
         }
     }
 

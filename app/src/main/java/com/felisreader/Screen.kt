@@ -4,9 +4,27 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
-sealed class Screen(val route: String, val args: List<NamedNavArgument> = emptyList()) {
-    // TODO: Add optional parameters -> Title, tag and author
-    object SearchScreen: Screen(route = "search")
+sealed class Screen(
+    val route: String,
+    val args: List<NamedNavArgument> = emptyList()
+) {
+    data class SearchScreen(
+        val title: String? = "{title}",
+        val tag: String? = "{tag}",
+    ):
+        Screen(
+            route = "search?title=$title&tag=$tag}",
+            args = listOf(
+                navArgument("title") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("tag") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+            )
+        )
 
     data class InfoScreen(val mangaId: String = "{id}"):
         Screen(

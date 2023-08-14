@@ -73,7 +73,7 @@ object AppUtil {
      * @param s2 The second string
      * @return The levenshtein distance between the two strings
      */
-    private fun levenshteinDistance(s1: String, s2: String): Int {
+    fun levenshteinDistance(s1: String, s2: String): Int {
         val s1Length: Int = s1.length
         val s2Length: Int = s2.length
 

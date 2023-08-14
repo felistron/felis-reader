@@ -4,6 +4,7 @@ import com.felisreader.core.domain.*
 import com.felisreader.manga.domain.model.api.MangaListResponse
 import com.felisreader.manga.domain.model.api.MangaResponse
 import com.felisreader.manga.domain.model.api.StatisticsResponse
+import com.felisreader.manga.domain.model.api.TagResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -54,6 +55,9 @@ interface MangaService {
     suspend fun getMangaStatistics(
         @Path("id") id: String
     ): Response<StatisticsResponse>
+
+    @GET("manga/tag")
+    suspend fun getMangaTags(): Response<TagResponse>
 
     companion object {
         const val BASE_URL: String = "https://api.mangadex.org/"

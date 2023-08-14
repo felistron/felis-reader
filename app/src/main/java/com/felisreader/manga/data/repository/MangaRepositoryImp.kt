@@ -6,6 +6,7 @@ import com.felisreader.manga.data.source.remote.MangaService
 import com.felisreader.manga.domain.model.api.MangaListResponse
 import com.felisreader.manga.domain.model.api.MangaResponse
 import com.felisreader.manga.domain.model.api.StatisticsResponse
+import com.felisreader.manga.domain.model.api.TagResponse
 import com.felisreader.manga.domain.repository.MangaRepository
 import retrofit2.Response
 
@@ -58,6 +59,11 @@ class MangaRepositoryImp(
 
     override suspend fun getStatistics(ids: List<String>): StatisticsResponse? {
         val response: Response<StatisticsResponse> = mangaService.getStatistics(ids)
+        return response.body()
+    }
+
+    override suspend fun getMangaTags(): TagResponse? {
+        val response: Response<TagResponse> = mangaService.getMangaTags()
         return response.body()
     }
 }
