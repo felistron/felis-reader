@@ -47,6 +47,8 @@ object MangaUtil {
         val authorName: String = if (authorRelationship == null) "Unknown author"
         else authorRelationship.attributes["name"].toString()
 
+        val authorId: String = authorRelationship?.id.toString()
+
         return Manga(
             id = mangaEntity.id.toString(),
             title = title,
@@ -55,6 +57,7 @@ object MangaUtil {
             coverUrl = coverUrl,
             coverUrlSave = coverUrlSave,
             author = Author(
+                id = authorId,
                 name = authorName
             ),
             tags = mangaEntity.attributes.tags,

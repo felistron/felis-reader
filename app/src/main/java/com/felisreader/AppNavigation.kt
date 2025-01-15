@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.felisreader.author.presentation.author_info.AuthorScreen
 import com.felisreader.chapter.presentation.chapter_lector.LectorScreen
 import com.felisreader.chapter.presentation.chapter_list.ChapterListScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
@@ -61,6 +62,15 @@ fun AppNavigation(
                                 inclusive = false
                             }
                         }
+                    },
+                    navigateToAuthor = { authorId ->
+                        navController.navigate(Screen.AuthorScreen(authorId = authorId).route) {
+                            launchSingleTop = true
+
+                            popUpTo(Screen.InfoScreen(mangaId).route) {
+                                inclusive = false
+                            }
+                        }
                     }
                 )
             }
@@ -88,6 +98,22 @@ fun AppNavigation(
         ) {
             it.arguments?.getString("id")?.let { chapterId ->
                 LectorScreen(chapterId = chapterId)
+            }
+        }
+
+        composable(
+            route = Screen.AuthorScreen().route,
+            arguments = Screen.AuthorScreen().args
+        ) {
+            it.arguments?.getString("id")?.let { authorId ->
+                AuthorScreen(
+                    authorId = authorId,
+                    navigateToManga = { mangaId ->
+                        navController.navigate(Screen.InfoScreen(mangaId).route) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
             }
         }
     }
