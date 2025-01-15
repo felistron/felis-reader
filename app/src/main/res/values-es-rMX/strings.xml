@@ -37,4 +37,5 @@
     <string name="author_biography">Biografía</string>
     <string name="author_no_biography">Sin biografía</string>
     <string name="author_titles">Titulos del autor</string>
+    <string name="author_social">Redes sociales</string>
 </resources>

@@ -43,4 +43,5 @@
     <string name="author_biography">Biography</string>
     <string name="author_no_biography">No biography</string>
     <string name="author_titles">Author\'s work</string>
+    <string name="author_social">Social</string>
 </resources>
