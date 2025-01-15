@@ -20,6 +20,7 @@ fun MangaScreen(
     mangaId: String,
     navigateToFeed: () -> Unit,
     searchByTag: (tagId: String) -> Unit,
+    navigateToAuthor: (authorId: String) -> Unit,
 ) {
     LaunchedEffect(true) {
         if (viewModel.state.value.loading) {
@@ -32,6 +33,7 @@ fun MangaScreen(
         onEvent = viewModel::onEvent,
         navigateToFeed = navigateToFeed,
         searchByTag = searchByTag,
+        navigateToAuthor = navigateToAuthor,
     )
 }
 
@@ -41,6 +43,7 @@ fun MangaContent(
     onEvent: (MangaEvent) -> Unit,
     navigateToFeed: () -> Unit,
     searchByTag: (tagId: String) -> Unit,
+    navigateToAuthor: (authorId: String) -> Unit,
 ) {
     when {
         state.loading && state.manga == null -> {
@@ -56,7 +59,12 @@ fun MangaContent(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 CoverField(state.manga.coverUrl)
-                TitleField(state.manga)
+                TitleField(
+                    manga = state.manga,
+                    onAuthorClick = { authorId ->
+                        navigateToAuthor(authorId)
+                    }
+                )
                 TagChipGroup(
                     tags = state.manga.tags,
                     onTagClick = { tagId ->

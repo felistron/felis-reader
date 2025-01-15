@@ -59,4 +59,15 @@ sealed class Screen(
                 }
             )
         )
+
+    data class AuthorScreen(val authorId: String = "{id}"):
+        Screen(
+            route = "author/$authorId",
+            args = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        )
 }

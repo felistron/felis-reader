@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.sp
 import com.felisreader.manga.domain.model.Manga
 
 @Composable
-fun TitleField(manga: Manga) {
+fun TitleField(
+    manga: Manga,
+    onAuthorClick: (authorId: String) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -41,7 +44,7 @@ fun TitleField(manga: Manga) {
         )
         Spacer(modifier = Modifier.height(5.dp))
         AssistChip(
-            onClick = { /*TODO*/ },
+            onClick = { onAuthorClick(manga.author.id) },
             label = {
                 Text(
                     text = manga.author.name,

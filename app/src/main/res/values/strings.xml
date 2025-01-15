@@ -40,4 +40,7 @@
     <string name="next_chapter">Next chapter</string>
     <string name="filter_tag_placeholder">Add tag</string>
     <string name="filter_tags">Tags</string>
+    <string name="author_biography">Biography</string>
+    <string name="author_no_biography">No biography</string>
+    <string name="author_titles">Author\'s work</string>
 </resources>
