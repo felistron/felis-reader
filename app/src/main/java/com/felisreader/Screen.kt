@@ -70,4 +70,10 @@ sealed class Screen(
                 }
             )
         )
+
+    data class HomeScreen(val idk: String = "{idk}"):
+            Screen(route = "home")
+
+    data class LibraryScreen(val idk: String = "{idk}"):
+        Screen(route = "library")
 }

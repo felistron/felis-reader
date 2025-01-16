@@ -10,7 +10,9 @@ import androidx.navigation.compose.composable
 import com.felisreader.author.presentation.author_info.AuthorScreen
 import com.felisreader.chapter.presentation.chapter_lector.LectorScreen
 import com.felisreader.chapter.presentation.chapter_list.ChapterListScreen
+import com.felisreader.manga.presentation.manga_home.HomeScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
+import com.felisreader.manga.presentation.manga_library.LibraryScreen
 import com.felisreader.manga.presentation.manga_search.SearchScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -115,6 +117,18 @@ fun AppNavigation(
                     },
                 )
             }
+        }
+
+        composable(
+            route = Screen.HomeScreen().route,
+        ) {
+            HomeScreen()
+        }
+
+        composable(
+            route = Screen.LibraryScreen().route,
+        ) {
+            LibraryScreen()
         }
     }
 }

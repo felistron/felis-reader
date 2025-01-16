@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.felisreader.core.presentation.BottomBar
 import com.felisreader.ui.theme.FelisReaderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,6 +53,11 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier.padding(it)
                                 )
                             }
+                        },
+                        bottomBar = {
+                            BottomBar(
+                                navController = navController,
+                            )
                         }
                     )
                     if (BuildConfig.DEBUG) {
