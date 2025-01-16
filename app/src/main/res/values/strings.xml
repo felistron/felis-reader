@@ -45,4 +45,7 @@
     <string name="author_titles">Author\'s work</string>
     <string name="author_social">Social</string>
     <string name="ui_cancel">Cancel</string>
+    <string name="ui_home">Home</string>
+    <string name="ui_search">Search</string>
+    <string name="ui_library">Library</string>
 </resources>
