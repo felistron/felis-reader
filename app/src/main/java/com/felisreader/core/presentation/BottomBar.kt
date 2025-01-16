@@ -11,13 +11,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.felisreader.R
 import com.felisreader.Screen
 
@@ -26,7 +24,8 @@ fun BottomBar(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var selectedItem by remember { mutableIntStateOf(1) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
         modifier = modifier,
@@ -44,9 +43,8 @@ fun BottomBar(
             label = {
                 Text(stringResource(id = R.string.ui_home))
             },
-            selected = selectedItem == 0,
+            selected = currentRoute == Screen.HomeScreen().route,
             onClick = {
-                selectedItem = 0
                 navController.navigate(Screen.HomeScreen().route) {
                     navController.graph.startDestinationRoute?.let { route ->
                         popUpTo(route) {
@@ -68,9 +66,8 @@ fun BottomBar(
             label = {
                 Text(stringResource(id = R.string.ui_search))
             },
-            selected = selectedItem == 1,
+            selected = currentRoute == Screen.SearchScreen().route,
             onClick = {
-                selectedItem = 1
                 navController.navigate(Screen.SearchScreen().route) {
                     navController.graph.startDestinationRoute?.let { route ->
                         popUpTo(route) {
@@ -92,9 +89,8 @@ fun BottomBar(
             label = {
                 Text(stringResource(id = R.string.ui_library))
             },
-            selected = selectedItem == 2,
+            selected = currentRoute == Screen.LibraryScreen().route,
             onClick = {
-                selectedItem = 2
                 navController.navigate(Screen.LibraryScreen().route) {
                     navController.graph.startDestinationRoute?.let { route ->
                         popUpTo(route) {
