@@ -1,10 +1,10 @@
 package com.felisreader.manga.presentation.manga_search.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -40,25 +40,7 @@ fun FilterField(
             .fillMaxWidth(),
         tonalElevation = if (expanded) 5.dp else 0.dp
     ) {
-        Column {
-            AssistChip(
-                onClick = { onEvent(SearchEvent.ToggleFilter) },
-                label = {
-                    Text(text = stringResource(id = R.string.filter))
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Outlined.FilterList,
-                        contentDescription = "Outlined filter list icon"
-                    )
-                },
-                border = null,
-                modifier = Modifier.padding(horizontal = 10.dp)
-            )
-            AnimatedVisibility (expanded) {
-                FilterList(onEvent, queryState, supportedTags)
-            }
-        }
+        FilterList(onEvent, queryState, supportedTags)
     }
 }
 
@@ -68,23 +50,47 @@ fun FilterList(
     queryState: MutableState<MangaListQuery>,
     supportedTags: List<TagEntity>
 ) {
+    val scrollState = ScrollState(initial = 0)
+
     Column(
-        modifier = Modifier.padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        modifier = Modifier
+            .padding(16.dp)
+            .verticalScroll(state = scrollState),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         TagField(queryState, supportedTags)
-        Divider()
+        Spacer(modifier = Modifier.height(16.dp))
         ContentRatingField(queryState)
+        Spacer(modifier = Modifier.height(16.dp))
         PublicationStatusField(queryState)
+        Spacer(modifier = Modifier.height(16.dp))
         MagazineDemographicField(queryState)
-        Button(
-            onClick = {
-                onEvent(SearchEvent.ToggleFilter)
-                onEvent(SearchEvent.ApplyFilter(queryState.value))
-            },
-            shape = MaterialTheme.shapes.medium
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = stringResource(id = R.string.filter_apply))
+            Button(
+                onClick = {
+                    onEvent(SearchEvent.ToggleFilter)
+                    onEvent(SearchEvent.ApplyFilter(queryState.value))
+                },
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(text = stringResource(id = R.string.filter_apply))
+            }
+            Button(
+                onClick = {
+                    onEvent(SearchEvent.ToggleFilter)
+                },
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            ) {
+                Text(text = stringResource(id = R.string.ui_cancel))
+            }
         }
     }
 }
