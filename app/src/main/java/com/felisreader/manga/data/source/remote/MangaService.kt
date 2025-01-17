@@ -1,6 +1,5 @@
 package com.felisreader.manga.data.source.remote
 
-import com.felisreader.core.domain.*
 import com.felisreader.manga.domain.model.api.MangaListResponse
 import com.felisreader.manga.domain.model.api.MangaResponse
 import com.felisreader.manga.domain.model.api.StatisticsResponse
