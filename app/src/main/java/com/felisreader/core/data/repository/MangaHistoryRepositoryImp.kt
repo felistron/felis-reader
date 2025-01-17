@@ -11,8 +11,8 @@ class MangaHistoryRepositoryImp(
         return dao.getAll()
     }
 
-    override suspend fun insert(item: MangaHistoryEntity) {
-        dao.insertOrUpdate(item)
+    override suspend fun insert(mangaId: String) {
+        dao.insertOrUpdate(MangaHistoryEntity(mangaId, System.currentTimeMillis()))
     }
 
     override suspend fun deleteById(mangaId: String) {

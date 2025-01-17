@@ -9,6 +9,6 @@ data class HistoryUseCases(
     val addItem: suspend (content: String, timestamp: Long) -> Unit,
     val deleteItem: suspend (content: String) -> Unit,
     val getMangaHistory: suspend () -> List<MangaHistoryEntity>,
-    val addMangaItem: suspend (MangaHistoryEntity) -> Unit,
+    val addMangaItem: suspend (mangaId: String) -> Unit,
     val deleteMangaItem: suspend (mangaId: String) -> Unit
 )

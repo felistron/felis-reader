@@ -4,6 +4,6 @@ import com.felisreader.core.domain.model.MangaHistoryEntity
 
 interface MangaHistoryRepository {
     suspend fun getAll(): List<MangaHistoryEntity>
-    suspend fun insert(item: MangaHistoryEntity)
+    suspend fun insert(mangaId: String)
     suspend fun deleteById(mangaId: String)
 }
