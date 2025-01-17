@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.felisreader.core.data.repository.HistoryRepositoryImp
+import com.felisreader.core.data.repository.MangaHistoryRepositoryImp
 import com.felisreader.core.data.source.local.HistoryDatabase
+import com.felisreader.core.domain.model.SearchHistoryEntity
 import com.felisreader.core.domain.repository.HistoryRepository
-import com.felisreader.core.domain.use_case.AddHistoryItemUseCase
-import com.felisreader.core.domain.use_case.DeleteHistoryItemUseCase
-import com.felisreader.core.domain.use_case.GetHistoryListUseCase
+import com.felisreader.core.domain.repository.MangaHistoryRepository
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.data.source.remote.MangaService
@@ -61,11 +61,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(historyRepository: HistoryRepository): HistoryUseCases {
+    fun provideMangaHistoryRepository(db: HistoryDatabase): MangaHistoryRepository {
+        return MangaHistoryRepositoryImp(db.mangaHistoryDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUseCases(
+        historyRepository: HistoryRepository,
+        mangaHistoryRepository: MangaHistoryRepository
+    ): HistoryUseCases {
         return HistoryUseCases(
-            getHistory = GetHistoryListUseCase(historyRepository),
-            addItem = AddHistoryItemUseCase(historyRepository),
-            deleteItem = DeleteHistoryItemUseCase(historyRepository)
+            getHistory = historyRepository::getAll,
+            addItem = { content, timestamp ->
+                historyRepository.insert(SearchHistoryEntity(content, timestamp))
+            },
+            deleteItem = historyRepository::deleteByContent,
+            getMangaHistory = mangaHistoryRepository::getAll,
+            addMangaItem = mangaHistoryRepository::insert,
+            deleteMangaItem = mangaHistoryRepository::deleteById,
         )
     }
 
