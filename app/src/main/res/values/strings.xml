@@ -48,4 +48,6 @@
     <string name="ui_home">Home</string>
     <string name="ui_search">Search</string>
     <string name="ui_library">Library</string>
+    <string name="ui_home_popular">Popular</string>
+    <string name="ui_home_recent">Recent</string>
 </resources>

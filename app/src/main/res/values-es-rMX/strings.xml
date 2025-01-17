@@ -42,4 +42,6 @@
     <string name="ui_home">Inicio</string>
     <string name="ui_search">Buscar</string>
     <string name="ui_library">Biblioteca</string>
+    <string name="ui_home_popular">Popular</string>
+    <string name="ui_home_recent">Reciente</string>
 </resources>

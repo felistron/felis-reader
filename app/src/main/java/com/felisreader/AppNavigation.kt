@@ -24,7 +24,7 @@ fun AppNavigation(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Screen.SearchScreen().route
+        startDestination = Screen.HomeScreen().route
     ) {
         composable(
             route = Screen.SearchScreen().route
@@ -122,7 +122,13 @@ fun AppNavigation(
         composable(
             route = Screen.HomeScreen().route,
         ) {
-            HomeScreen()
+            HomeScreen(
+                navigateToManga = { mangaId ->
+                    navController.navigate(Screen.InfoScreen(mangaId).route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         composable(
