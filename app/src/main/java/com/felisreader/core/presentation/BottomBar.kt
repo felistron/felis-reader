@@ -47,9 +47,9 @@ fun BottomBar(
                 label = {
                     Text(stringResource(id = R.string.ui_home))
                 },
-                selected = currentRoute == Screen.HomeScreen().route,
+                selected = currentRoute == Screen.HomeScreen.route,
                 onClick = {
-                    navController.navigate(Screen.HomeScreen().route) {
+                    navController.navigate(Screen.HomeScreen.route) {
                         navController.graph.startDestinationRoute?.let { route ->
                             popUpTo(route) {
                                 saveState = true
@@ -93,9 +93,9 @@ fun BottomBar(
                 label = {
                     Text(stringResource(id = R.string.ui_library))
                 },
-                selected = currentRoute == Screen.LibraryScreen().route,
+                selected = currentRoute == Screen.LibraryScreen.route,
                 onClick = {
-                    navController.navigate(Screen.LibraryScreen().route) {
+                    navController.navigate(Screen.LibraryScreen.route) {
                         navController.graph.startDestinationRoute?.let { route ->
                             popUpTo(route) {
                                 saveState = true
