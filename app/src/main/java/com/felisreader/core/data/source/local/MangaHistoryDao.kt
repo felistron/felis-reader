@@ -8,8 +8,8 @@ import com.felisreader.core.domain.model.MangaHistoryEntity
 
 @Dao
 interface MangaHistoryDao {
-    @Query("SELECT * FROM manga_history ORDER BY timestamp DESC")
-    suspend fun getAll(): List<MangaHistoryEntity>
+    @Query("SELECT * FROM manga_history ORDER BY timestamp DESC LIMIT :limit OFFSET :offset")
+    suspend fun getAll(limit: Int, offset: Int): List<MangaHistoryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(item: MangaHistoryEntity)

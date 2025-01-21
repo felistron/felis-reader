@@ -71,9 +71,9 @@ sealed class Screen(
             )
         )
 
-    data class HomeScreen(val idk: String = "{idk}"):
-            Screen(route = "home")
+    object HomeScreen: Screen(route = "home")
 
-    data class LibraryScreen(val idk: String = "{idk}"):
-        Screen(route = "library")
+    object LibraryScreen: Screen(route = "library")
+
+    object MangaHistoryScreen: Screen(route = "library/manga_history")
 }

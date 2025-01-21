@@ -15,9 +15,11 @@ import androidx.compose.ui.unit.sp
 import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.presentation.components.TagChipGroup
 import com.felisreader.manga.domain.model.Manga
+import java.util.Locale
 
 @Composable
 fun MangaCard(
+    modifier: Modifier = Modifier,
     manga: Manga,
     onCardClick: () -> Unit
 ) {
@@ -25,7 +27,7 @@ fun MangaCard(
         color = MaterialTheme.colorScheme.background,
         tonalElevation = 2.dp,
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(200.dp),
         onClick = onCardClick
@@ -41,13 +43,21 @@ fun MangaCard(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
-                Row(
-                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    Text(text = if (manga.statistics == null) "N/A" else String.format("%.2f", manga.statistics.rating.bayesian))
-                    Icon(imageVector = Icons.Outlined.StarBorder, contentDescription = "Rating")
+                if (manga.statistics != null) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text(
+                            text = String.format(
+                                Locale.getDefault(),
+                                "%.2f",
+                                manga.statistics.rating.bayesian
+                            )
+                        )
+                        Icon(imageVector = Icons.Outlined.StarBorder, contentDescription = "Rating")
+                    }
                 }
                 TagChipGroup(
                     tags = emptyList(),

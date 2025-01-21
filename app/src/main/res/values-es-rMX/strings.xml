@@ -44,4 +44,6 @@
     <string name="ui_library">Biblioteca</string>
     <string name="ui_home_popular">Popular</string>
     <string name="ui_home_recent">Reciente</string>
+    <string name="ui_library_manga_history">Mangas recientes</string>
+    <string name="uI_signin_mangadex">Inicia sesión con Mangadex</string>
 </resources>
