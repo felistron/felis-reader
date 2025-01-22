@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.core.domain.use_case.HistoryUseCases
+import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,7 +69,7 @@ class MangaHistoryViewModel @Inject constructor(
                 return@launch
             }
 
-            val history = mangaUseCases.getMangaList(MangaListQuery(
+            var history = mangaUseCases.getMangaList(MangaListQuery(
                 ids = ids,
                 includes = listOf(EntityType.AUTHOR, EntityType.COVER_ART),
             ))
@@ -76,6 +77,16 @@ class MangaHistoryViewModel @Inject constructor(
             if (history == null) {
                 _state.value = _state.value.copy(canLoadMore = false)
             } else {
+                val historyTemp: MutableList<Manga> = mutableListOf()
+
+                for (id in ids) {
+                    historyTemp.add( history.data.first { it.id == id} )
+                }
+
+                history = history.copy(
+                    data = historyTemp
+                )
+
                 val storedIds = _state.value.history?.data?.map { it.id } ?: emptyList()
                 val list = history.data.filter { manga -> !storedIds.contains(manga.id) }
 
