@@ -29,6 +29,21 @@ class MangaHistoryViewModel @Inject constructor(
         when (event) {
             is MangaHistoryEvent.LoadHistory -> loadHistory()
             is MangaHistoryEvent.LoadMore -> loadMore()
+            is MangaHistoryEvent.DeleteHistoryItem -> deleteHistoryItem(event.mangaId)
+        }
+    }
+
+    private fun deleteHistoryItem(mangaId: String) {
+        viewModelScope.launch {
+            historyUseCases.deleteMangaItem(mangaId)
+
+            val items = _state.value.history?.data?.filterNot { it.id == mangaId } ?: emptyList()
+
+            _state.value = _state.value.copy(
+                history = _state.value.history?.copy(
+                    data = items
+                )
+            )
         }
     }
 
@@ -47,6 +62,11 @@ class MangaHistoryViewModel @Inject constructor(
             val offset = _state.value.offset
 
             val ids = historyUseCases.getMangaHistory(LIMIT, offset).map { it.id }
+
+            if (ids.isEmpty()) {
+                _state.value = _state.value.copy(canLoadMore = false)
+                return@launch
+            }
 
             val history = mangaUseCases.getMangaList(MangaListQuery(
                 ids = ids,
