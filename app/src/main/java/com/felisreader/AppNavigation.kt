@@ -12,7 +12,8 @@ import com.felisreader.chapter.presentation.chapter_lector.LectorScreen
 import com.felisreader.chapter.presentation.chapter_list.ChapterListScreen
 import com.felisreader.manga.presentation.manga_home.HomeScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
-import com.felisreader.manga.presentation.manga_library.LibraryScreen
+import com.felisreader.library.presentation.LibraryScreen
+import com.felisreader.library.presentation.manga_history.MangaHistoryScreen
 import com.felisreader.manga.presentation.manga_search.SearchScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -24,7 +25,7 @@ fun AppNavigation(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Screen.HomeScreen().route
+        startDestination = Screen.HomeScreen.route
     ) {
         composable(
             route = Screen.SearchScreen().route
@@ -120,7 +121,7 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screen.HomeScreen().route,
+            route = Screen.HomeScreen.route,
         ) {
             HomeScreen(
                 navigateToManga = { mangaId ->
@@ -132,9 +133,27 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screen.LibraryScreen().route,
+            route = Screen.LibraryScreen.route,
         ) {
-            LibraryScreen()
+            LibraryScreen(
+                navigateToMangaHistory = {
+                    navController.navigate(Screen.MangaHistoryScreen.route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.MangaHistoryScreen.route,
+        ) {
+            MangaHistoryScreen(
+                navigateToManga = { mangaId ->
+                    navController.navigate(Screen.InfoScreen(mangaId).route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }

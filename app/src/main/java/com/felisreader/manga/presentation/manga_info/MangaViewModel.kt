@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.use_case.MangaUseCases
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MangaViewModel @Inject constructor(
-    private val mangaUseCases: MangaUseCases
+    private val mangaUseCases: MangaUseCases,
+    private val historyUseCases: HistoryUseCases,
 ) : ViewModel() {
     private val _state: MutableState<MangaState> = mutableStateOf(MangaState())
     val state: State<MangaState> = _state
@@ -29,6 +31,8 @@ class MangaViewModel @Inject constructor(
 
     private fun loadManga(mangaId: String) {
         viewModelScope.launch {
+            historyUseCases.addMangaItem(mangaId)
+
             val statisticsResponse: StatisticsResponse? = mangaUseCases.getMangaStatistics(mangaId)
 
             val manga: Manga? = getManga(mangaId)
