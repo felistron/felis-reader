@@ -11,4 +11,8 @@ sealed class MangaOrder(val orderType: OrderType, val name: String) {
     class FollowedCount(orderType: OrderType): MangaOrder(orderType, "followedCount")
     class Relevance(orderType: OrderType): MangaOrder(orderType, "relevance")
     class Rating(orderType: OrderType): MangaOrder(orderType, "rating")
+
+    override fun toString(): String {
+        return name + "/" + orderType.name
+    }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,9 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.felisreader.R
+import com.felisreader.core.domain.model.OrderType
 import com.felisreader.core.util.AppUtil
 import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.domain.model.api.MangaListQuery
+import com.felisreader.manga.domain.model.api.MangaOrder
 import com.felisreader.manga.domain.model.api.PublicationDemographic
 import com.felisreader.manga.domain.model.api.Status
 import com.felisreader.manga.domain.model.api.TagEntity
@@ -65,6 +68,8 @@ fun FilterList(
         PublicationStatusField(queryState)
         Spacer(modifier = Modifier.height(16.dp))
         MagazineDemographicField(queryState)
+        Spacer(modifier = Modifier.height(16.dp))
+        OrderField(queryState)
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -125,6 +130,104 @@ fun FilterChip(
         ),
         selected = selected
     )
+}
+
+@Composable
+fun OrderField(
+    queryState: MutableState<MangaListQuery>
+) {
+
+    val elements: List<Pair<String, List<MangaOrder>>> = listOf(
+        Pair(
+            stringResource(id = R.string.filter_no_order),
+            emptyList()
+        ),
+
+        Pair(
+            stringResource(id = R.string.filter_sort_title_desc),
+            listOf(MangaOrder.Title(OrderType.Descending))
+        ),
+        Pair(
+            stringResource(id = R.string.filter_sort_title_asc),
+            listOf(MangaOrder.Title(OrderType.Ascending))
+        ),
+
+        Pair(
+            stringResource(id = R.string.filter_sort_year_desc),
+            listOf(MangaOrder.Year(OrderType.Descending))
+        ),
+        Pair(
+            stringResource(id = R.string.filter_sort_year_asc),
+            listOf(MangaOrder.Year(OrderType.Ascending))
+        ),
+
+        Pair(
+            stringResource(id = R.string.filter_sort_followed_desc),
+            listOf(MangaOrder.FollowedCount(OrderType.Descending))
+        ),
+        Pair(
+            stringResource(id = R.string.filter_sort_followed_asc),
+            listOf(MangaOrder.FollowedCount(OrderType.Ascending))
+        ),
+
+        Pair(
+            stringResource(id = R.string.filter_sort_relevance_desc),
+            listOf(MangaOrder.Relevance(OrderType.Descending))
+        ),
+        Pair(
+            stringResource(id = R.string.filter_sort_relevance_asc),
+            listOf(MangaOrder.Relevance(OrderType.Ascending))
+        ),
+
+        Pair(
+            stringResource(id = R.string.filter_sort_rating_desc),
+            listOf(MangaOrder.Rating(OrderType.Descending))
+        ),
+        Pair(
+            stringResource(id = R.string.filter_sort_rating_asc),
+            listOf(MangaOrder.Rating(OrderType.Ascending))
+        ),
+    )
+
+    val first = elements.firstOrNull {
+        it.second.firstOrNull().toString() == queryState.value.order?.firstOrNull().toString()
+    }?.first ?: stringResource(id = R.string.filter_no_order)
+
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(first) }
+
+    Column {
+        Text(
+            text = stringResource(id = R.string.filter_sort_label),
+            style = MaterialTheme.typography.titleMedium
+        )
+        Box {
+            AssistChip(
+                label = { Text(selected) },
+                onClick = { expanded = !expanded},
+                trailingIcon = {
+                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                },
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                for (element in elements) {
+                    DropdownMenuItem(
+                        text = { Text(element.first) },
+                        onClick = {
+                            queryState.value = queryState.value.copy(
+                                order = element.second
+                            )
+                            expanded = false
+                            selected = element.first
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)

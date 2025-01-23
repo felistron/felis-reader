@@ -95,7 +95,8 @@ class SearchViewModel @Inject constructor(
                         status = event.query.status,
                         title = if (event.query.title.isNullOrBlank()) null else event.query.title,
                         includedTags = event.query.includedTags,
-                        offset = 0
+                        offset = 0,
+                        order = event.query.order
                     ),
                     mangaList = null,
                     lazyListState = LazyListState(),
