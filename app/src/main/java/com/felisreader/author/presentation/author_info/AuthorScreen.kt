@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +36,10 @@ fun AuthorScreen(
     viewModel: AuthorViewModel = hiltViewModel(),
     authorId: String,
     navigateToManga: (mangaId: String) -> Unit,
+    setTopBarTitle: (@Composable () -> Unit) -> Unit,
 ) {
+    setTopBarTitle { }
+
     LaunchedEffect(true) {
         if (viewModel.state.value.loading) {
             viewModel.onEvent(AuthorEvent.LoadAuthor(authorId))
@@ -45,6 +49,7 @@ fun AuthorScreen(
     AuthorContent(
         state = viewModel.state.value,
         navigateToManga = navigateToManga,
+        setTopBarTitle = setTopBarTitle,
     )
 }
 
@@ -53,6 +58,7 @@ fun AuthorScreen(
 fun AuthorContent(
     state: AuthorState,
     navigateToManga: (mangaId: String) -> Unit,
+    setTopBarTitle: (@Composable () -> Unit) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -62,6 +68,14 @@ fun AuthorContent(
         }
 
         !state.loading && state.author != null && state.titles != null -> {
+            setTopBarTitle {
+                Text(
+                    text = state.author.attributes.name,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .padding(16.dp)
