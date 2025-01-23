@@ -43,7 +43,10 @@ fun AppNavigation(
 
             SearchScreen(
                 navigateToInfo = { mangaId ->
-                    navController.navigate(Screen.InfoScreen(mangaId).route) {
+                    navController.navigate(Screen.InfoScreen(
+                        mangaId = mangaId,
+                        rootScreen = "search"
+                    ).route) {
                         launchSingleTop = true
                     }
                 },
@@ -72,7 +75,10 @@ fun AppNavigation(
                 MangaScreen(
                     mangaId = mangaId,
                     navigateToFeed = {
-                        navController.navigate(Screen.ChapterListScreen(mangaId).route) {
+                        navController.navigate(Screen.ChapterListScreen(
+                            mangaId = mangaId,
+                            rootScreen = it.arguments?.getString("root") ?: "{root}"
+                        ).route) {
                             launchSingleTop = true
 
                             popUpTo(Screen.InfoScreen(mangaId).route) {
@@ -90,7 +96,10 @@ fun AppNavigation(
                         }
                     },
                     navigateToAuthor = { authorId ->
-                        navController.navigate(Screen.AuthorScreen(authorId = authorId).route) {
+                        navController.navigate(Screen.AuthorScreen(
+                            authorId = authorId,
+                            rootScreen = it.arguments?.getString("root") ?: "{root}"
+                        ).route) {
                             launchSingleTop = true
 
                             popUpTo(Screen.InfoScreen(mangaId).route) {
@@ -140,7 +149,10 @@ fun AppNavigation(
                 AuthorScreen(
                     authorId = authorId,
                     navigateToManga = { mangaId ->
-                        navController.navigate(Screen.InfoScreen(mangaId).route) {
+                        navController.navigate(Screen.InfoScreen(
+                            mangaId = mangaId,
+                            rootScreen = it.arguments?.getString("root") ?: "{root}"
+                        ).route) {
                             launchSingleTop = true
                         }
                     },
@@ -156,7 +168,7 @@ fun AppNavigation(
 
             HomeScreen(
                 navigateToManga = { mangaId ->
-                    navController.navigate(Screen.InfoScreen(mangaId).route) {
+                    navController.navigate(Screen.InfoScreen(mangaId, "home").route) {
                         launchSingleTop = true
                     }
                 }
@@ -170,7 +182,9 @@ fun AppNavigation(
 
             LibraryScreen(
                 navigateToMangaHistory = {
-                    navController.navigate(Screen.MangaHistoryScreen.route) {
+                    navController.navigate(Screen.MangaHistoryScreen(
+                        rootScreen = "library"
+                    ).route) {
                         launchSingleTop = true
                     }
                 }
@@ -178,7 +192,7 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screen.MangaHistoryScreen.route,
+            route = Screen.MangaHistoryScreen().route,
         ) {
             setTopBarIcon {
                 IconButton(onClick = {
@@ -197,7 +211,10 @@ fun AppNavigation(
 
             MangaHistoryScreen(
                 navigateToManga = { mangaId ->
-                    navController.navigate(Screen.InfoScreen(mangaId).route) {
+                    navController.navigate(Screen.InfoScreen(
+                        mangaId = mangaId,
+                        rootScreen = it.arguments?.getString("root") ?: "{root}"
+                    ).route) {
                         launchSingleTop = true
                     }
                 }

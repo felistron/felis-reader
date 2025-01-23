@@ -30,6 +30,8 @@ fun BottomBar(
 
     val showNavigationBar = currentRoute != Screen.LectorScreen().route
 
+    val route = navBackStackEntry?.arguments?.getString("root")
+
     AnimatedVisibility(showNavigationBar) {
         NavigationBar(
             modifier = modifier,
@@ -47,7 +49,7 @@ fun BottomBar(
                 label = {
                     Text(stringResource(id = R.string.ui_home))
                 },
-                selected = currentRoute == Screen.HomeScreen.route,
+                selected = currentRoute == Screen.HomeScreen.route || route == "home",
                 onClick = {
                     navController.navigate(Screen.HomeScreen.route) {
                         navController.graph.startDestinationRoute?.let { route ->
@@ -70,7 +72,7 @@ fun BottomBar(
                 label = {
                     Text(stringResource(id = R.string.ui_search))
                 },
-                selected = currentRoute == Screen.SearchScreen().route,
+                selected = currentRoute == Screen.SearchScreen().route || route == "search",
                 onClick = {
                     navController.navigate(Screen.SearchScreen().route) {
                         navController.graph.startDestinationRoute?.let { route ->
@@ -93,7 +95,7 @@ fun BottomBar(
                 label = {
                     Text(stringResource(id = R.string.ui_library))
                 },
-                selected = currentRoute == Screen.LibraryScreen.route,
+                selected = currentRoute == Screen.LibraryScreen.route || route == "library",
                 onClick = {
                     navController.navigate(Screen.LibraryScreen.route) {
                         navController.graph.startDestinationRoute?.let { route ->
