@@ -9,6 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -206,7 +207,7 @@ fun AppNavigation(
             }
 
             setTopBarTitle {
-                Text("History")
+                Text(stringResource(id = R.string.ui_library_manga_history))
             }
 
             MangaHistoryScreen(
