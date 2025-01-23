@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
@@ -21,7 +22,10 @@ fun MangaScreen(
     navigateToFeed: () -> Unit,
     searchByTag: (tagId: String) -> Unit,
     navigateToAuthor: (authorId: String) -> Unit,
+    setTopBarTitle: (@Composable () -> Unit) -> Unit,
 ) {
+    setTopBarTitle { }
+
     LaunchedEffect(true) {
         if (viewModel.state.value.loading) {
             viewModel.onEvent(MangaEvent.LoadManga(mangaId = mangaId))
@@ -34,6 +38,7 @@ fun MangaScreen(
         navigateToFeed = navigateToFeed,
         searchByTag = searchByTag,
         navigateToAuthor = navigateToAuthor,
+        setTopBarTitle = setTopBarTitle,
     )
 }
 
@@ -44,6 +49,7 @@ fun MangaContent(
     navigateToFeed: () -> Unit,
     searchByTag: (tagId: String) -> Unit,
     navigateToAuthor: (authorId: String) -> Unit,
+    setTopBarTitle: (@Composable () -> Unit) -> Unit,
 ) {
     when {
         state.loading && state.manga == null -> {
@@ -51,6 +57,14 @@ fun MangaContent(
         }
 
         !state.loading && state.manga != null -> {
+            setTopBarTitle {
+                Text(
+                    text = state.manga.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)

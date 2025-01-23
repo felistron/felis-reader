@@ -55,7 +55,6 @@ fun HomeContent(
 
     Column(
         modifier = Modifier
-            .padding(vertical = 16.dp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {

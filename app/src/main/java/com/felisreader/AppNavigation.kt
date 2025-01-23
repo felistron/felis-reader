@@ -2,6 +2,11 @@ package com.felisreader
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -20,7 +25,11 @@ import com.felisreader.manga.presentation.manga_search.SearchScreen
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    setTopBarIcon: (@Composable () -> Unit) -> Unit,
+    setTopBarTitle: (@Composable () -> Unit) -> Unit,
+    resetTopBar: () -> Unit,
+    setTopBarVisible: (visible: Boolean) -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -30,6 +39,8 @@ fun AppNavigation(
         composable(
             route = Screen.SearchScreen().route
         ) {
+            resetTopBar()
+
             SearchScreen(
                 navigateToInfo = { mangaId ->
                     navController.navigate(Screen.InfoScreen(mangaId).route) {
@@ -46,6 +57,18 @@ fun AppNavigation(
             arguments = Screen.InfoScreen().args
         ) {
             it.arguments?.getString("id")?.let { mangaId ->
+
+                setTopBarIcon {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                }
+
                 MangaScreen(
                     mangaId = mangaId,
                     navigateToFeed = {
@@ -74,7 +97,8 @@ fun AppNavigation(
                                 inclusive = false
                             }
                         }
-                    }
+                    },
+                    setTopBarTitle = setTopBarTitle,
                 )
             }
         }
@@ -83,6 +107,8 @@ fun AppNavigation(
             route = Screen.ChapterListScreen().route,
             arguments = Screen.ChapterListScreen().args
         ) {
+            setTopBarVisible(true)
+
             it.arguments?.getString("id")?.let { mangaId ->
                 ChapterListScreen(
                     mangaId = mangaId,
@@ -99,6 +125,8 @@ fun AppNavigation(
             route = Screen.LectorScreen().route,
             arguments = Screen.LectorScreen().args
         ) {
+            setTopBarVisible(false)
+
             it.arguments?.getString("id")?.let { chapterId ->
                 LectorScreen(chapterId = chapterId)
             }
@@ -116,6 +144,7 @@ fun AppNavigation(
                             launchSingleTop = true
                         }
                     },
+                    setTopBarTitle = setTopBarTitle
                 )
             }
         }
@@ -123,6 +152,8 @@ fun AppNavigation(
         composable(
             route = Screen.HomeScreen.route,
         ) {
+            resetTopBar()
+
             HomeScreen(
                 navigateToManga = { mangaId ->
                     navController.navigate(Screen.InfoScreen(mangaId).route) {
@@ -135,6 +166,8 @@ fun AppNavigation(
         composable(
             route = Screen.LibraryScreen.route,
         ) {
+            resetTopBar()
+
             LibraryScreen(
                 navigateToMangaHistory = {
                     navController.navigate(Screen.MangaHistoryScreen.route) {
@@ -147,6 +180,21 @@ fun AppNavigation(
         composable(
             route = Screen.MangaHistoryScreen.route,
         ) {
+            setTopBarIcon {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            }
+
+            setTopBarTitle {
+                Text("History")
+            }
+
             MangaHistoryScreen(
                 navigateToManga = { mangaId ->
                     navController.navigate(Screen.InfoScreen(mangaId).route) {
