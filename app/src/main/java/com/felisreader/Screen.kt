@@ -26,11 +26,18 @@ sealed class Screen(
             )
         )
 
-    data class InfoScreen(val mangaId: String = "{id}"):
+    data class InfoScreen(
+        val mangaId: String = "{id}",
+        val rootScreen: String = "{root}",
+    ):
         Screen(
-            route = "manga/$mangaId",
+            route = "manga/$mangaId?root=$rootScreen",
             args = listOf(
                 navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument("root") {
                     type = NavType.StringType
                     nullable = false
                 }
@@ -38,11 +45,17 @@ sealed class Screen(
         )
 
     // TODO: Add optional parameter -> Order
-    data class ChapterListScreen(val mangaId: String = "{id}"):
+    data class ChapterListScreen(
+        val mangaId: String = "{id}",
+        val rootScreen: String = "{root}"
+    ):
         Screen(
-            route = "manga/$mangaId/chapters",
+            route = "manga/$mangaId/chapters?root=$rootScreen",
             args = listOf(
                 navArgument("id") {
+                    type = NavType.StringType
+                },
+                navArgument("root") {
                     type = NavType.StringType
                 }
             )
@@ -60,11 +73,18 @@ sealed class Screen(
             )
         )
 
-    data class AuthorScreen(val authorId: String = "{id}"):
+    data class AuthorScreen(
+        val authorId: String = "{id}",
+        val rootScreen: String = "{root}",
+    ):
         Screen(
-            route = "author/$authorId",
+            route = "author/$authorId?root=$rootScreen",
             args = listOf(
                 navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument("root") {
                     type = NavType.StringType
                     nullable = false
                 }
@@ -75,5 +95,15 @@ sealed class Screen(
 
     object LibraryScreen: Screen(route = "library")
 
-    object MangaHistoryScreen: Screen(route = "library/manga_history")
+    data class MangaHistoryScreen(
+        val rootScreen: String = "{root}"
+    ) : Screen(
+        route = "library/manga_history?root=$rootScreen",
+        args = listOf(
+            navArgument("root") {
+                type = NavType.StringType
+                nullable = false
+            }
+        )
+    )
 }
