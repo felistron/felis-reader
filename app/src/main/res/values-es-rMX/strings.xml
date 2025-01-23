@@ -46,4 +46,16 @@
     <string name="ui_home_recent">Reciente</string>
     <string name="ui_library_manga_history">Mangas recientes</string>
     <string name="uI_signin_mangadex">Inicia sesión con Mangadex</string>
+    <string name="filter_no_order">Sin ordenar</string>
+    <string name="filter_sort_label">Ordenar por</string>
+    <string name="filter_sort_title_desc">Titulo descendiente</string>
+    <string name="filter_sort_title_asc">Titulo ascendente</string>
+    <string name="filter_sort_year_desc">Reciente</string>
+    <string name="filter_sort_year_asc">Antiguo</string>
+    <string name="filter_sort_followed_desc">Más seguido</string>
+    <string name="filter_sort_followed_asc">Menos seguido</string>
+    <string name="filter_sort_relevance_desc">Mayor relevancia</string>
+    <string name="filter_sort_relevance_asc">Menor relevancia</string>
+    <string name="filter_sort_rating_desc">Mejor puntuado</string>
+    <string name="filter_sort_rating_asc">Peor puntuado</string>
 </resources>
