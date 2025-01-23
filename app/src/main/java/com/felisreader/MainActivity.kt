@@ -44,7 +44,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            FelisReaderTheme {
+            FelisReaderTheme(
+                dynamicColor = true
+            ) {
                 navController = rememberNavController()
                 scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
