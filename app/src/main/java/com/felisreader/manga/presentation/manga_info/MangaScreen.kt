@@ -71,8 +71,10 @@ fun MangaContent(
                     .verticalScroll(state = state.scrollState),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                CoverField(state.manga.coverUrl)
+                CoverField(
+                    modifier = Modifier.fillMaxWidth(),
+                    coverUrl = state.manga.coverUrl,
+                )
                 TitleField(
                     manga = state.manga,
                     onAuthorClick = { authorId ->
