@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -64,7 +65,7 @@ fun HomeContent(
             style = MaterialTheme.typography.headlineMedium
         )
         if (state.popularManga == null) {
-            Loading(modifier = Modifier, size = 32)
+            Loading(modifier = Modifier.fillMaxWidth(), size = 32)
         } else {
             MangaCarrousel(
                 mangas = state.popularManga.data,
@@ -77,7 +78,7 @@ fun HomeContent(
             style = MaterialTheme.typography.headlineMedium
         )
         if (state.recentManga == null) {
-            Loading(modifier = Modifier, size = 32)
+            Loading(modifier = Modifier.fillMaxWidth(), size = 32)
         } else {
             MangaCarrousel(
                 mangas = state.recentManga.data,
