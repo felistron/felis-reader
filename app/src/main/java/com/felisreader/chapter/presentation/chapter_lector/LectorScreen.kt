@@ -96,7 +96,7 @@ fun LectorContent(
                             }
                         }
                     },
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 state = state.lazyListState
             ) {
                 stickyHeader {
