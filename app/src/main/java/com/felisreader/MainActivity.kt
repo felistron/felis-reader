@@ -70,7 +70,11 @@ class MainActivity : ComponentActivity() {
                                 TopAppBar(
                                     scrollBehavior = scrollBehavior,
                                     title = { topBarTitle() },
-                                    navigationIcon = { topBarIcon() }
+                                    navigationIcon = { topBarIcon() },
+                                    colors = TopAppBarDefaults.topAppBarColors(
+                                        containerColor = MaterialTheme.colorScheme.background,
+                                        scrolledContainerColor = MaterialTheme.colorScheme.background,
+                                    ),
                                 )
                             }
                         },
