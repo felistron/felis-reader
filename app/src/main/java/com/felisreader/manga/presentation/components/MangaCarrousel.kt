@@ -3,6 +3,7 @@ package com.felisreader.manga.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -27,6 +28,8 @@ fun MangaCarrousel(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item { Spacer(modifier = Modifier.width(8.dp)) }
+
         items(
             items = mangas,
             key = { it.id }
@@ -36,6 +39,8 @@ fun MangaCarrousel(
                 onClick = { navigateToManga(manga.id) }
             )
         }
+
+        item { Spacer(modifier = Modifier.width(8.dp)) }
     }
 }
 
@@ -57,7 +62,11 @@ fun MangaCarrouselItem(
                 modifier = Modifier.height(300.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                CoverThumbnail(coverUrl = manga.coverUrlSave)
+                Surface(
+                    shape = MaterialTheme.shapes.medium,
+                ) {
+                    CoverThumbnail(coverUrl = manga.coverUrlSave)
+                }
             }
             Text(
                 modifier = Modifier.padding(8.dp),
