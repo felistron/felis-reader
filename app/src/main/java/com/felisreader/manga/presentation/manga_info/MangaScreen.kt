@@ -1,19 +1,39 @@
 package com.felisreader.manga.presentation.manga_info
 
-import androidx.compose.foundation.layout.*
+import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
-import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.core.presentation.Loading
+import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.presentation.components.TagChipGroup
-import com.felisreader.manga.presentation.manga_info.components.*
+import com.felisreader.manga.presentation.manga_info.components.CoverField
+import com.felisreader.manga.presentation.manga_info.components.InfoTabs
+import com.felisreader.manga.presentation.manga_info.components.StatusField
+import com.felisreader.manga.presentation.manga_info.components.TitleField
+
 
 @Composable
 fun MangaScreen(
@@ -51,6 +71,8 @@ fun MangaContent(
     navigateToAuthor: (authorId: String) -> Unit,
     setTopBarTitle: (@Composable () -> Unit) -> Unit,
 ) {
+    val context = LocalContext.current
+
     when {
         state.loading && state.manga == null -> {
             Loading(modifier = Modifier.fillMaxSize(), size = 64)
@@ -98,6 +120,19 @@ fun MangaContent(
                 ) {
                     Button(onClick = navigateToFeed) {
                         Text(text = stringResource(id = R.string.see_chapters))
+                    }
+                    IconButton(
+                        onClick = {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, "https://mangadex.org/title/${state.manga.id}")
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            startActivity(context, shareIntent, null)
+                        }
+                    ) {
+                        Icon(Icons.Default.Share, contentDescription = null)
                     }
                 }
                 InfoTabs(
