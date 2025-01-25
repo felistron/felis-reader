@@ -64,7 +64,7 @@ fun MangaHistoryContent(
             )
         }
 
-        state.history == null && !state.canLoadMore -> {
+        state.history == null || state.history.data.isEmpty() && !state.canLoadMore  -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -73,7 +73,7 @@ fun MangaHistoryContent(
             }
         }
 
-        state.history != null -> {
+        state.history.data.isNotEmpty() -> {
             LazyColumn(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
