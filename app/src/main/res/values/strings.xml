@@ -64,4 +64,5 @@
     <string name="filter_sort_relevance_asc">Lower relevance</string>
     <string name="filter_sort_rating_desc">Higher rating</string>
     <string name="filter_sort_rating_asc">Lower rating</string>
+    <string name="ui_empty_result">No results</string>
 </resources>
