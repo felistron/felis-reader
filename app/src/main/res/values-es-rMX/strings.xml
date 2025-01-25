@@ -58,4 +58,5 @@
     <string name="filter_sort_relevance_asc">Menor relevancia</string>
     <string name="filter_sort_rating_desc">Mejor puntuado</string>
     <string name="filter_sort_rating_asc">Peor puntuado</string>
+    <string name="ui_empty_result">Sin resultados</string>
 </resources>
