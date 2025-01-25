@@ -22,7 +22,6 @@ import com.felisreader.core.presentation.Loading
 import com.felisreader.manga.presentation.manga_search.components.FilterDialog
 import com.felisreader.manga.presentation.manga_search.components.MangaCard
 import com.felisreader.manga.presentation.manga_search.components.SearchField
-import com.felisreader.manga.presentation.manga_search.components.WelcomeDialog
 
 @Composable
 fun SearchScreen(
@@ -35,10 +34,6 @@ fun SearchScreen(
         if (viewModel.state.value.loading) {
             viewModel.onEvent(SearchEvent.LoadMangaList(title = title, tag = tag))
         }
-    }
-
-    AnimatedVisibility(viewModel.state.value.welcomeDialogVisible) {
-        WelcomeDialog(onClose = { viewModel.onEvent(SearchEvent.CloseWelcomeDialog(it)) })
     }
 
     AnimatedVisibility(
