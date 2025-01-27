@@ -32,6 +32,15 @@ class MangaHistoryViewModel @Inject constructor(
             is MangaHistoryEvent.LoadHistory -> loadHistory()
             is MangaHistoryEvent.LoadMore -> loadMore()
             is MangaHistoryEvent.DeleteHistoryItem -> deleteHistoryItem(event.mangaId)
+            is MangaHistoryEvent.Refresh -> refresh()
+        }
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            _state.value = MangaHistoryState()
+
+            loadHistory()
         }
     }
 
