@@ -2,6 +2,7 @@ package com.felisreader.manga.presentation.manga_home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
 import com.felisreader.core.presentation.Loading
 import com.felisreader.manga.presentation.components.MangaCarrousel
+import com.felisreader.manga.presentation.manga_search.components.WelcomeDialog
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -39,6 +41,14 @@ fun HomeScreen(
         if (viewModel.state.value.recentManga == null) {
             viewModel.onEvent(HomeEvent.LoadRecent)
         }
+    }
+
+    AnimatedVisibility(viewModel.state.value.welcomeDialogVisible) {
+        WelcomeDialog(
+            onClose = { showAgain ->
+                viewModel.onEvent(HomeEvent.CloseWelcomeDialog(showAgain))
+            }
+        )
     }
 
     HomeContent(
