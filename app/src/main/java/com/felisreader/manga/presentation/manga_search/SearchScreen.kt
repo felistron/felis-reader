@@ -46,16 +46,27 @@ fun SearchScreen(
         )
     }
 
-    var refreshing by remember { mutableStateOf(viewModel.state.value.loading) }
+    LaunchedEffect(true) {
+        if (viewModel.state.value.mangaList == null) {
+            viewModel.onEvent(SearchEvent.LoadMangaList(title = title, tag = tag))
+        }
+    }
+
+    var refreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(refreshing) {
         if (refreshing) {
-            viewModel.onEvent(SearchEvent.LoadMangaList(title = title, tag = tag))
-            //viewModel.onEvent(SearchEvent.Refresh)
-            // delay to trick user into thinking that the refresh process takes more time
-            // bc sometimes refresh is too fast and the user may think that nothing happen
-            delay(1000)
-            refreshing = false
+            viewModel.onEvent(
+                SearchEvent.LoadMangaList(
+                    title = viewModel.state.value.query.title,
+                    tag = viewModel.state.value.query.includedTags?.firstOrNull(),
+                ) {
+                    // delay to trick user into thinking that the refresh process takes more time
+                    // bc sometimes refresh is too fast and the user may think that nothing happened
+                    delay(1000)
+                    refreshing = false
+                }
+            )
         }
     }
 
@@ -100,7 +111,11 @@ fun SearchContent(
     navigateToInfo: (mangaId: String) -> Unit
 ) {
     when {
-        !state.loading && state.mangaList != null -> {
+        state.loading && state.mangaList == null -> {
+            Loading(modifier = Modifier.fillMaxSize(), size = 64)
+        }
+
+        state.mangaList != null -> {
             when {
                 state.mangaList.data.isEmpty() -> {
                     Box(
@@ -110,6 +125,7 @@ fun SearchContent(
                         Text(stringResource(id = R.string.ui_empty_result))
                     }
                 }
+
                 else -> {
                     LazyColumn(
                         modifier = Modifier.padding(horizontal = 8.dp),
@@ -141,10 +157,6 @@ fun SearchContent(
                     }
                 }
             }
-        }
-
-        else -> {
-            // TODO: Handle 4xx and 5xx errors
         }
     }
 }
