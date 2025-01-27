@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.OrderType
 import com.felisreader.core.domain.model.api.EntityType
+import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.MangaListQuery
@@ -22,16 +23,40 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val mangaUseCases: MangaUseCases
+    private val mangaUseCases: MangaUseCases,
+    private val dataStore: DataStoreManager,
 ) : ViewModel() {
     private val _state: MutableState<HomeState> = mutableStateOf(HomeState())
     val state: State<HomeState> = _state
+
+    init {
+        viewModelScope.launch {
+            dataStore.getPreferences().collect { preferences ->
+                _state.value = _state.value.copy(
+                    welcomeDialogVisible = preferences.showWelcome
+                )
+            }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: HomeEvent) {
         when(event) {
             is HomeEvent.LoadPopular -> loadPopular()
             is HomeEvent.LoadRecent -> loadRecent()
+            is HomeEvent.CloseWelcomeDialog -> closeWelcomeDialog(event.showAgain)
+        }
+    }
+
+    private fun closeWelcomeDialog(showAgain: Boolean) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                welcomeDialogVisible = false
+            )
+
+            dataStore.getPreferences().collect { preferences ->
+                dataStore.savePreferences(preferences.copy(showWelcome = showAgain))
+            }
         }
     }
 

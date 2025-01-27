@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.Sentence
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.core.util.AppUtil
-import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.StatisticsResponse
@@ -25,7 +24,6 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val mangaUseCases: MangaUseCases,
     private val historyUseCases: HistoryUseCases,
-    private val dataStore: DataStoreManager
 ): ViewModel() {
 
     private val _state: MutableState<SearchState> = mutableStateOf(SearchState())
@@ -57,12 +55,6 @@ class SearchViewModel @Inject constructor(
     val tagsState = _tagsState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            dataStore.getPreferences().collect { preferences ->
-                _state.value = _state.value.copy(welcomeDialogVisible = preferences.showWelcome)
-            }
-        }
-
         viewModelScope.launch {
             historyUseCases.getHistory().collect { history ->
                 val list: List<String> = history.map {
@@ -121,18 +113,6 @@ class SearchViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     searchBarActive = event.active
                 )
-            }
-
-            is SearchEvent.CloseWelcomeDialog -> {
-                _state.value = _state.value.copy(
-                    welcomeDialogVisible = false
-                )
-
-                viewModelScope.launch {
-                    dataStore.getPreferences().collect { preferences ->
-                        dataStore.savePreferences(preferences.copy(showWelcome = event.showAgain))
-                    }
-                }
             }
 
             is SearchEvent.AddHistoryItem -> addHistoryItem(event.content, event.timestamp)
