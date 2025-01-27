@@ -22,6 +22,9 @@ import com.felisreader.core.presentation.Loading
 import com.felisreader.manga.presentation.manga_search.components.FilterDialog
 import com.felisreader.manga.presentation.manga_search.components.MangaCard
 import com.felisreader.manga.presentation.manga_search.components.SearchField
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.delay
 
 @Composable
 fun SearchScreen(
@@ -30,12 +33,6 @@ fun SearchScreen(
     title: String?,
     tag: String?,
 ) {
-    LaunchedEffect(true) {
-        if (viewModel.state.value.loading) {
-            viewModel.onEvent(SearchEvent.LoadMangaList(title = title, tag = tag))
-        }
-    }
-
     AnimatedVisibility(
         visible = viewModel.state.value.expandedFilter,
         enter = EnterTransition.None,
@@ -49,32 +46,50 @@ fun SearchScreen(
         )
     }
 
-    Column {
-        SearchField(
-            state = viewModel.state.value,
-            searchText = viewModel.titleSearchState.collectAsState().value,
-            history = viewModel.historyState.collectAsState().value,
-            onEvent = viewModel::onEvent,
-        )
-        AssistChip(
-            onClick = { viewModel.onEvent(SearchEvent.ToggleFilter) },
-            label = {
-                Text(text = stringResource(id = R.string.filter))
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.FilterList,
-                    contentDescription = "Outlined filter list icon"
-                )
-            },
-            border = null,
-            modifier = Modifier.padding(horizontal = 10.dp)
-        )
-        SearchContent(
-            state = viewModel.state.value,
-            onEvent = viewModel::onEvent,
-            navigateToInfo = navigateToInfo,
-        )
+    var refreshing by remember { mutableStateOf(viewModel.state.value.loading) }
+
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            viewModel.onEvent(SearchEvent.LoadMangaList(title = title, tag = tag))
+            //viewModel.onEvent(SearchEvent.Refresh)
+            // delay to trick user into thinking that the refresh process takes more time
+            // bc sometimes refresh is too fast and the user may think that nothing happen
+            delay(1000)
+            refreshing = false
+        }
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = refreshing),
+        onRefresh = { refreshing = true }
+    ) {
+        Column {
+            SearchField(
+                state = viewModel.state.value,
+                searchText = viewModel.titleSearchState.collectAsState().value,
+                history = viewModel.historyState.collectAsState().value,
+                onEvent = viewModel::onEvent,
+            )
+            AssistChip(
+                onClick = { viewModel.onEvent(SearchEvent.ToggleFilter) },
+                label = {
+                    Text(text = stringResource(id = R.string.filter))
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.FilterList,
+                        contentDescription = "Outlined filter list icon"
+                    )
+                },
+                border = null,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+            SearchContent(
+                state = viewModel.state.value,
+                onEvent = viewModel::onEvent,
+                navigateToInfo = navigateToInfo,
+            )
+        }
     }
 }
 
@@ -85,13 +100,6 @@ fun SearchContent(
     navigateToInfo: (mangaId: String) -> Unit
 ) {
     when {
-        state.loading && state.mangaList == null -> {
-            Loading(
-                modifier = Modifier.fillMaxSize(),
-                size = 64
-            )
-        }
-
         !state.loading && state.mangaList != null -> {
             when {
                 state.mangaList.data.isEmpty() -> {
