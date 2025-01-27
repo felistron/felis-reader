@@ -17,6 +17,7 @@ import com.felisreader.manga.domain.model.api.MangaOrder
 import com.felisreader.manga.domain.model.api.Status
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -62,8 +63,12 @@ class HomeViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadManga(callback: suspend () -> Unit) {
         viewModelScope.launch {
-            loadRecent()
-            loadPopular()
+            val popular = async { loadPopular() }
+            val recent = async { loadRecent() }
+
+            popular.await()
+            recent.await()
+
             callback()
         }
     }
