@@ -37,13 +37,7 @@ fun HomeScreen(
 ) {
     LaunchedEffect(true) {
         if (viewModel.state.value.popularManga == null) {
-            viewModel.onEvent(HomeEvent.LoadPopular)
-        }
-    }
-
-    LaunchedEffect(true) {
-        if (viewModel.state.value.recentManga == null) {
-            viewModel.onEvent(HomeEvent.LoadRecent)
+            viewModel.onEvent(HomeEvent.LoadManga())
         }
     }
 
@@ -73,12 +67,12 @@ fun HomeContent(
 
     LaunchedEffect(refreshing) {
         if (refreshing) {
-            onEvent(HomeEvent.LoadPopular)
-            onEvent(HomeEvent.LoadRecent)
-            // delay to trick user into thinking that the refresh process takes more time
-            // bc sometimes refresh is too fast and the user may think that nothing happen
-            delay(1000)
-            refreshing = false
+            onEvent(HomeEvent.LoadManga {
+                // delay to trick user into thinking that the refresh process takes more time
+                // bc sometimes refresh is too fast and the user may think that nothing happen
+                delay(1000)
+                refreshing = false
+            })
         }
     }
 

@@ -42,8 +42,7 @@ class HomeViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: HomeEvent) {
         when(event) {
-            is HomeEvent.LoadPopular -> loadPopular()
-            is HomeEvent.LoadRecent -> loadRecent()
+            is HomeEvent.LoadManga -> loadManga(event.callback)
             is HomeEvent.CloseWelcomeDialog -> closeWelcomeDialog(event.showAgain)
         }
     }
@@ -60,50 +59,55 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadRecent() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadManga(callback: suspend () -> Unit) {
         viewModelScope.launch {
-            val list: MangaList? = mangaUseCases.getMangaList(
-                MangaListQuery(
-                    limit = 20,
-                    offset = 0,
-                    includes = listOf(EntityType.COVER_ART, EntityType.AUTHOR),
-                    hasAvailableChapters = true,
-                    order = listOf(
-                        MangaOrder.LatestUploadedChapter(OrderType.Descending)
-                    )
-                )
-            )
-
-            _state.value = _state.value.copy(
-                recentManga = list
-            )
+            loadRecent()
+            loadPopular()
+            callback()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun loadPopular() {
-        viewModelScope.launch {
-            val list: MangaList? = mangaUseCases.getMangaList(
-                MangaListQuery(
-                    limit = 10,
-                    offset = 0,
-                    status = listOf(Status.ONGOING),
-                    includes = listOf(EntityType.COVER_ART, EntityType.AUTHOR),
-                    hasAvailableChapters = true,
-                    order = listOf(
-                        MangaOrder.FollowedCount(OrderType.Descending)
-                    ),
-                    contentRating = listOf(
-                        ContentRating.SAFE,
-                        ContentRating.SUGGESTIVE
-                    ),
-                    createdAtSince = LocalDateTime.now().minusMonths(1)
+    private suspend fun loadRecent() {
+        val list: MangaList? = mangaUseCases.getMangaList(
+            MangaListQuery(
+                limit = 20,
+                offset = 0,
+                includes = listOf(EntityType.COVER_ART, EntityType.AUTHOR),
+                hasAvailableChapters = true,
+                order = listOf(
+                    MangaOrder.LatestUploadedChapter(OrderType.Descending)
                 )
             )
+        )
 
-            _state.value = _state.value.copy(
-                popularManga = list,
+        _state.value = _state.value.copy(
+            recentManga = list
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun loadPopular() {
+        val list: MangaList? = mangaUseCases.getMangaList(
+            MangaListQuery(
+                limit = 10,
+                offset = 0,
+                status = listOf(Status.ONGOING),
+                includes = listOf(EntityType.COVER_ART, EntityType.AUTHOR),
+                hasAvailableChapters = true,
+                order = listOf(
+                    MangaOrder.FollowedCount(OrderType.Descending)
+                ),
+                contentRating = listOf(
+                    ContentRating.SAFE,
+                    ContentRating.SUGGESTIVE
+                ),
+                createdAtSince = LocalDateTime.now().minusMonths(1)
             )
-        }
+        )
+
+        _state.value = _state.value.copy(
+            popularManga = list,
+        )
     }
 }
