@@ -63,7 +63,7 @@ fun SearchScreen(
                 ) {
                     // delay to trick user into thinking that the refresh process takes more time
                     // bc sometimes refresh is too fast and the user may think that nothing happened
-                    delay(1000)
+                    delay(500)
                     refreshing = false
                 }
             )
