@@ -39,16 +39,22 @@ fun MangaHistoryScreen(
     viewModel: MangaHistoryViewModel = hiltViewModel(),
     navigateToManga: (mangaId: String) -> Unit,
 ) {
+    LaunchedEffect(true) {
+        if (viewModel.state.value.history == null) {
+            viewModel.onEvent(MangaHistoryEvent.LoadHistory())
+        }
+    }
 
-    var refreshing by remember { mutableStateOf(viewModel.state.value.history == null) }
+    var refreshing by remember { mutableStateOf(false) }
 
     LaunchedEffect(refreshing) {
         if (refreshing) {
-            viewModel.onEvent(MangaHistoryEvent.Refresh)
-            // delay to trick user into thinking that the refresh process takes more time
-            // bc sometimes refresh is too fast and the user may think that nothing happen
-            delay(1000)
-            refreshing = false
+            viewModel.onEvent(MangaHistoryEvent.LoadHistory {
+                // delay to trick user into thinking that the refresh process takes more time
+                // bc sometimes refresh is too fast and the user may think that nothing happen
+                delay(1000)
+                refreshing = false
+            })
         }
     }
 
@@ -73,7 +79,12 @@ fun MangaHistoryContent(
     val scrollState by remember { mutableStateOf(LazyListState()) }
 
     when {
-        state.history == null || state.history.data.isEmpty() && !state.canLoadMore  -> {
+
+        state.history == null -> {
+            Loading(modifier = Modifier.fillMaxSize(), size = 64)
+        }
+
+        state.history.data.isEmpty() && !state.canLoadMore  -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
