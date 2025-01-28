@@ -65,4 +65,14 @@
     <string name="filter_sort_rating_desc">Higher rating</string>
     <string name="filter_sort_rating_asc">Lower rating</string>
     <string name="ui_empty_result">No results</string>
+    <string name="ui_continue">Continue</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="client_id">Client id</string>
+    <string name="client_secret">Client secret</string>
+    <string name="signin">Sign in</string>
+    <string name="notice">Notice</string>
+    <string name="get_personal_client">Get personal client</string>
+    <string name="signin_notice_body">Currently the Mangadex\'s signin service is in beta and is it only possible to sign in with personal clients. This system may be insecure, therefore it\'s use is not recommended. All sign in information will be saved in the current device\'s local storage and no data will be sent to any third party server besides Mangadex\'s.</string>
+    <string name="signin_notice_agreement">I agree</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.felisreader.library.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,18 +20,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
+import com.felisreader.library.presentation.components.MangadexSignIn
 
 @Composable
 fun LibraryScreen(
+    viewModel: LibraryViewModel = hiltViewModel(),
     navigateToMangaHistory: () -> Unit,
 ) {
-    LibraryContent(navigateToMangaHistory)
+    AnimatedVisibility(viewModel.state.value.signInDialogVisible) {
+        MangadexSignIn(setVisible = { viewModel.onEvent(LibraryEvent.SignInDialogVisible(it)) })
+    }
+
+    LibraryContent(
+        navigateToMangaHistory = navigateToMangaHistory,
+        onEvent = viewModel::onEvent
+    )
 }
 
 @Composable
 fun LibraryContent(
-    navigateToMangaHistory: () -> Unit
+    navigateToMangaHistory: () -> Unit,
+    onEvent: (LibraryEvent) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -52,7 +64,7 @@ fun LibraryContent(
             contentAlignment = Alignment.Center,
         ) {
             Button(
-                onClick = {}
+                onClick = { onEvent(LibraryEvent.SignInDialogVisible(true)) }
             ) {
                 Text(stringResource(id = R.string.uI_signin_mangadex))
             }

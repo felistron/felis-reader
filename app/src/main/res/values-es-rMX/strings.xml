@@ -59,4 +59,14 @@
     <string name="filter_sort_rating_desc">Mejor puntuado</string>
     <string name="filter_sort_rating_asc">Peor puntuado</string>
     <string name="ui_empty_result">Sin resultados</string>
+    <string name="ui_continue">Continuar</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="client_id">Id del cliente</string>
+    <string name="client_secret">Secreto del cliente</string>
+    <string name="signin">Iniciar sesión</string>
+    <string name="notice">Atención</string>
+    <string name="get_personal_client">Obtener cliente personal</string>
+    <string name="signin_notice_body">Actualmente el servicio de inicio de sesion con Mangadex esta en beta y unicamente se podra iniciar sesion con clientes personales. Este sistema puede ser inseguro por lo que no se recomienda su uso. Todos los datos de inicio de sesion de almacenan en el dispositivo y no se envian a un servidor externo mas que el de Mangadex.</string>
+    <string name="signin_notice_agreement">Estoy de acuerdo</string>
 </resources>
