@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -64,7 +65,7 @@ fun AuthorContent(
 
     when {
         state.loading && state.author == null && state.titles == null -> {
-            Loading(modifier = Modifier.fillMaxWidth(), size = 64)
+            Loading(modifier = Modifier.fillMaxSize(), size = 64)
         }
 
         !state.loading && state.author != null && state.titles != null -> {
