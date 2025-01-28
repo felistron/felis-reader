@@ -76,4 +76,5 @@
     <string name="signin_notice_body">Currently the Mangadex\'s signin service is in beta and is it only possible to sign in with personal clients. This system may be insecure, therefore it\'s use is not recommended. All sign in information will be saved in the current device\'s local storage and no data will be sent to any third party server besides Mangadex\'s.</string>
     <string name="signin_notice_agreement">I agree</string>
     <string name="singin_remember">Remember me</string>
+    <string name="wrong_credentials">Wrong credentials</string>
 </resources>

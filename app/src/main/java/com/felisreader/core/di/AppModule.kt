@@ -3,6 +3,7 @@ package com.felisreader.core.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.felisreader.cipher.SecurePreferencesManager
 import com.felisreader.core.data.repository.HistoryRepositoryImp
 import com.felisreader.core.data.repository.MangaHistoryRepositoryImp
 import com.felisreader.core.data.source.local.HistoryDatabase
@@ -87,5 +88,11 @@ object AppModule {
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStoreManager {
         return DataStoreManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSecurePreferencesManager(@ApplicationContext context: Context): SecurePreferencesManager {
+        return SecurePreferencesManager(context)
     }
 }

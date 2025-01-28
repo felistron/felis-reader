@@ -30,7 +30,12 @@ fun LibraryScreen(
     navigateToMangaHistory: () -> Unit,
 ) {
     AnimatedVisibility(viewModel.state.value.signInDialogVisible) {
-        MangadexSignIn(setVisible = { viewModel.onEvent(LibraryEvent.SignInDialogVisible(it)) })
+        MangadexSignIn(
+            setVisible = { viewModel.onEvent(LibraryEvent.SignInDialogVisible(it)) },
+            signIn = { username, password, clientId, clientSecret, remember ->
+                viewModel.onEvent(LibraryEvent.SignIn(username, password, clientId, clientSecret, remember))
+            }
+        )
     }
 
     LibraryContent(

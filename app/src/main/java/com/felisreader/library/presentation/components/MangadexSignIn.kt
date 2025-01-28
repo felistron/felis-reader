@@ -39,6 +39,10 @@ import com.felisreader.R
 @Composable
 fun MangadexSignIn(
     setVisible: (visible: Boolean) -> Unit,
+    signIn: (
+        username: String, password: String,
+        clientId: String, clientSecret: String,
+        remember: Boolean) -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -48,7 +52,8 @@ fun MangadexSignIn(
     var clientSecretText by remember { mutableStateOf("") }
 
     var nextDialog by remember { mutableStateOf(false) }
-    var checked by remember { mutableStateOf(false) }
+    var noticeChecked by remember { mutableStateOf(false) }
+    var rememberChecked by remember { mutableStateOf(false) }
 
     if (!nextDialog) {
         AlertDialog(
@@ -78,12 +83,12 @@ fun MangadexSignIn(
                     )
                     Row(
                         modifier = Modifier
-                            .clickable(onClick = { checked = !checked })
+                            .clickable(onClick = { noticeChecked = !noticeChecked })
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Checkbox(checked = checked, onCheckedChange = { checked = it})
+                        Checkbox(checked = noticeChecked, onCheckedChange = { noticeChecked = it})
                         Text(stringResource(id = R.string.signin_notice_agreement))
                     }
                     Row(
@@ -91,7 +96,7 @@ fun MangadexSignIn(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Button(
-                            enabled = checked,
+                            enabled = noticeChecked,
                             onClick = { nextDialog = true }
                         ) {
                             Text(stringResource(id = R.string.ui_continue))
@@ -131,8 +136,7 @@ fun MangadexSignIn(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next,
                         ),
-
-                        )
+                    )
                     OutlinedTextField(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -178,6 +182,16 @@ fun MangadexSignIn(
                         visualTransformation = PasswordVisualTransformation()
                     )
                     Row(
+                        modifier = Modifier
+                            .clickable(onClick = { rememberChecked = !rememberChecked })
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(checked = rememberChecked, onCheckedChange = { rememberChecked = it})
+                        Text(stringResource(id = R.string.singin_remember))
+                    }
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -186,7 +200,9 @@ fun MangadexSignIn(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
                             ),
-                            onClick = { /* TODO: Sign in */}
+                            onClick = {
+                                signIn(usernameText, passwordText, clientIdText, clientSecretText, rememberChecked)
+                            }
                         ) {
                             Text(stringResource(id = R.string.signin))
                         }
