@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
 import com.felisreader.core.presentation.Loading
 import com.felisreader.manga.presentation.manga_search.components.MangaCard
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.delay
 
 @Composable
 fun MangaHistoryScreen(
@@ -37,15 +41,33 @@ fun MangaHistoryScreen(
 ) {
     LaunchedEffect(true) {
         if (viewModel.state.value.history == null) {
-            viewModel.onEvent(MangaHistoryEvent.LoadHistory)
+            viewModel.onEvent(MangaHistoryEvent.LoadHistory())
         }
     }
 
-    MangaHistoryContent(
-        state = viewModel.state.value,
-        onEvent = viewModel::onEvent,
-        navigateToManga = navigateToManga,
-    )
+    var refreshing by remember { mutableStateOf(false) }
+
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            viewModel.onEvent(MangaHistoryEvent.LoadHistory {
+                // delay to trick user into thinking that the refresh process takes more time
+                // bc sometimes refresh is too fast and the user may think that nothing happen
+                delay(500)
+                refreshing = false
+            })
+        }
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = refreshing),
+        onRefresh = { refreshing = true }
+    ) {
+        MangaHistoryContent(
+            state = viewModel.state.value,
+            onEvent = viewModel::onEvent,
+            navigateToManga = navigateToManga,
+        )
+    }
 }
 
 @Composable
@@ -57,14 +79,12 @@ fun MangaHistoryContent(
     val scrollState by remember { mutableStateOf(LazyListState()) }
 
     when {
-        state.history == null && state.canLoadMore -> {
-            Loading(
-                modifier = Modifier.fillMaxSize(),
-                size = 64
-            )
+
+        state.history == null -> {
+            Loading(modifier = Modifier.fillMaxSize(), size = 64)
         }
 
-        state.history == null || state.history.data.isEmpty() && !state.canLoadMore  -> {
+        state.history.data.isEmpty() && !state.canLoadMore  -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,

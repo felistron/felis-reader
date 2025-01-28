@@ -11,5 +11,5 @@ sealed class SearchEvent {
     data class AddHistoryItem(val content: String, val timestamp: Long): SearchEvent()
     data class OnSearchTextChange(val text: String): SearchEvent()
     data class OnSearch(val title: String): SearchEvent()
-    data class LoadMangaList(val title: String?, val tag: String?): SearchEvent()
+    data class LoadMangaList(val title: String?, val tag: String?, val callback: suspend () -> Unit = {}): SearchEvent()
 }

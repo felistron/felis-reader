@@ -26,15 +26,20 @@ class ChapterListViewModel @Inject constructor(
 
     fun onEvent(event: ChapterListEvent) {
         when (event) {
-            is ChapterListEvent.FeedChapters -> feedChapters(event.mangaId, event.order)
+            is ChapterListEvent.FeedChapters -> feedChapters(event.mangaId, event.callback)
             is ChapterListEvent.LoadMore -> loadMore()
             is ChapterListEvent.ToggleOrder -> toggleOrder()
         }
     }
 
-    private fun feedChapters(mangaId: String, order: OrderType ) {
+    private fun feedChapters(mangaId: String, callback: suspend () -> Unit) {
         viewModelScope.launch {
-            _state.value = ChapterListState()
+            _state.value = _state.value.copy(
+                canLoadMore = true,
+                loading = true,
+            )
+
+            val order = _state.value.order
 
             val query = FeedQuery(
                 id = UUID.fromString(mangaId),
@@ -59,6 +64,8 @@ class ChapterListViewModel @Inject constructor(
                     canLoadMore = response.data.size < response.total
                 )
             }
+
+            callback()
         }
     }
 
@@ -94,7 +101,12 @@ class ChapterListViewModel @Inject constructor(
                 is OrderType.Descending -> OrderType.Ascending
                 is OrderType.Ascending -> OrderType.Descending
             }
-            onEvent(ChapterListEvent.FeedChapters(_state.value.feedQuery?.id.toString(), order))
+
+            _state.value = _state.value.copy(
+                order = order
+            )
+
+            onEvent(ChapterListEvent.FeedChapters(_state.value.feedQuery?.id.toString()))
         }
     }
 }

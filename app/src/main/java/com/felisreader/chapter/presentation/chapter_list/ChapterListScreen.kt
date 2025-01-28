@@ -20,6 +20,9 @@ import com.felisreader.chapter.presentation.chapter_list.components.ChapterCard
 import com.felisreader.core.domain.model.OrderType
 import com.felisreader.core.util.ChapterUtil.groupByVolumeAndChapter
 import com.felisreader.core.presentation.Loading
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -34,11 +37,29 @@ fun ChapterListScreen(
         }
     }
 
-    ChapterListContent(
-        state = viewModel.state.value,
-        navigateToLector = navigateToLector,
-        onEvent = viewModel::onEvent
-    )
+    var refreshing by remember { mutableStateOf(false) }
+
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            viewModel.onEvent(ChapterListEvent.FeedChapters(mangaId) {
+                // delay to trick user into thinking that the refresh process takes more time
+                // bc sometimes refresh is too fast and the user may think that nothing happen
+                delay(500)
+                refreshing = false
+            })
+        }
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = refreshing),
+        onRefresh = { refreshing = true }
+    ) {
+        ChapterListContent(
+            state = viewModel.state.value,
+            navigateToLector = navigateToLector,
+            onEvent = viewModel::onEvent
+        )
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -50,7 +71,7 @@ fun ChapterListContent(
     onEvent: (ChapterListEvent) -> Unit
 ) {
     when {
-        state.loading -> {
+        state.loading && state.chapterList.isEmpty() -> {
             Loading(modifier = Modifier.fillMaxSize(), size = 64)
         }
 

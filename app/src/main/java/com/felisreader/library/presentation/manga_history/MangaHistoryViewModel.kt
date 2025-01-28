@@ -9,6 +9,7 @@ import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.ContentRating
+import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +30,7 @@ class MangaHistoryViewModel @Inject constructor(
 
     fun onEvent(event: MangaHistoryEvent) {
         when (event) {
-            is MangaHistoryEvent.LoadHistory -> loadHistory()
+            is MangaHistoryEvent.LoadHistory -> loadHistory(event.callback)
             is MangaHistoryEvent.LoadMore -> loadMore()
             is MangaHistoryEvent.DeleteHistoryItem -> deleteHistoryItem(event.mangaId)
         }
@@ -51,51 +52,13 @@ class MangaHistoryViewModel @Inject constructor(
 
     private fun loadMore() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                offset = _state.value.offset + LIMIT
-            )
+            val offset = _state.value.offset + LIMIT
 
-            loadHistory()
-        }
-    }
+            val history = getHistoryList(LIMIT, offset)
 
-    private fun loadHistory() {
-        viewModelScope.launch {
-            val offset = _state.value.offset
-
-            val ids = historyUseCases.getMangaHistory(LIMIT, offset).map { it.id }
-
-            if (ids.isEmpty()) {
-                _state.value = _state.value.copy(canLoadMore = false)
-                return@launch
-            }
-
-            var history = mangaUseCases.getMangaList(MangaListQuery(
-                ids = ids,
-                // this is needed bc mangadex decided to ¯\_(ツ)_/¯
-                // otherwise it just won't work correctly
-                contentRating = listOf(
-                    ContentRating.SAFE,
-                    ContentRating.SUGGESTIVE,
-                    ContentRating.EROTICA,
-                    ContentRating.PORNOGRAPHIC,
-                ),
-                includes = listOf(EntityType.AUTHOR, EntityType.COVER_ART),
-            ))
-
-            if (history == null || history.data.isEmpty()) {
+            if (history == null) {
                 _state.value = _state.value.copy(canLoadMore = false)
             } else {
-                val historyTemp: MutableList<Manga> = mutableListOf()
-
-                for (id in ids) {
-                    historyTemp.add( history.data.first { it.id == id} )
-                }
-
-                history = history.copy(
-                    data = historyTemp
-                )
-
                 val storedIds = _state.value.history?.data?.map { it.id } ?: emptyList()
                 val list = history.data.filter { manga -> !storedIds.contains(manga.id) }
 
@@ -110,5 +73,66 @@ class MangaHistoryViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun loadHistory(callback: suspend () -> Unit) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                offset = 0,
+                canLoadMore = true
+            )
+
+            val offset = _state.value.offset
+
+            val history = getHistoryList(LIMIT, offset)
+
+            if (history == null) {
+                _state.value = _state.value.copy(canLoadMore = false)
+            } else {
+                _state.value = _state.value.copy(
+                    history = history,
+                    canLoadMore = history.data.isNotEmpty()
+                )
+            }
+
+            callback()
+        }
+    }
+
+    private suspend fun getHistoryList(limit: Int, offset: Int): MangaList? {
+        val ids = historyUseCases.getMangaHistory(limit, offset).map { it.id }
+
+        if (ids.isEmpty()) {
+            return null
+        }
+
+        var history = mangaUseCases.getMangaList(MangaListQuery(
+            ids = ids,
+            // this is needed bc mangadex decided to ¯\_(ツ)_/¯
+            // otherwise it just won't work correctly
+            contentRating = listOf(
+                ContentRating.SAFE,
+                ContentRating.SUGGESTIVE,
+                ContentRating.EROTICA,
+                ContentRating.PORNOGRAPHIC,
+            ),
+            includes = listOf(EntityType.AUTHOR, EntityType.COVER_ART),
+        ))
+
+        if (history == null || history.data.isEmpty()) {
+            return null
+        }
+
+        val historyTemp: MutableList<Manga> = mutableListOf()
+
+        for (id in ids) {
+            historyTemp.add( history.data.first { it.id == id} )
+        }
+
+        history = history.copy(
+            data = historyTemp
+        )
+
+        return history
     }
 }

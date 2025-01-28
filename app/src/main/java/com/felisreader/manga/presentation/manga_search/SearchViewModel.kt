@@ -125,17 +125,16 @@ class SearchViewModel @Inject constructor(
 
             is SearchEvent.OnSearch -> onSearch(event.title)
 
-            is SearchEvent.LoadMangaList -> loadMangaList(event.title, event.tag)
+            is SearchEvent.LoadMangaList -> loadMangaList(event.title, event.tag, event.callback)
         }
     }
 
-    private fun loadMangaList(title: String?, tag: String?) {
+    private fun loadMangaList(title: String?, tag: String?, callback: suspend () -> Unit) {
         _state.value = _state.value.copy(
             query = _state.value.query.copy(
                 title = title,
                 includedTags = tag?.let { listOf(it) },
             ),
-            mangaList = null,
             lazyListState = LazyListState(),
             canLoadMore = true,
             loading = true
@@ -151,6 +150,7 @@ class SearchViewModel @Inject constructor(
                     loading = false
                 )
             }
+            callback()
         }
     }
 
