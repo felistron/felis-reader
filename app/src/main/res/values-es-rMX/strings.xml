@@ -45,7 +45,7 @@
     <string name="ui_home_popular">Popular</string>
     <string name="ui_home_recent">Reciente</string>
     <string name="ui_library_manga_history">Mangas recientes</string>
-    <string name="uI_signin_mangadex">Inicia sesión con Mangadex</string>
+    <string name="ui_signin_mangadex">Inicia sesión con Mangadex</string>
     <string name="filter_no_order">Sin ordenar</string>
     <string name="filter_sort_label">Ordenar por</string>
     <string name="filter_sort_title_desc">Titulo descendiente</string>
@@ -67,6 +67,7 @@
     <string name="signin">Iniciar sesión</string>
     <string name="notice">Atención</string>
     <string name="get_personal_client">Obtener cliente personal</string>
-    <string name="signin_notice_body">Actualmente el servicio de inicio de sesion con Mangadex esta en beta y unicamente se podra iniciar sesion con clientes personales. Este sistema puede ser inseguro por lo que no se recomienda su uso. Todos los datos de inicio de sesion de almacenan en el dispositivo y no se envian a un servidor externo mas que el de Mangadex.</string>
+    <string name="signin_notice_body">Actualmente el servicio de inicio de sesión con Mangadex esta en beta y únicamente se podrá iniciar sesión con clientes personales. Este sistema puede ser inseguro por lo que no se recomienda su uso. Todos los datos de inicio de sesion se almacenan en el dispositivo y no se envian a un servidor externo mas que el de Mangadex.</string>
     <string name="signin_notice_agreement">Estoy de acuerdo</string>
+    <string name="singin_remember">Recordarme</string>
 </resources>

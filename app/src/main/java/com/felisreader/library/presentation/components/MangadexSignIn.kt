@@ -115,7 +115,7 @@ fun MangadexSignIn(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.uI_signin_mangadex),
+                        text = stringResource(id = R.string.ui_signin_mangadex),
                         style = MaterialTheme.typography.titleLarge
                     )
                     OutlinedTextField(

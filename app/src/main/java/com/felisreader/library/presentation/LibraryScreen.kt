@@ -66,7 +66,7 @@ fun LibraryContent(
             Button(
                 onClick = { onEvent(LibraryEvent.SignInDialogVisible(true)) }
             ) {
-                Text(stringResource(id = R.string.uI_signin_mangadex))
+                Text(stringResource(id = R.string.ui_signin_mangadex))
             }
         }
     }

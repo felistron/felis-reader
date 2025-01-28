@@ -51,7 +51,7 @@
     <string name="ui_home_popular">Popular</string>
     <string name="ui_home_recent">Recent</string>
     <string name="ui_library_manga_history">Manga history</string>
-    <string name="uI_signin_mangadex">Sign in with Mangadex</string>
+    <string name="ui_signin_mangadex">Sign in with Mangadex</string>
     <string name="filter_no_order">No order</string>
     <string name="filter_sort_label">Sort by</string>
     <string name="filter_sort_title_desc">Title descending</string>
@@ -75,4 +75,5 @@
     <string name="get_personal_client">Get personal client</string>
     <string name="signin_notice_body">Currently the Mangadex\'s signin service is in beta and is it only possible to sign in with personal clients. This system may be insecure, therefore it\'s use is not recommended. All sign in information will be saved in the current device\'s local storage and no data will be sent to any third party server besides Mangadex\'s.</string>
     <string name="signin_notice_agreement">I agree</string>
+    <string name="singin_remember">Remember me</string>
 </resources>
