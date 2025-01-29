@@ -172,7 +172,7 @@ fun MangadexSignIn(
                             .padding(top = 8.dp),
                         value = clientSecretText,
                         onValueChange = { clientSecretText = it },
-                        placeholder = { Text(stringResource(id = R.string.client_id)) },
+                        placeholder = { Text(stringResource(id = R.string.client_secret)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             autoCorrect = false,
