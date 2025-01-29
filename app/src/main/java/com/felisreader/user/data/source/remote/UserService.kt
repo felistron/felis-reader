@@ -17,6 +17,15 @@ interface UserService {
         @Field("client_secret") clientSecret: String,
     ): Response<AccessToken>
 
+    @FormUrlEncoded
+    @POST("realms/mangadex/protocol/openid-connect/token")
+    suspend fun refreshToken(
+        @Field("grant_type") grantType: String,
+        @Field("refresh_token") refreshToken: String,
+        @Field("client_id") clientId: String,
+        @Field("client_secret") clientSecret: String,
+    ): Response<AccessToken>
+
     companion object {
         const val AUTH_BASE_URL: String = "https://auth.mangadex.org/"
     }

@@ -47,7 +47,7 @@ class LibraryViewModel @Inject constructor(
 
             when (response) {
                 is ApiResult.Success -> {
-                    securePrefsManager.saveAccessToken(response.body, timestamp)
+                    securePrefsManager.saveAccessToken(response.body, timestamp, clientId, clientSecret)
                     // TODO: Give feedback on success
                 }
                 is ApiResult.Failure -> {

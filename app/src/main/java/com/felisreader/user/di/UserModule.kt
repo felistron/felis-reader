@@ -1,5 +1,6 @@
 package com.felisreader.user.di
 
+import com.felisreader.cipher.SecurePreferencesManager
 import com.felisreader.user.data.repository.UserRepositoryImp
 import com.felisreader.user.data.source.remote.UserService
 import com.felisreader.user.domain.repository.UserRepository
@@ -25,7 +26,10 @@ object UserModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(userService: UserService): UserRepository {
-        return UserRepositoryImp(userService)
+    fun provideUserRepository(
+        userService: UserService,
+        prefsManager: SecurePreferencesManager
+    ): UserRepository {
+        return UserRepositoryImp(userService, prefsManager)
     }
 }
