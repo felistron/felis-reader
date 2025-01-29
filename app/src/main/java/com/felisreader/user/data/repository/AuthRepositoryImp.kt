@@ -1,19 +1,19 @@
 package com.felisreader.user.data.repository
 
 import com.felisreader.cipher.SecurePreferencesManager
-import com.felisreader.user.data.source.remote.UserService
+import com.felisreader.user.data.source.remote.AuthService
 import com.felisreader.user.domain.model.AccessToken
 import com.felisreader.user.domain.model.AccessTokenQuery
 import com.felisreader.user.domain.model.ApiResult
 import com.felisreader.user.domain.model.RefreshTokenQuery
-import com.felisreader.user.domain.repository.UserRepository
+import com.felisreader.user.domain.repository.AuthRepository
 
-class UserRepositoryImp(
-    private val userService: UserService,
+class AuthRepositoryImp(
+    private val authService: AuthService,
     private val securePrefsManager: SecurePreferencesManager,
-) : UserRepository {
+) : AuthRepository {
     override suspend fun getAccessToken(query: AccessTokenQuery): ApiResult<AccessToken> {
-        val response = userService.getAccessToken(
+        val response = authService.getAccessToken(
             grantType = "password",
             username = query.username,
             password = query.password,
@@ -28,7 +28,7 @@ class UserRepositoryImp(
     }
 
     override suspend fun refreshToken(query: RefreshTokenQuery): ApiResult<AccessToken> {
-        val response = userService.refreshToken(
+        val response = authService.refreshToken(
             grantType = "refresh_token",
             refreshToken = query.refreshToken,
             clientId = query.clientId,

@@ -6,7 +6,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-interface UserService {
+interface AuthService {
     @FormUrlEncoded
     @POST("realms/mangadex/protocol/openid-connect/token")
     suspend fun getAccessToken(

@@ -1,9 +1,9 @@
 package com.felisreader.user.di
 
 import com.felisreader.cipher.SecurePreferencesManager
-import com.felisreader.user.data.repository.UserRepositoryImp
-import com.felisreader.user.data.source.remote.UserService
-import com.felisreader.user.domain.repository.UserRepository
+import com.felisreader.user.data.repository.AuthRepositoryImp
+import com.felisreader.user.data.source.remote.AuthService
+import com.felisreader.user.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,20 +16,20 @@ import javax.inject.Singleton
 object UserModule {
     @Provides
     @Singleton
-    fun provideUserService(retrofit: Retrofit): UserService {
+    fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit
             .newBuilder()
-            .baseUrl(UserService.AUTH_BASE_URL)
+            .baseUrl(AuthService.AUTH_BASE_URL)
             .build()
-            .create(UserService::class.java)
+            .create(AuthService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideUserRepository(
-        userService: UserService,
+    fun provideAuthRepository(
+        authService: AuthService,
         prefsManager: SecurePreferencesManager
-    ): UserRepository {
-        return UserRepositoryImp(userService, prefsManager)
+    ): AuthRepository {
+        return AuthRepositoryImp(authService, prefsManager)
     }
 }

@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.felisreader.cipher.SecurePreferencesManager
 import com.felisreader.user.domain.model.AccessTokenQuery
 import com.felisreader.user.domain.model.ApiResult
-import com.felisreader.user.domain.repository.UserRepository
+import com.felisreader.user.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
     private val securePrefsManager: SecurePreferencesManager,
 ): ViewModel() {
     private val _state: MutableState<LibraryState> = mutableStateOf(LibraryState())
@@ -38,7 +38,7 @@ class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             val timestamp = System.currentTimeMillis()
 
-            val response = userRepository.getAccessToken(AccessTokenQuery(
+            val response = authRepository.getAccessToken(AccessTokenQuery(
                 username = username,
                 password = password,
                 clientId = clientId,
