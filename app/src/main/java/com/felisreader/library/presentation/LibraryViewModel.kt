@@ -38,7 +38,7 @@ class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             val timestamp = System.currentTimeMillis()
 
-            val response = authRepository.getAccessToken(AccessTokenQuery(
+            val response = authRepository.createAccessToken(AccessTokenQuery(
                 username = username,
                 password = password,
                 clientId = clientId,

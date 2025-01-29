@@ -12,7 +12,7 @@ class AuthRepositoryImp(
     private val authService: AuthService,
     private val securePrefsManager: SecurePreferencesManager,
 ) : AuthRepository {
-    override suspend fun getAccessToken(query: AccessTokenQuery): ApiResult<AccessToken> {
+    override suspend fun createAccessToken(query: AccessTokenQuery): ApiResult<AccessToken> {
         val response = authService.getAccessToken(
             grantType = "password",
             username = query.username,
@@ -41,7 +41,7 @@ class AuthRepositoryImp(
         return ApiResult.Success(accessToken)
     }
 
-    override suspend fun isLoggedIn(): Boolean {
+    override suspend fun getAccessToken(): String? {
         val currentTimestamp = System.currentTimeMillis()
 
         val accessTimestamp = securePrefsManager.getAccessTimestamp()
@@ -60,13 +60,13 @@ class AuthRepositoryImp(
             refreshExpiresIn == SecurePreferencesManager.DEFAULT_EXPIRATION ||
             clientId == null ||
             clientSecret == null
-        ) return false
+        ) return null
 
         // Check if the accessToken has expired
         if (accessTimestamp + expiresIn * 1000 < currentTimestamp) {
 
             // Check if the refreshToken has expired
-            if (accessTimestamp + refreshExpiresIn * 1000 < currentTimestamp) return false
+            if (accessTimestamp + refreshExpiresIn * 1000 < currentTimestamp) return null
 
             // Refresh the token
             val newToken = refreshToken(RefreshTokenQuery(
@@ -78,11 +78,12 @@ class AuthRepositoryImp(
             when (newToken) {
                 is ApiResult.Success -> {
                     securePrefsManager.saveAccessToken(newToken.body, currentTimestamp, clientId, clientSecret)
+                    return newToken.body.accessToken
                 }
-                is ApiResult.Failure -> return false
+                is ApiResult.Failure -> return null
             }
         }
 
-        return true
+        return accessToken
     }
 }

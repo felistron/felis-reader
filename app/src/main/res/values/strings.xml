@@ -77,4 +77,5 @@
     <string name="signin_notice_agreement">I agree</string>
     <string name="singin_remember">Remember me</string>
     <string name="wrong_credentials">Wrong credentials</string>
+    <string name="ohayo" translatable="false">Ohayo</string>
 </resources>

@@ -6,7 +6,7 @@ import com.felisreader.user.domain.model.ApiResult
 import com.felisreader.user.domain.model.RefreshTokenQuery
 
 interface AuthRepository {
-    suspend fun getAccessToken(query: AccessTokenQuery): ApiResult<AccessToken>
+    suspend fun createAccessToken(query: AccessTokenQuery): ApiResult<AccessToken>
     suspend fun refreshToken(query: RefreshTokenQuery): ApiResult<AccessToken>
-    suspend fun isLoggedIn(): Boolean
+    suspend fun getAccessToken(): String?
 }
