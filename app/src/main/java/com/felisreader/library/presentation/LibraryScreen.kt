@@ -1,5 +1,6 @@
 package com.felisreader.library.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,18 +20,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
+import com.felisreader.user.presentation.signin.SignInDialog
 
 @Composable
 fun LibraryScreen(
+    viewModel: LibraryViewModel = hiltViewModel(),
     navigateToMangaHistory: () -> Unit,
 ) {
-    LibraryContent(navigateToMangaHistory)
+    AnimatedVisibility(viewModel.state.value.signInDialogVisible) {
+        SignInDialog(
+            onSuccess = {
+                viewModel.onEvent(LibraryEvent.SignInDialogVisible(false))
+            },
+            onCancel = {
+                viewModel.onEvent(LibraryEvent.SignInDialogVisible(false))
+           },
+        )
+    }
+
+    LibraryContent(
+        navigateToMangaHistory = navigateToMangaHistory,
+        onEvent = viewModel::onEvent,
+        isLoggedIn = viewModel.state.value.isLoggedIn
+    )
 }
 
 @Composable
 fun LibraryContent(
-    navigateToMangaHistory: () -> Unit
+    isLoggedIn: Boolean,
+    navigateToMangaHistory: () -> Unit,
+    onEvent: (LibraryEvent) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -48,13 +69,24 @@ fun LibraryContent(
             onClick = navigateToMangaHistory
         )
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Button(
-                onClick = {}
+            Text(
+                text = stringResource(id = R.string.reading_lists),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        if (!isLoggedIn) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
             ) {
-                Text(stringResource(id = R.string.uI_signin_mangadex))
+                Button(
+                    onClick = { onEvent(LibraryEvent.SignInDialogVisible(true)) }
+                ) {
+                    Text(stringResource(id = R.string.ui_signin_mangadex))
+                }
             }
         }
     }

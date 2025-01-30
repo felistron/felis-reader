@@ -16,6 +16,8 @@ import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.manga.domain.model.api.MangaOrder
 import com.felisreader.manga.domain.model.api.Status
 import com.felisreader.manga.domain.use_case.MangaUseCases
+import com.felisreader.user.domain.model.ApiResult
+import com.felisreader.user.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val mangaUseCases: MangaUseCases,
     private val dataStore: DataStoreManager,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _state: MutableState<HomeState> = mutableStateOf(HomeState())
     val state: State<HomeState> = _state
@@ -36,6 +39,17 @@ class HomeViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     welcomeDialogVisible = preferences.showWelcome
                 )
+            }
+        }
+        viewModelScope.launch {
+            when (val response = userRepository.getLoggedUser()) {
+                is ApiResult.Success -> {
+                    val loggedUser  = response.body
+                    _state.value = _state.value.copy(
+                        loggedUser = loggedUser.data
+                    )
+                }
+                else -> { }
             }
         }
     }

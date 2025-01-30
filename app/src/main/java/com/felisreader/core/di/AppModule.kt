@@ -3,6 +3,7 @@ package com.felisreader.core.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.felisreader.cipher.SecurePreferencesManager
 import com.felisreader.core.data.repository.HistoryRepositoryImp
 import com.felisreader.core.data.repository.MangaHistoryRepositoryImp
 import com.felisreader.core.data.source.local.HistoryDatabase
@@ -12,6 +13,9 @@ import com.felisreader.core.domain.repository.MangaHistoryRepository
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.data.source.remote.MangaService
+import com.felisreader.user.data.repository.AuthRepositoryImp
+import com.felisreader.user.data.source.remote.AuthService
+import com.felisreader.user.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -87,5 +91,30 @@ object AppModule {
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStoreManager {
         return DataStoreManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSecurePreferencesManager(@ApplicationContext context: Context): SecurePreferencesManager {
+        return SecurePreferencesManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit
+            .newBuilder()
+            .baseUrl(AuthService.AUTH_BASE_URL)
+            .build()
+            .create(AuthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        authService: AuthService,
+        prefsManager: SecurePreferencesManager
+    ): AuthRepository {
+        return AuthRepositoryImp(authService, prefsManager)
     }
 }
