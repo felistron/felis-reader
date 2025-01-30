@@ -1,5 +1,6 @@
 package com.felisreader.user.data.source.remote
 
+import com.felisreader.user.domain.model.api.ReadingHistoryResponse
 import com.felisreader.user.domain.model.api.ReadingStatusResponse
 import com.felisreader.user.domain.model.api.UserResponse
 import retrofit2.Response
@@ -14,4 +15,9 @@ interface UserService {
     suspend fun getReadingStatus(
         @Header("Authorization") authorization: String
     ): Response<ReadingStatusResponse>
+
+    @GET("user/history")
+    suspend fun getReadingHistory(
+        @Header("Authorization") authorization: String
+    ): Response<ReadingHistoryResponse>
 }
