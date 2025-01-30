@@ -6,16 +6,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.chapter.domain.model.api.*
-import com.felisreader.chapter.domain.use_case.ChapterUseCases
+import com.felisreader.chapter.domain.repository.ChapterRepository
 import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.core.domain.model.api.Relationship
+import com.felisreader.core.domain.repository.ReadingHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LectorViewModel @Inject constructor(
-    private val useCases: ChapterUseCases
+    private val chapterRepository: ChapterRepository,
+    private val readingHistoryRepository: ReadingHistoryRepository,
 ): ViewModel() {
     private val _state: MutableState<LectorState> = mutableStateOf(LectorState())
     val state: State<LectorState> = _state
@@ -31,9 +33,11 @@ class LectorViewModel @Inject constructor(
         _state.value = _state.value.copy(loading = true)
 
         viewModelScope.launch {
-            val atHome: AtHomeResponse? = useCases.chapterFeed(chapterId)
+            readingHistoryRepository.insert(chapterId)
 
-            val chapter: ChapterResponse? = useCases.getChapter(ChapterQuery(
+            val atHome: AtHomeResponse? = chapterRepository.getChapterFeed(chapterId)
+
+            val chapter: ChapterResponse? = chapterRepository.getChapter(ChapterQuery(
                 chapterId = chapterId,
                 includes = listOf(
                     EntityType.MANGA,
@@ -52,7 +56,7 @@ class LectorViewModel @Inject constructor(
                         )
 
                     mangaRelationship?.let {
-                        val aggregate: Aggregate? = useCases.aggregate(
+                        val aggregate: Aggregate? = chapterRepository.getAggregate(
                             AggregateQuery(
                                 mangaId = mangaRelationship.id.toString(),
                                 translatedLanguage =
@@ -105,7 +109,7 @@ class LectorViewModel @Inject constructor(
 
     private fun reportImage(body: AtHomeReportBody) {
         viewModelScope.launch {
-            useCases.report(body)
+            chapterRepository.postReport(body)
         }
     }
 }
