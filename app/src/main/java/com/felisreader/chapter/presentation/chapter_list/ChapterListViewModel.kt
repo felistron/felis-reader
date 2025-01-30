@@ -103,7 +103,9 @@ class ChapterListViewModel @Inject constructor(
             }
 
             _state.value = _state.value.copy(
-                order = order
+                order = order,
+                loading = true,
+                chapterList = emptyList(),
             )
 
             onEvent(ChapterListEvent.FeedChapters(_state.value.feedQuery?.id.toString()))
