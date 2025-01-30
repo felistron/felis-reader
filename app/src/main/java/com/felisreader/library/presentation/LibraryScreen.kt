@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.felisreader.R
-import com.felisreader.library.presentation.components.MangadexSignIn
+import com.felisreader.user.presentation.signin.SignInDialog
 
 @Composable
 fun LibraryScreen(
@@ -30,11 +30,13 @@ fun LibraryScreen(
     navigateToMangaHistory: () -> Unit,
 ) {
     AnimatedVisibility(viewModel.state.value.signInDialogVisible) {
-        MangadexSignIn(
-            setVisible = { viewModel.onEvent(LibraryEvent.SignInDialogVisible(it)) },
-            signIn = { username, password, clientId, clientSecret, remember ->
-                viewModel.onEvent(LibraryEvent.SignIn(username, password, clientId, clientSecret, remember))
-            }
+        SignInDialog(
+            onSuccess = {
+                viewModel.onEvent(LibraryEvent.SignInDialogVisible(false))
+            },
+            onCancel = {
+                viewModel.onEvent(LibraryEvent.SignInDialogVisible(false))
+           },
         )
     }
 
