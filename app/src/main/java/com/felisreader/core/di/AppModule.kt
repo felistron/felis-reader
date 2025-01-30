@@ -6,10 +6,12 @@ import androidx.room.Room
 import com.felisreader.cipher.SecurePreferencesManager
 import com.felisreader.core.data.repository.HistoryRepositoryImp
 import com.felisreader.core.data.repository.MangaHistoryRepositoryImp
+import com.felisreader.core.data.repository.ReadingHistoryRepositoryImp
 import com.felisreader.core.data.source.local.HistoryDatabase
 import com.felisreader.core.domain.model.SearchHistoryEntity
 import com.felisreader.core.domain.repository.HistoryRepository
 import com.felisreader.core.domain.repository.MangaHistoryRepository
+import com.felisreader.core.domain.repository.ReadingHistoryRepository
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.data.source.remote.MangaService
@@ -67,6 +69,12 @@ object AppModule {
     @Singleton
     fun provideMangaHistoryRepository(db: HistoryDatabase): MangaHistoryRepository {
         return MangaHistoryRepositoryImp(db.mangaHistoryDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReadingHistoryRepository(db: HistoryDatabase): ReadingHistoryRepository {
+        return ReadingHistoryRepositoryImp(db.readingHistoryDao)
     }
 
     @Provides

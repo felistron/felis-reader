@@ -28,6 +28,7 @@ import com.felisreader.user.presentation.signin.SignInDialog
 fun LibraryScreen(
     viewModel: LibraryViewModel = hiltViewModel(),
     navigateToMangaHistory: () -> Unit,
+    navigateToReadingHistory: () -> Unit,
 ) {
     AnimatedVisibility(viewModel.state.value.signInDialogVisible) {
         SignInDialog(
@@ -43,7 +44,8 @@ fun LibraryScreen(
     LibraryContent(
         navigateToMangaHistory = navigateToMangaHistory,
         onEvent = viewModel::onEvent,
-        isLoggedIn = viewModel.state.value.isLoggedIn
+        isLoggedIn = viewModel.state.value.isLoggedIn,
+        navigateToReadingHistory = navigateToReadingHistory,
     )
 }
 
@@ -51,6 +53,7 @@ fun LibraryScreen(
 fun LibraryContent(
     isLoggedIn: Boolean,
     navigateToMangaHistory: () -> Unit,
+    navigateToReadingHistory: () -> Unit,
     onEvent: (LibraryEvent) -> Unit,
 ) {
     Column(
@@ -88,6 +91,18 @@ fun LibraryContent(
                     Text(stringResource(id = R.string.ui_signin_mangadex))
                 }
             }
+        } else {
+            LibraryItem(
+                name = stringResource(id = R.string.library_reading_history),
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.History,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                    )
+                },
+                onClick = navigateToReadingHistory
+            )
         }
     }
 }

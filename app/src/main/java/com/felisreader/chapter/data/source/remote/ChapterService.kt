@@ -3,7 +3,7 @@ package com.felisreader.chapter.data.source.remote
 import com.felisreader.chapter.domain.model.api.Aggregate
 import com.felisreader.chapter.domain.model.api.AtHomeResponse
 import com.felisreader.chapter.domain.model.api.ChapterResponse
-import com.felisreader.chapter.domain.model.api.FeedResponse
+import com.felisreader.chapter.domain.model.api.ChapterListResponse
 import com.felisreader.chapter.domain.model.api.AtHomeReportBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -35,7 +35,7 @@ interface ChapterService {
         @Query("includeEmptyPages") includeEmptyPages: Int?,
         @Query("includeFuturePublishAt") includeFuturePublishAt: Int?,
         @Query("includeExternalUrl") includeExternalUrl: Int?
-    ): Response<FeedResponse>
+    ): Response<ChapterListResponse>
 
     @GET("at-home/server/{id}")
     suspend fun getChapterFeed(
@@ -61,4 +61,32 @@ interface ChapterService {
     suspend fun postReport(
         @Body body: AtHomeReportBody
     )
+
+    @GET("chapter")
+    suspend fun getChapterList(
+        @Query("limit") limit: Int?,
+        @Query("offset") offset: Int?,
+        @Query("ids[]", encoded = true) ids: List<String>?,
+        @Query("title") title: String?,
+        @Query("groups[]", encoded = true) groups: List<String>?,
+        @Query("uploader[]", encoded = true) uploader: List<String>?,
+        @Query("manga") manga: String?,
+        @Query("volume[]", encoded = true) volume: List<String>?,
+        @Query("chapter[]", encoded = true) chapter: List<String>?,
+        @Query("translatedLanguage[]", encoded = true) translatedLanguage: List<String>?,
+        @Query("originalLanguage[]", encoded = true) originalLanguage: List<String>?,
+        @Query("excludedOriginalLanguage[]", encoded = true) excludedOriginalLanguage: List<String>?,
+        @Query("contentRating[]", encoded = true) contentRating: List<String>?,
+        @Query("excludedGroups[]", encoded = true) excludedGroups: List<String>?,
+        @Query("excludedUploaders[]", encoded = true) excludedUploaders: List<String>?,
+        @Query("includeFutureUpdates") includeFutureUpdates: Int?,
+        @Query("includeEmptyPages") includeEmptyPages: Int?,
+        @Query("includeFuturePublishAt") includeFuturePublishAt: Int?,
+        @Query("includeExternalUrl") includeExternalUrl: Int?,
+        @Query("createdAtSince") createdAtSince: String?,
+        @Query("updatedAtSince") updatedAtSince: String?,
+        @Query("publishAtSince") publishAtSince: String?,
+        @QueryMap(encoded = true) order: Map<String, String>?,
+        @Query("includes[]", encoded = true) includes: List<String>?,
+    ): Response<ChapterListResponse>
 }
