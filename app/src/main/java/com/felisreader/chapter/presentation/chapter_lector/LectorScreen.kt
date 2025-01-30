@@ -29,8 +29,10 @@ fun LectorScreen(
     chapterId: String,
 ) {
     LaunchedEffect(true) {
-        this.launch {
-            viewModel.onEvent(LectorEvent.LoadLector(chapterId))
+        if (viewModel.state.value.chapter == null) {
+            launch {
+                viewModel.onEvent(LectorEvent.LoadLector(chapterId))
+            }
         }
     }
 
@@ -56,9 +58,9 @@ fun LectorContent(
 
     val coroutineScope = rememberCoroutineScope()
 
-    var scale by remember { mutableStateOf(1f) }
-    var offsetX by remember { mutableStateOf(0f) }
-    var size by remember { mutableStateOf(0f) }
+    var scale by remember { mutableFloatStateOf(1f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var size by remember { mutableFloatStateOf(0f) }
 
     if (state.loading) {
         Loading(
