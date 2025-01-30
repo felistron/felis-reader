@@ -21,5 +21,6 @@ fun PageImage(
         contentScale = ContentScale.FillWidth,
     ) {
         it.placeholder(R.drawable.manga_cover)
+            .skipMemoryCache(true)
     }
 }
