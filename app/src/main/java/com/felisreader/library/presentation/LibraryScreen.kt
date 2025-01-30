@@ -42,12 +42,14 @@ fun LibraryScreen(
 
     LibraryContent(
         navigateToMangaHistory = navigateToMangaHistory,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        isLoggedIn = viewModel.state.value.isLoggedIn
     )
 }
 
 @Composable
 fun LibraryContent(
+    isLoggedIn: Boolean,
     navigateToMangaHistory: () -> Unit,
     onEvent: (LibraryEvent) -> Unit,
 ) {
@@ -67,13 +69,24 @@ fun LibraryContent(
             onClick = navigateToMangaHistory
         )
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Button(
-                onClick = { onEvent(LibraryEvent.SignInDialogVisible(true)) }
+            Text(
+                text = stringResource(id = R.string.reading_lists),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        if (!isLoggedIn) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
             ) {
-                Text(stringResource(id = R.string.ui_signin_mangadex))
+                Button(
+                    onClick = { onEvent(LibraryEvent.SignInDialogVisible(true)) }
+                ) {
+                    Text(stringResource(id = R.string.ui_signin_mangadex))
+                }
             }
         }
     }

@@ -71,4 +71,5 @@
     <string name="signin_notice_agreement">Estoy de acuerdo</string>
     <string name="singin_remember">Recordarme</string>
     <string name="wrong_credentials">Credenciales incorrectas</string>
+    <string name="reading_lists">Listas de lectura</string>
 </resources>
