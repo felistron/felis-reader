@@ -9,7 +9,6 @@ import com.felisreader.core.domain.model.api.EntityType
 import com.felisreader.core.domain.use_case.HistoryUseCases
 import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.ContentRating
-import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.MangaListQuery
 import com.felisreader.manga.domain.use_case.MangaUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +21,7 @@ class MangaHistoryViewModel @Inject constructor(
     private val mangaUseCases: MangaUseCases,
 ) : ViewModel() {
     companion object {
-        private const val LIMIT: Int = 10
+        private const val LIMIT: Int = 20
     }
 
     private val _state: MutableState<MangaHistoryState> = mutableStateOf(MangaHistoryState())
@@ -40,12 +39,8 @@ class MangaHistoryViewModel @Inject constructor(
         viewModelScope.launch {
             historyUseCases.deleteMangaItem(mangaId)
 
-            val items = _state.value.history?.data?.filterNot { it.id == mangaId } ?: emptyList()
-
             _state.value = _state.value.copy(
-                history = _state.value.history?.copy(
-                    data = items
-                )
+                history = _state.value.history?.filterNot { it.id == mangaId }
             )
         }
     }
@@ -56,22 +51,13 @@ class MangaHistoryViewModel @Inject constructor(
 
             val history = getHistoryList(LIMIT, offset)
 
-            if (history == null) {
-                _state.value = _state.value.copy(canLoadMore = false)
-            } else {
-                val storedIds = _state.value.history?.data?.map { it.id } ?: emptyList()
-                val list = history.data.filter { manga -> !storedIds.contains(manga.id) }
+            val storedIds = _state.value.history?.map { it.id } ?: emptyList()
+            val list = history.filter { manga -> !storedIds.contains(manga.id) }
 
-                _state.value = _state.value.copy(
-                    history = _state.value.history?.copy(
-                        limit = history.limit,
-                        offset = history.offset,
-                        total = history.total,
-                        data = _state.value.history?.data?.plus(list) ?: list
-                    ) ?: history,
-                    canLoadMore = list.isNotEmpty()
-                )
-            }
+            _state.value = _state.value.copy(
+                history = _state.value.history?.plus(list),
+                canLoadMore = list.isNotEmpty()
+            )
         }
     }
 
@@ -86,24 +72,20 @@ class MangaHistoryViewModel @Inject constructor(
 
             val history = getHistoryList(LIMIT, offset)
 
-            if (history == null) {
-                _state.value = _state.value.copy(canLoadMore = false)
-            } else {
-                _state.value = _state.value.copy(
-                    history = history,
-                    canLoadMore = history.data.isNotEmpty()
-                )
-            }
+            _state.value = _state.value.copy(
+                history = history,
+                canLoadMore = history.isNotEmpty() && history.size >= LIMIT
+            )
 
             callback()
         }
     }
 
-    private suspend fun getHistoryList(limit: Int, offset: Int): MangaList? {
+    private suspend fun getHistoryList(limit: Int, offset: Int): List<Manga> {
         val ids = historyUseCases.getMangaHistory(limit, offset).map { it.id }
 
         if (ids.isEmpty()) {
-            return null
+            return emptyList()
         }
 
         var history = mangaUseCases.getMangaList(MangaListQuery(
@@ -120,7 +102,7 @@ class MangaHistoryViewModel @Inject constructor(
         ))
 
         if (history == null || history.data.isEmpty()) {
-            return null
+            return emptyList()
         }
 
         val historyTemp: MutableList<Manga> = mutableListOf()
@@ -133,6 +115,6 @@ class MangaHistoryViewModel @Inject constructor(
             data = historyTemp
         )
 
-        return history
+        return history.data
     }
 }
