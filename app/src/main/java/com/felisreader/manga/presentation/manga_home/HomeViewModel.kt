@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.felisreader.core.domain.model.OrderType
 import com.felisreader.core.domain.model.api.EntityType
-import com.felisreader.datastore.DataStoreManager
 import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.domain.model.api.MangaList
 import com.felisreader.manga.domain.model.api.MangaListQuery
@@ -27,20 +26,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val mangaUseCases: MangaUseCases,
-    private val dataStore: DataStoreManager,
     private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _state: MutableState<HomeState> = mutableStateOf(HomeState())
     val state: State<HomeState> = _state
 
     init {
-        viewModelScope.launch {
-            dataStore.getPreferences().collect { preferences ->
-                _state.value = _state.value.copy(
-                    welcomeDialogVisible = preferences.showWelcome
-                )
-            }
-        }
         viewModelScope.launch {
             when (val response = userRepository.getLoggedUser()) {
                 is ApiResult.Success -> {
@@ -67,10 +58,6 @@ class HomeViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 welcomeDialogVisible = false
             )
-
-            dataStore.getPreferences().collect { preferences ->
-                dataStore.savePreferences(preferences.copy(showWelcome = showAgain))
-            }
         }
     }
 
