@@ -106,4 +106,16 @@ sealed class Screen(
             }
         )
     )
+
+    data class ReadingHistoryScreen(
+        val rootScreen: String = "{root}"
+    ): Screen(
+        route = "library/reading_history?root=$rootScreen",
+        args = listOf(
+            navArgument("root") {
+                type = NavType.StringType
+                nullable = false
+            }
+        )
+    )
 }

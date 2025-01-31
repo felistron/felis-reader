@@ -3,7 +3,7 @@ package com.felisreader
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -20,6 +20,7 @@ import com.felisreader.manga.presentation.manga_home.HomeScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
 import com.felisreader.library.presentation.LibraryScreen
 import com.felisreader.library.presentation.manga_history.MangaHistoryScreen
+import com.felisreader.library.presentation.reading_history.ReadingHistoryScreen
 import com.felisreader.manga.presentation.manga_search.SearchScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -62,16 +63,7 @@ fun AppNavigation(
         ) {
             it.arguments?.getString("id")?.let { mangaId ->
 
-                setTopBarIcon {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
+                setTopBarIcon { ReturnIcon(navController) }
 
                 MangaScreen(
                     mangaId = mangaId,
@@ -188,6 +180,13 @@ fun AppNavigation(
                     ).route) {
                         launchSingleTop = true
                     }
+                },
+                navigateToReadingHistory = {
+                    navController.navigate(Screen.ReadingHistoryScreen(
+                        rootScreen = "library"
+                    ).route) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -195,16 +194,7 @@ fun AppNavigation(
         composable(
             route = Screen.MangaHistoryScreen().route,
         ) {
-            setTopBarIcon {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = null
-                    )
-                }
-            }
+            setTopBarIcon { ReturnIcon(navController) }
 
             setTopBarTitle {
                 Text(stringResource(id = R.string.ui_library_manga_history))
@@ -221,5 +211,39 @@ fun AppNavigation(
                 }
             )
         }
+
+        composable(
+            route = Screen.ReadingHistoryScreen().route
+        ) {
+            setTopBarVisible(true)
+
+            setTopBarIcon { ReturnIcon(navController) }
+
+            setTopBarTitle {
+                Text(stringResource(id = R.string.library_reading_history))
+            }
+
+            ReadingHistoryScreen(
+                navigateToLector = { chapterId ->
+                    navController.navigate(Screen.LectorScreen(chapterId).route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun ReturnIcon(
+    navController: NavHostController
+) {
+    IconButton(onClick = {
+        navController.popBackStack()
+    }) {
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = null
+        )
     }
 }

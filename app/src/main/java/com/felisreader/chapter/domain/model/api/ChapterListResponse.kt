@@ -1,6 +1,6 @@
 package com.felisreader.chapter.domain.model.api
 
-data class FeedResponse(
+data class ChapterListResponse(
     val result: String,
     val response: String,
     val data: List<Chapter>,
