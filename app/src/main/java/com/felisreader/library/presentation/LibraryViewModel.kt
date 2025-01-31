@@ -31,6 +31,7 @@ class LibraryViewModel @Inject constructor(
     fun onEvent(event: LibraryEvent) {
         when (event) {
             is LibraryEvent.SignInDialogVisible -> signInDialogVisible(event.visible)
+            is LibraryEvent.SignInSuccess -> signInSuccess()
         }
     }
 
@@ -38,5 +39,9 @@ class LibraryViewModel @Inject constructor(
         _state.value = _state.value.copy(
             signInDialogVisible = visible
         )
+    }
+
+    private fun signInSuccess() {
+        _state.value = _state.value.copy(isLoggedIn = true)
     }
 }

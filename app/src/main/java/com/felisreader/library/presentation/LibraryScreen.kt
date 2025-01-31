@@ -20,6 +20,7 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,6 +37,7 @@ fun LibraryScreen(
         SignInDialog(
             onSuccess = {
                 viewModel.onEvent(LibraryEvent.SignInDialogVisible(false))
+                viewModel.onEvent(LibraryEvent.SignInSuccess)
             },
             onCancel = {
                 viewModel.onEvent(LibraryEvent.SignInDialogVisible(false))
@@ -95,6 +97,24 @@ fun LibraryContent(
             },
             onClick = navigateToReadingHistory
         )
+        if (!isLoggedIn) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFE6613E),
+                        contentColor = Color.White,
+                    ),
+                    onClick = {
+                        onEvent(LibraryEvent.SignInDialogVisible(true))
+                    }
+                ) {
+                    Text(stringResource(id = R.string.ui_signin_mangadex))
+                }
+            }
+        }
     }
 }
 
