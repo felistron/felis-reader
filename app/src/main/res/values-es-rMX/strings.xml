@@ -72,4 +72,6 @@
     <string name="singin_remember">Recordarme</string>
     <string name="wrong_credentials">Credenciales incorrectas</string>
     <string name="reading_lists">Listas de lectura</string>
+    <string name="library_reading_history">Historial de lectura</string>
+    <string name="no_volume">Sin volumen</string>
 </resources>

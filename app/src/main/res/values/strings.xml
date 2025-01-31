@@ -79,4 +79,6 @@
     <string name="wrong_credentials">Wrong credentials</string>
     <string name="ohayo" translatable="false">Ohayo</string>
     <string name="reading_lists">Reading lists</string>
+    <string name="library_reading_history">Reading history</string>
+    <string name="no_volume">No volume</string>
 </resources>
