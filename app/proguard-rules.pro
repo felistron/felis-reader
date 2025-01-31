@@ -37,3 +37,8 @@
 
  # With R8 full mode generic signatures are stripped for classes that are not kept.
  -keep,allowobfuscation,allowshrinking class retrofit2.Response
+
+ -dontwarn com.google.errorprone.annotations.CanIgnoreReturnValue
+ -dontwarn com.google.errorprone.annotations.CheckReturnValue
+ -dontwarn com.google.errorprone.annotations.Immutable
+ -dontwarn com.google.errorprone.annotations.RestrictedApi
