@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,9 +59,20 @@ fun LibraryContent(
     onEvent: (LibraryEvent) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(id = R.string.reading_lists),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
         LibraryItem(
             name = stringResource(id = R.string.ui_library_manga_history),
             icon = {
@@ -71,39 +84,17 @@ fun LibraryContent(
             },
             onClick = navigateToMangaHistory
         )
-        Box(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = stringResource(id = R.string.reading_lists),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-        if (!isLoggedIn) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Button(
-                    onClick = { onEvent(LibraryEvent.SignInDialogVisible(true)) }
-                ) {
-                    Text(stringResource(id = R.string.ui_signin_mangadex))
-                }
-            }
-        } else {
-            LibraryItem(
-                name = stringResource(id = R.string.library_reading_history),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.History,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground,
-                    )
-                },
-                onClick = navigateToReadingHistory
-            )
-        }
+        LibraryItem(
+            name = stringResource(id = R.string.library_reading_history),
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                )
+            },
+            onClick = navigateToReadingHistory
+        )
     }
 }
 
@@ -113,14 +104,19 @@ fun LibraryItem(
     icon: @Composable () -> Unit,
     onClick: () -> Unit,
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
-        color = MaterialTheme.colorScheme.background,
-        onClick = onClick
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        onClick = onClick,
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 2.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
