@@ -80,6 +80,7 @@ class ReadingHistoryViewModel @Inject constructor(
 
         val chapterResponse = chapterRepository.getChapterList(
             ChapterListQuery(
+                limit = ReadingHistoryState.LIMIT,
                 ids = chapterIds,
                 contentRating = listOf(
                     ContentRating.SAFE,
