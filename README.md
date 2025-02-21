@@ -55,8 +55,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![Product Name Screen Shot][product-screenshot-2]
-![Product Name Screen Shot][product-screenshot-1]
+<div align="center">
+  <img src="images/app-sc-2.jpg" alt="Logo" width="250">
+  <img src="images/app-sc-1.jpg" alt="Logo" width="250">
+</div>
 
 Felis reader is a Mangadex client for Android 7+. The main goal is to be able to enjoy
 reading mangas/manhwas everywhere even offline; it is fully compatible with all the features of Mangadex
