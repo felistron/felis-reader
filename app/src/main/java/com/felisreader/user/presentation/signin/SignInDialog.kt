@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -101,7 +102,8 @@ fun ProcessingDialog(
     ) {
         if (success) {
             Icon(
-                Icons.Filled.CheckCircle,
+                modifier = Modifier.size(64.dp),
+                imageVector = Icons.Filled.CheckCircle,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
             )
@@ -137,7 +139,6 @@ fun MangadexSignInDialog(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onBackground,
-            tonalElevation = 4.dp
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -156,9 +157,9 @@ fun MangadexSignInDialog(
                     placeholder = { Text(stringResource(id = R.string.username)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        autoCorrect = false,
+                        autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
+                        imeAction = ImeAction.Next
                     ),
                 )
                 OutlinedTextField(
@@ -170,9 +171,9 @@ fun MangadexSignInDialog(
                     placeholder = { Text(stringResource(id = R.string.password)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        autoCorrect = false,
+                        autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Next,
+                        imeAction = ImeAction.Next
                     ),
                     visualTransformation = PasswordVisualTransformation()
                 )
@@ -185,9 +186,9 @@ fun MangadexSignInDialog(
                     placeholder = { Text(stringResource(id = R.string.client_id)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        autoCorrect = false,
+                        autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
+                        imeAction = ImeAction.Next
                     ),
                 )
                 OutlinedTextField(
@@ -199,9 +200,9 @@ fun MangadexSignInDialog(
                     placeholder = { Text(stringResource(id = R.string.client_secret)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        autoCorrect = false,
+                        autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
+                        imeAction = ImeAction.Done
                     ),
                     visualTransformation = PasswordVisualTransformation()
                 )
@@ -265,7 +266,6 @@ fun NoticeDialog(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onBackground,
-            tonalElevation = 4.dp
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -280,7 +280,7 @@ fun NoticeDialog(
                     onClick = { uriHandler.openUri("https://api.mangadex.org/docs/02-authentication/personal-clients/") },
                     label = { Text(stringResource(id = R.string.get_personal_client)) },
                     trailingIcon = {
-                        Icon(Icons.Default.OpenInNew, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
                     }
                 )
                 Row(

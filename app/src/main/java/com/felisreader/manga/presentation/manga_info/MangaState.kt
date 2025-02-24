@@ -7,5 +7,9 @@ data class MangaState(
     val manga: Manga? = null,
     val loading: Boolean = true,
     val isDescriptionCollapsed: Boolean = true,
-    val scrollState: ScrollState = ScrollState(initial = 0)
+    val scrollState: ScrollState = ScrollState(initial = 0),
+    val ratingDialogVisible: Boolean = false,
+    val loggedIn: Boolean = false,
+    val signInDialogVisible: Boolean = false,
+    val userRating: Int = 0
 )

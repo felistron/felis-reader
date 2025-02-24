@@ -81,4 +81,5 @@
     <string name="reading_lists">Reading lists</string>
     <string name="library_reading_history">Reading history</string>
     <string name="no_volume">No volume</string>
+    <string name="rate">Rate</string>
 </resources>
