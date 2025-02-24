@@ -31,8 +31,10 @@ import com.felisreader.manga.domain.model.api.ContentRating
 import com.felisreader.manga.presentation.components.TagChipGroup
 import com.felisreader.manga.presentation.manga_info.components.CoverField
 import com.felisreader.manga.presentation.manga_info.components.InfoTabs
+import com.felisreader.manga.presentation.manga_info.components.RatingDialog
 import com.felisreader.manga.presentation.manga_info.components.StatusField
 import com.felisreader.manga.presentation.manga_info.components.TitleField
+import com.felisreader.user.presentation.signin.SignInDialog
 
 
 @Composable
@@ -87,6 +89,30 @@ fun MangaContent(
                 )
             }
 
+            if (state.manga.statistics != null) {
+                RatingDialog(
+                    visible = state.ratingDialogVisible,
+                    rating = state.manga.statistics.rating,
+                    onDismiss = { onEvent(MangaEvent.SetRatingDialogVisible(false)) },
+                    loggedIn = state.loggedIn,
+                    onSignInClick = { onEvent(MangaEvent.SetSignInDialogVisible(true)) },
+                    selectedRating = state.userRating,
+                    onRatingSelected = { onEvent(MangaEvent.SubmitRating(it)) }
+                )
+            }
+
+            if(state.signInDialogVisible) {
+                SignInDialog(
+                    onSuccess = {
+                        onEvent(MangaEvent.SignInSuccess)
+                        onEvent(MangaEvent.SetSignInDialogVisible(false))
+                    },
+                    onCancel = {
+                        onEvent(MangaEvent.SetSignInDialogVisible(false))
+                    },
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -113,7 +139,12 @@ fun MangaContent(
                     demography = state.manga.demography,
                     onDemographyClick = { }
                 )
-                StatusField(state.manga)
+                StatusField(
+                    manga = state.manga,
+                    onRatingClick = {
+                        onEvent(MangaEvent.SetRatingDialogVisible(true))
+                    }
+                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center

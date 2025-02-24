@@ -12,17 +12,24 @@ import androidx.compose.ui.res.stringResource
 import com.felisreader.R
 import com.felisreader.core.util.MangaUtil
 import com.felisreader.manga.domain.model.Manga
+import java.util.Locale
 
 @Composable
-fun StatusField(manga: Manga) {
+fun StatusField(
+    manga: Manga,
+    onRatingClick: () -> Unit,
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier.fillMaxWidth()
     ) {
         AssistChip(
-            onClick = { /*TODO*/ },
+            onClick = onRatingClick,
             label = {
-                Text(text = if (manga.statistics == null) "N/A" else String.format("%.2f", manga.statistics.rating.bayesian))
+                Text(
+                    text = if (manga.statistics == null) "N/A"
+                    else String.format(Locale.getDefault(), "%.2f", manga.statistics.rating.bayesian)
+                )
             },
             leadingIcon = {
                 Icon(imageVector = Icons.Outlined.StarBorder, contentDescription = "Rating")
