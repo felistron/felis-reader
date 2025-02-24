@@ -41,11 +41,11 @@ class MangaViewModel @Inject constructor(
         viewModelScope.launch {
             state.value.manga?.let { manga ->
                 if (_state.value.userRating != rating) {
-                    userRepository.createOrUpdateRating(manga.id, rating)
                     _state.value = _state.value.copy(userRating = rating)
+                    userRepository.createOrUpdateRating(manga.id, rating)
                 } else {
-                    userRepository.deleteRating(manga.id)
                     _state.value = _state.value.copy(userRating = 0)
+                    userRepository.deleteRating(manga.id)
                 }
             }
         }
@@ -96,11 +96,13 @@ class MangaViewModel @Inject constructor(
         viewModelScope.launch {
             when (val response = userRepository.getRatings(listOf(mangaId))) {
                 is ApiResult.Success -> {
+                    _state.value = _state.value.copy(loggedIn = true)
+
                     val ratings = response.body.ratings
+
                     ratings[mangaId]?.let {
                         _state.value = _state.value.copy(
                             userRating = it.rating,
-                            loggedIn = true
                         )
                     }
                 }
