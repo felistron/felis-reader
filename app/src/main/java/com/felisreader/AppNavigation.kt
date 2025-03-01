@@ -187,6 +187,13 @@ fun AppNavigation(
                     ).route) {
                         launchSingleTop = true
                     }
+                },
+                navigateToFollows = {
+                    navController.navigate(Screen.FollowsScreen(
+                        rootScreen = "library"
+                    ).route) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -226,6 +233,24 @@ fun AppNavigation(
             ReadingHistoryScreen(
                 navigateToLector = { chapterId ->
                     navController.navigate(Screen.LectorScreen(chapterId).route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.FollowsScreen().route
+        ) {
+            setTopBarIcon { ReturnIcon(navController) }
+
+            setTopBarTitle {
+                Text(stringResource(id = R.string.ui_library))
+            }
+
+            FollowsScreen(
+                navigateToInfo = { mangaId ->
+                    navController.navigate(Screen.InfoScreen(mangaId, "library").route) {
                         launchSingleTop = true
                     }
                 }

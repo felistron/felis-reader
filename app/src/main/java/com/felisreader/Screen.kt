@@ -118,4 +118,16 @@ sealed class Screen(
             }
         )
     )
+
+    data class FollowsScreen(
+        val rootScreen: String = "{root}"
+    ): Screen(
+        route = "library/follows?root=$rootScreen",
+        args = listOf(
+            navArgument("root") {
+                type = NavType.StringType
+                nullable = false
+            }
+        )
+    )
 }

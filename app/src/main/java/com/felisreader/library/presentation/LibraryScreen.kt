@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +34,7 @@ fun LibraryScreen(
     viewModel: LibraryViewModel = hiltViewModel(),
     navigateToMangaHistory: () -> Unit,
     navigateToReadingHistory: () -> Unit,
+    navigateToFollows: () -> Unit,
 ) {
     AnimatedVisibility(viewModel.state.value.signInDialogVisible) {
         SignInDialog(
@@ -50,6 +53,7 @@ fun LibraryScreen(
         onEvent = viewModel::onEvent,
         isLoggedIn = viewModel.state.value.isLoggedIn,
         navigateToReadingHistory = navigateToReadingHistory,
+        navigateToFollows = navigateToFollows,
     )
 }
 
@@ -58,6 +62,7 @@ fun LibraryContent(
     isLoggedIn: Boolean,
     navigateToMangaHistory: () -> Unit,
     navigateToReadingHistory: () -> Unit,
+    navigateToFollows: () -> Unit,
     onEvent: (LibraryEvent) -> Unit,
 ) {
     Column(
@@ -97,6 +102,16 @@ fun LibraryContent(
             },
             onClick = navigateToReadingHistory
         )
+        Divider()
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(id = R.string.md_lists),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
         if (!isLoggedIn) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -114,6 +129,18 @@ fun LibraryContent(
                     Text(stringResource(id = R.string.ui_signin_mangadex))
                 }
             }
+        } else {
+            LibraryItem(
+                name = stringResource(id = R.string.ui_library),
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.LibraryBooks,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                    )
+                },
+                onClick = navigateToFollows
+            )
         }
     }
 }
