@@ -19,6 +19,7 @@ import com.felisreader.chapter.presentation.chapter_list.ChapterListScreen
 import com.felisreader.manga.presentation.manga_home.HomeScreen
 import com.felisreader.manga.presentation.manga_info.MangaScreen
 import com.felisreader.library.presentation.LibraryScreen
+import com.felisreader.library.presentation.follows.FollowsScreen
 import com.felisreader.library.presentation.manga_history.MangaHistoryScreen
 import com.felisreader.library.presentation.reading_history.ReadingHistoryScreen
 import com.felisreader.manga.presentation.manga_search.SearchScreen
@@ -187,6 +188,13 @@ fun AppNavigation(
                     ).route) {
                         launchSingleTop = true
                     }
+                },
+                navigateToFollows = {
+                    navController.navigate(Screen.FollowsScreen(
+                        rootScreen = "library"
+                    ).route) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -226,6 +234,24 @@ fun AppNavigation(
             ReadingHistoryScreen(
                 navigateToLector = { chapterId ->
                     navController.navigate(Screen.LectorScreen(chapterId).route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.FollowsScreen().route
+        ) {
+            setTopBarIcon { ReturnIcon(navController) }
+
+            setTopBarTitle {
+                Text(stringResource(id = R.string.ui_library))
+            }
+
+            FollowsScreen(
+                navigateToInfo = { mangaId ->
+                    navController.navigate(Screen.InfoScreen(mangaId, "library").route) {
                         launchSingleTop = true
                     }
                 }

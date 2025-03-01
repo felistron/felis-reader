@@ -75,4 +75,11 @@
     <string name="library_reading_history">Historial de lectura</string>
     <string name="no_volume">Sin volumen</string>
     <string name="rate">Calificar</string>
+    <string name="reading_status_reading">Leyendo</string>
+    <string name="reading_status_on_hold">En pausa</string>
+    <string name="reading_status_plan_to_read">Pendiente</string>
+    <string name="reading_status_dropped">Abandonado</string>
+    <string name="reading_status_re_reading">Re-leyendo</string>
+    <string name="reading_status_completed">Leído</string>
+    <string name="md_lists">Listas MD</string>
 </resources>
