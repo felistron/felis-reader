@@ -2,6 +2,8 @@ package com.felisreader.user.data.source.remote
 
 import com.felisreader.core.domain.model.api.BasicResponse
 import com.felisreader.user.domain.model.api.RatingBody
+import com.felisreader.user.domain.model.api.ReadingStatusBody
+import com.felisreader.user.domain.model.api.ReadingStatusListResponse
 import com.felisreader.user.domain.model.api.ReadingStatusResponse
 import com.felisreader.user.domain.model.api.UserRatingResponse
 import com.felisreader.user.domain.model.api.UserResponse
@@ -20,9 +22,22 @@ interface UserService {
     suspend fun getLoggedUser(@Header("Authorization") authorization: String): Response<UserResponse>
 
     @GET("manga/status")
-    suspend fun getReadingStatus(
+    suspend fun getReadingStatusList(
         @Header("Authorization") authorization: String
+    ): Response<ReadingStatusListResponse>
+
+    @GET("manga/{id}/status")
+    suspend fun getReadingStatus(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String
     ): Response<ReadingStatusResponse>
+
+    @POST("manga/{id}/status")
+    suspend fun updateReadingStatus(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+        @Body body: ReadingStatusBody
+    ): Response<BasicResponse>
 
     @GET("rating")
     suspend fun getLoggedUserRatings(

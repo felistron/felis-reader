@@ -11,13 +11,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material.icons.filled.LibraryAddCheck
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -32,6 +36,7 @@ import com.felisreader.manga.presentation.components.TagChipGroup
 import com.felisreader.manga.presentation.manga_info.components.CoverField
 import com.felisreader.manga.presentation.manga_info.components.InfoTabs
 import com.felisreader.manga.presentation.manga_info.components.RatingDialog
+import com.felisreader.manga.presentation.manga_info.components.ReadingStatusDialog
 import com.felisreader.manga.presentation.manga_info.components.StatusField
 import com.felisreader.manga.presentation.manga_info.components.TitleField
 import com.felisreader.user.presentation.signin.SignInDialog
@@ -113,6 +118,14 @@ fun MangaContent(
                 )
             }
 
+            if (state.readingStatusDialogVisible) {
+                ReadingStatusDialog(
+                    defaultOption = state.readingStatus,
+                    onDismiss = { onEvent(MangaEvent.SetReadingStatusDialogVisible(false)) },
+                    onConfirm = { onEvent(MangaEvent.SubmitReadingStatus(it)) }
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -147,10 +160,20 @@ fun MangaContent(
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
                     Button(onClick = navigateToFeed) {
                         Text(text = stringResource(id = R.string.see_chapters))
+                    }
+                    IconButton(
+                        onClick = { onEvent(MangaEvent.SetReadingStatusDialogVisible(true)) },
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(),
+                    ) {
+                        if (state.readingStatus == null) {
+                            Icon(Icons.Default.LibraryAdd, contentDescription = null)
+                        } else {
+                            Icon(Icons.Default.LibraryAddCheck, contentDescription = null)
+                        }
                     }
                     IconButton(
                         onClick = {
@@ -161,7 +184,8 @@ fun MangaContent(
                             }
                             val shareIntent = Intent.createChooser(sendIntent, null)
                             startActivity(context, shareIntent, null)
-                        }
+                        },
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(),
                     ) {
                         Icon(Icons.Default.Share, contentDescription = null)
                     }

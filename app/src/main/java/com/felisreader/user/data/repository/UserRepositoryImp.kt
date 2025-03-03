@@ -3,6 +3,9 @@ package com.felisreader.user.data.repository
 import com.felisreader.user.data.source.remote.UserService
 import com.felisreader.user.domain.model.ApiResult
 import com.felisreader.user.domain.model.api.RatingBody
+import com.felisreader.user.domain.model.api.ReadingStatus
+import com.felisreader.user.domain.model.api.ReadingStatusBody
+import com.felisreader.user.domain.model.api.ReadingStatusListResponse
 import com.felisreader.user.domain.model.api.ReadingStatusResponse
 import com.felisreader.user.domain.model.api.UserRatingResponse
 import com.felisreader.user.domain.model.api.UserResponse
@@ -25,16 +28,48 @@ class UserRepositoryImp(
         return ApiResult.Success(userResponse)
     }
 
-    override suspend fun getReadingStatus(): ApiResult<ReadingStatusResponse> {
+    override suspend fun getAllReadingStatus(): ApiResult<ReadingStatusListResponse> {
         val accessToken = authRepository.getAccessToken()
             ?: return ApiResult.Failure(401)
 
-        val response = userService.getReadingStatus("Bearer $accessToken")
+        val response = userService.getReadingStatusList("Bearer $accessToken")
 
         val readingStatus = response.body()
             ?: return ApiResult.Failure(response.code())
 
         return ApiResult.Success(readingStatus)
+    }
+
+    override suspend fun getReadingStatus(mangaId: String): ApiResult<ReadingStatusResponse> {
+        val accessToken = authRepository.getAccessToken()
+            ?: return ApiResult.Failure(401)
+
+        val response = userService.getReadingStatus("Bearer $accessToken", mangaId)
+
+        val readingStatus = response.body()
+            ?: return ApiResult.Failure(response.code())
+
+        return ApiResult.Success(readingStatus)
+    }
+
+    override suspend fun updateReadingStatus(
+        mangaId: String,
+        readingStatus: ReadingStatus?
+    ): ApiResult<Unit> {
+        val accessToken = authRepository.getAccessToken()
+            ?: return ApiResult.Failure(401)
+
+        val response = userService.updateReadingStatus(
+            "Bearer $accessToken",
+            mangaId,
+            ReadingStatusBody(readingStatus)
+        )
+
+        return if (response.body() == null) {
+            ApiResult.Failure(response.code())
+        } else {
+            ApiResult.Success(Unit)
+        }
     }
 
     override suspend fun getRatings(manga: List<String>): ApiResult<UserRatingResponse> {

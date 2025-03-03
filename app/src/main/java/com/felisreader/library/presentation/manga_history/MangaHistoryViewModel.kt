@@ -88,7 +88,8 @@ class MangaHistoryViewModel @Inject constructor(
             return emptyList()
         }
 
-        var history = mangaUseCases.getMangaList(MangaListQuery(
+        val history = mangaUseCases.getMangaList(MangaListQuery(
+            limit = limit,
             ids = ids,
             // this is needed bc mangadex decided to ¯\_(ツ)_/¯
             // otherwise it just won't work correctly
@@ -105,16 +106,15 @@ class MangaHistoryViewModel @Inject constructor(
             return emptyList()
         }
 
+        // Sort elements again...
         val historyTemp: MutableList<Manga> = mutableListOf()
 
         for (id in ids) {
-            historyTemp.add( history.data.first { it.id == id} )
+            history.data.firstOrNull { it.id ==  id }?.let {
+                historyTemp.add(it)
+            }
         }
 
-        history = history.copy(
-            data = historyTemp
-        )
-
-        return history.data
+        return historyTemp
     }
 }
