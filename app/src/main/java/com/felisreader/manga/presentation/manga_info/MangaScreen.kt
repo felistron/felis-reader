@@ -2,7 +2,6 @@ package com.felisreader.manga.presentation.manga_info
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,12 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material.icons.filled.LibraryAddCheck
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,7 +39,6 @@ import com.felisreader.manga.presentation.manga_info.components.RatingDialog
 import com.felisreader.manga.presentation.manga_info.components.ReadingStatusDialog
 import com.felisreader.manga.presentation.manga_info.components.StatusField
 import com.felisreader.manga.presentation.manga_info.components.TitleField
-import com.felisreader.user.domain.model.api.ReadingStatus
 import com.felisreader.user.presentation.signin.SignInDialog
 
 
@@ -161,26 +160,20 @@ fun MangaContent(
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        ),
+                    Button(onClick = navigateToFeed) {
+                        Text(text = stringResource(id = R.string.see_chapters))
+                    }
+                    IconButton(
                         onClick = { onEvent(MangaEvent.SetReadingStatusDialogVisible(true)) },
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(),
                     ) {
-                        Text(
-                            text = when (state.readingStatus) {
-                                ReadingStatus.READING -> stringResource(id = R.string.reading_status_reading)
-                                ReadingStatus.ON_HOLD -> stringResource(id = R.string.reading_status_on_hold)
-                                ReadingStatus.PLAN_TO_READ -> stringResource(id = R.string.reading_status_plan_to_read)
-                                ReadingStatus.DROPPED -> stringResource(id = R.string.reading_status_dropped)
-                                ReadingStatus.RE_READING -> stringResource(id = R.string.reading_status_re_reading)
-                                ReadingStatus.COMPLETED -> stringResource(id = R.string.reading_status_completed)
-                                null -> stringResource(id = R.string.add_to_library)
-                            }
-                        )
+                        if (state.readingStatus == null) {
+                            Icon(Icons.Default.LibraryAdd, contentDescription = null)
+                        } else {
+                            Icon(Icons.Default.LibraryAddCheck, contentDescription = null)
+                        }
                     }
                     IconButton(
                         onClick = {
@@ -191,17 +184,10 @@ fun MangaContent(
                             }
                             val shareIntent = Intent.createChooser(sendIntent, null)
                             startActivity(context, shareIntent, null)
-                        }
+                        },
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(),
                     ) {
                         Icon(Icons.Default.Share, contentDescription = null)
-                    }
-                }
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Button(onClick = navigateToFeed) {
-                        Text(text = stringResource(id = R.string.see_chapters))
                     }
                 }
                 InfoTabs(
