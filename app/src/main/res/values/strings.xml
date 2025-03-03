@@ -89,4 +89,8 @@
     <string name="reading_status_re_reading">Re-reading</string>
     <string name="reading_status_completed">Completed</string>
     <string name="md_lists">MD Lists</string>
+    <string name="ui_add">Add</string>
+    <string name="reading_status">Reading status</string>
+    <string name="add_to_library">Add to library</string>
+    <string name="none">None</string>
 </resources>

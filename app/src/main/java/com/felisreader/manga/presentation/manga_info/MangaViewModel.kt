@@ -12,6 +12,7 @@ import com.felisreader.manga.domain.model.Manga
 import com.felisreader.manga.domain.model.api.StatisticsResponse
 import com.felisreader.manga.domain.repository.MangaRepository
 import com.felisreader.user.domain.model.ApiResult
+import com.felisreader.user.domain.model.api.ReadingStatus
 import com.felisreader.user.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -34,6 +35,32 @@ class MangaViewModel @Inject constructor(
             is MangaEvent.SetSignInDialogVisible -> setSignInDialogVisible(event.visible)
             is MangaEvent.SignInSuccess -> signInSuccess()
             is MangaEvent.SubmitRating -> submitRating(event.rating)
+            is MangaEvent.SetReadingStatusDialogVisible -> setReadingStatusDialogVisible(event.visible)
+            is MangaEvent.SubmitReadingStatus -> submitReadingStatus(event.status)
+        }
+    }
+
+    private fun submitReadingStatus(status: ReadingStatus?) {
+        viewModelScope.launch {
+            _state.value.manga?.let { manga ->
+                _state.value = _state.value.copy(
+                    readingStatus = status,
+                    readingStatusDialogVisible = false
+                )
+                userRepository.updateReadingStatus(manga.id, status)
+            }
+        }
+    }
+
+    private fun setReadingStatusDialogVisible(visible: Boolean) {
+        if (!_state.value.loggedIn && visible) {
+            _state.value = _state.value.copy(
+                signInDialogVisible = true
+            )
+        } else {
+            _state.value = _state.value.copy(
+                readingStatusDialogVisible = visible
+            )
         }
     }
 
@@ -58,6 +85,7 @@ class MangaViewModel @Inject constructor(
                     loggedIn = true
                 )
                 loadRating(manga.id)
+                loadReadingStatus(manga.id)
             }
         }
     }
@@ -77,6 +105,7 @@ class MangaViewModel @Inject constructor(
     private fun loadManga(mangaId: String) {
         viewModelScope.launch {
             loadRating(mangaId)
+            loadReadingStatus(mangaId)
 
             historyRepository.insert(mangaId)
 
@@ -92,23 +121,36 @@ class MangaViewModel @Inject constructor(
         }
     }
 
-    private fun loadRating(mangaId: String) {
-        viewModelScope.launch {
-            when (val response = userRepository.getRatings(listOf(mangaId))) {
-                is ApiResult.Success -> {
-                    _state.value = _state.value.copy(loggedIn = true)
+    private suspend fun loadReadingStatus(mangaId: String) {
+        when (val response = userRepository.getReadingStatus(mangaId)) {
+            is ApiResult.Success -> {
+                val readingStatus = response.body.status
+                _state.value = _state.value.copy(
+                    loggedIn = true,
+                    readingStatus = readingStatus,
+                )
+            }
+            is ApiResult.Failure -> {
+                _state.value = _state.value.copy(loggedIn = false)
+            }
+        }
+    }
 
-                    val ratings = response.body.ratings
+    private suspend fun loadRating(mangaId: String) {
+        when (val response = userRepository.getRatings(listOf(mangaId))) {
+            is ApiResult.Success -> {
+                _state.value = _state.value.copy(loggedIn = true)
 
-                    ratings[mangaId]?.let {
-                        _state.value = _state.value.copy(
-                            userRating = it.rating,
-                        )
-                    }
+                val ratings = response.body.ratings
+
+                ratings[mangaId]?.let {
+                    _state.value = _state.value.copy(
+                        userRating = it.rating,
+                    )
                 }
-                is ApiResult.Failure -> {
-                    _state.value = _state.value.copy(loggedIn = false)
-                }
+            }
+            is ApiResult.Failure -> {
+                _state.value = _state.value.copy(loggedIn = false)
             }
         }
     }

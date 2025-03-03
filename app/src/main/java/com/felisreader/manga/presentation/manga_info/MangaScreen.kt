@@ -2,6 +2,7 @@ package com.felisreader.manga.presentation.manga_info
 
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,11 +14,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -32,8 +36,10 @@ import com.felisreader.manga.presentation.components.TagChipGroup
 import com.felisreader.manga.presentation.manga_info.components.CoverField
 import com.felisreader.manga.presentation.manga_info.components.InfoTabs
 import com.felisreader.manga.presentation.manga_info.components.RatingDialog
+import com.felisreader.manga.presentation.manga_info.components.ReadingStatusDialog
 import com.felisreader.manga.presentation.manga_info.components.StatusField
 import com.felisreader.manga.presentation.manga_info.components.TitleField
+import com.felisreader.user.domain.model.api.ReadingStatus
 import com.felisreader.user.presentation.signin.SignInDialog
 
 
@@ -113,6 +119,14 @@ fun MangaContent(
                 )
             }
 
+            if (state.readingStatusDialogVisible) {
+                ReadingStatusDialog(
+                    defaultOption = state.readingStatus,
+                    onDismiss = { onEvent(MangaEvent.SetReadingStatusDialogVisible(false)) },
+                    onConfirm = { onEvent(MangaEvent.SubmitReadingStatus(it)) }
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -149,8 +163,24 @@ fun MangaContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(onClick = navigateToFeed) {
-                        Text(text = stringResource(id = R.string.see_chapters))
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        ),
+                        onClick = { onEvent(MangaEvent.SetReadingStatusDialogVisible(true)) },
+                    ) {
+                        Text(
+                            text = when (state.readingStatus) {
+                                ReadingStatus.READING -> stringResource(id = R.string.reading_status_reading)
+                                ReadingStatus.ON_HOLD -> stringResource(id = R.string.reading_status_on_hold)
+                                ReadingStatus.PLAN_TO_READ -> stringResource(id = R.string.reading_status_plan_to_read)
+                                ReadingStatus.DROPPED -> stringResource(id = R.string.reading_status_dropped)
+                                ReadingStatus.RE_READING -> stringResource(id = R.string.reading_status_re_reading)
+                                ReadingStatus.COMPLETED -> stringResource(id = R.string.reading_status_completed)
+                                null -> stringResource(id = R.string.add_to_library)
+                            }
+                        )
                     }
                     IconButton(
                         onClick = {
@@ -164,6 +194,14 @@ fun MangaContent(
                         }
                     ) {
                         Icon(Icons.Default.Share, contentDescription = null)
+                    }
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Button(onClick = navigateToFeed) {
+                        Text(text = stringResource(id = R.string.see_chapters))
                     }
                 }
                 InfoTabs(

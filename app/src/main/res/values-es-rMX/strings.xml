@@ -82,4 +82,8 @@
     <string name="reading_status_re_reading">Re-leyendo</string>
     <string name="reading_status_completed">Leído</string>
     <string name="md_lists">Listas MD</string>
+    <string name="ui_add">Agregar</string>
+    <string name="reading_status">Estado de lectura</string>
+    <string name="add_to_library">Agregar a la biblioteca</string>
+    <string name="none">Ninguno</string>
 </resources>

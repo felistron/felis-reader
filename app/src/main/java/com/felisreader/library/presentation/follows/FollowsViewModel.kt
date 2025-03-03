@@ -27,7 +27,7 @@ class FollowsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            when (val response = userRepository.getReadingStatus()) {
+            when (val response = userRepository.getAllReadingStatus()) {
                 is ApiResult.Success -> {
                     _state.value = _state.value.copy(statuses = response.body.statuses)
                 }
