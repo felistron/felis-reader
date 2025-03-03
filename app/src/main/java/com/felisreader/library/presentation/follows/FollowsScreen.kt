@@ -94,44 +94,86 @@ fun FollowsScreen(
                     when (selected) {
                         0 -> {
                             StatusItem(
-                                state.reading,
-                                navigateToInfo
-                            ) { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.READING)) }
+                                mangas = state.reading,
+                                navigateToInfo = navigateToInfo,
+                                loadMangaStatus = { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.READING)) },
+                                onRefresh = {
+                                    onEvent(FollowsEvent.LoadAllReadingStatus {
+                                        onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.READING))
+                                        it()
+                                    })
+                                }
+                            )
                         }
 
                         1 -> {
                             StatusItem(
-                                state.onHold,
-                                navigateToInfo
-                            ) { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.ON_HOLD)) }
+                                mangas = state.onHold,
+                                navigateToInfo = navigateToInfo,
+                                loadMangaStatus = { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.ON_HOLD)) },
+                                onRefresh = {
+                                    onEvent(FollowsEvent.LoadAllReadingStatus {
+                                        onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.ON_HOLD))
+                                        it()
+                                    })
+                                }
+                            )
                         }
 
                         2 -> {
                             StatusItem(
-                                state.planToRead,
-                                navigateToInfo
-                            ) { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.PLAN_TO_READ)) }
+                                mangas = state.planToRead,
+                                navigateToInfo = navigateToInfo,
+                                loadMangaStatus = { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.PLAN_TO_READ)) },
+                                onRefresh = {
+                                    onEvent(FollowsEvent.LoadAllReadingStatus {
+                                        onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.PLAN_TO_READ))
+                                        it()
+                                    })
+                                }
+                            )
                         }
 
                         3 -> {
                             StatusItem(
-                                state.dropped,
-                                navigateToInfo
-                            ) { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.DROPPED)) }
+                                mangas = state.dropped,
+                                navigateToInfo = navigateToInfo,
+                                loadMangaStatus = { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.DROPPED)) },
+                                onRefresh = {
+                                    onEvent(FollowsEvent.LoadAllReadingStatus {
+                                        onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.DROPPED))
+                                        it()
+                                    })
+                                }
+                            )
                         }
 
                         4 -> {
                             StatusItem(
-                                state.reReading,
-                                navigateToInfo
-                            ) { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.RE_READING)) }
+                                mangas = state.reReading,
+                                navigateToInfo = navigateToInfo,
+                                loadMangaStatus = { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.RE_READING)) },
+                                onRefresh = {
+                                    onEvent(FollowsEvent.LoadAllReadingStatus {
+                                        onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.RE_READING))
+                                        it()
+                                    })
+                                }
+                            )
                         }
 
                         5 -> {
                             StatusItem(
-                                state.completed,
-                                navigateToInfo
-                            ) { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.COMPLETED)) }
+                                mangas = state.completed,
+                                navigateToInfo = navigateToInfo,
+                                loadMangaStatus = { onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.COMPLETED)) },
+                                onRefresh = {
+                                    onEvent(FollowsEvent.LoadAllReadingStatus {
+                                        onEvent(FollowsEvent.LoadReadingStatus(ReadingStatus.COMPLETED))
+                                        it()
+                                    })
+                                }
+                            )
                         }
                     }
                 },
@@ -148,12 +190,14 @@ fun StatusItem(
     mangas: List<Manga>?,
     navigateToInfo: (mangaId: String) -> Unit,
     loadMangaStatus: () -> Unit,
+    onRefresh: (callback: suspend () -> Unit) -> Unit,
 ) {
     if (mangas != null) {
         MangaLazyList(
             modifier = Modifier.fillMaxSize(),
             items = mangas,
             onItemClick = navigateToInfo,
+            onRefresh = onRefresh,
         )
     } else {
         LaunchedEffect(true) {

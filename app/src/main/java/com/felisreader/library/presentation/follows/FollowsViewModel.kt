@@ -26,20 +26,27 @@ class FollowsViewModel @Inject constructor(
     val state: State<FollowsState> = _state
 
     init {
-        viewModelScope.launch {
-            when (val response = userRepository.getAllReadingStatus()) {
-                is ApiResult.Success -> {
-                    _state.value = _state.value.copy(statuses = response.body.statuses)
-                }
-                is ApiResult.Failure -> { /* Failure bc of authorization*/ }
-            }
-        }
+        loadAllReadingStatus { }
     }
 
     fun onEvent(event: FollowsEvent) {
         when (event) {
             is FollowsEvent.SetSelectedTab -> setSelectedTab(event.index)
             is FollowsEvent.LoadReadingStatus -> loadReadingStatus(event.status)
+            is FollowsEvent.LoadAllReadingStatus -> loadAllReadingStatus(event.callback)
+        }
+    }
+
+    private fun loadAllReadingStatus(callback: suspend () -> Unit) {
+        viewModelScope.launch {
+            when (val response = userRepository.getAllReadingStatus()) {
+                is ApiResult.Success -> {
+                    _state.value = _state.value.copy(
+                        statuses = response.body.statuses)
+                }
+                is ApiResult.Failure -> { /* Failure bc of authorization*/ }
+            }
+            callback()
         }
     }
 
